@@ -58,4 +58,9 @@ class Car extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function views()
+    {
+        return $this->hasMany(CarView::class);
+    }
 }

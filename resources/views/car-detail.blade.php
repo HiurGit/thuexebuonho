@@ -26,6 +26,31 @@ $allImages = $car->images;
 <meta name="twitter:image" content="{{ asset($mainImage) }}">
 @endsection
 
+@push('schemas')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Product',
+    'name' => $car->name . ' - Thuê Xe Buôn Hồ',
+    'description' => 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Xe ' . $car->seats . ' chỗ, hộp số ' . $car->transmission . ', nhiên liệu ' . $car->fuel . ', năm sản xuất ' . $car->year . '.',
+    'image' => asset($mainImage),
+    'brand' => [
+        '@type' => 'Brand',
+        'name' => 'Thuê Xe Buôn Hồ',
+    ],
+    'offers' => [
+        '@type' => 'Offer',
+        'url' => url()->current(),
+        'priceCurrency' => 'VND',
+        'price' => $car->price_per_day,
+        'priceValidUntil' => now()->addYear()->toIso8601String(),
+        'availability' => 'https://schema.org/InStock',
+        'itemCondition' => 'https://schema.org/UsedCondition',
+    ],
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+@endpush
+
 @section('content-desktop')
 <main>
   <div class="w-full border-b border-app-line bg-app-accent">
@@ -133,7 +158,7 @@ $allImages = $car->images;
                     <button type="button" class="pickup-option pickup-delivery rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
                       <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Giao xe tận nơi</p>
-                      <p class="text-[10px] text-slate-400">10k / km</p>
+                      <p class="text-[10px] text-slate-400">Free 5 km</p>
                     </button>
                   </div>
                 </div>
@@ -178,7 +203,7 @@ $allImages = $car->images;
                     <button type="button" class="pickup-option pickup-delivery rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
                       <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Giao xe tận nơi</p>
-                      <p class="text-[10px] text-slate-400">10k / km</p>
+                      <p class="text-[10px] text-slate-400">Free 5 km</p>
                     </button>
                   </div>
                 </div>
@@ -223,7 +248,7 @@ $allImages = $car->images;
                     <button type="button" class="pickup-option pickup-delivery rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
                       <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Giao xe tận nơi</p>
-                      <p class="text-[10px] text-slate-400">10k / km</p>
+                      <p class="text-[10px] text-slate-400">Free 5 km</p>
                     </button>
                   </div>
                 </div>
@@ -324,7 +349,20 @@ $allImages = $car->images;
     <section>
       <h2 class="section-title text-lg font-extrabold">Mô tả</h2>
       <div class="mt-4 rounded-2xl border border-app-line bg-stone-50 p-6">
-        <p class="text-sm leading-7 text-app-muted">{{ $car->description }}</p>
+        <div data-description-wrapper class="relative">
+          <div data-description-content data-collapsed-height="160" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 160px;">
+            <p class="text-sm leading-7 text-app-muted">{!! nl2br(e($car->description)) !!}</p>
+          </div>
+          <div data-description-fade class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-stone-50 via-stone-50/95 to-transparent"></div>
+        </div>
+        <button
+          type="button"
+          data-description-toggle
+          class="mx-auto mt-3 flex items-center gap-1 rounded-[8px] px-4  text-[13px] font-bold text-app-accent transition-all"
+        >
+          <span data-description-toggle-label>Xem thêm</span>
+          <svg class="h-4 w-4 description-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
       </div>
     </section>
     <section>
@@ -566,7 +604,7 @@ $allImages = $car->images;
                 <button type="button" class="pickup-option pickup-delivery rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
                   <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Giao xe tận nơi</p>
-                  <p class="text-[10px] text-slate-400">10k / km</p>
+                  <p class="text-[10px] text-slate-400">Free 5 km</p>
                 </button>
               </div>
             </div>
@@ -616,7 +654,7 @@ $allImages = $car->images;
                 <button type="button" class="pickup-option pickup-delivery rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
                   <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Giao xe tận nơi</p>
-                  <p class="text-[10px] text-slate-400">10k / km</p>
+                  <p class="text-[10px] text-slate-400">Free 5 km</p>
                 </button>
               </div>
             </div>
@@ -666,7 +704,7 @@ $allImages = $car->images;
                 <button type="button" class="pickup-option pickup-delivery rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
                   <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Giao xe tận nơi</p>
-                  <p class="text-[10px] text-slate-400">10k / km</p>
+                  <p class="text-[10px] text-slate-400">Free 5 km</p>
                 </button>
               </div>
             </div>
@@ -750,7 +788,20 @@ $allImages = $car->images;
   <section class="bg-white px-4 py-3">
     <h2 class="section-title text-base font-extrabold">Mô tả</h2>
     <div class="mt-4 rounded-[12px] border border-app-line bg-stone-50 p-4">
-      <p class="text-sm leading-6 text-app-muted">{{ $car->description }}</p>
+      <div data-description-wrapper class="relative">
+          <div data-description-content data-collapsed-height="128" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 128px;">
+          <p class="text-sm leading-6 text-app-muted">{!! nl2br(e($car->description)) !!}</p>
+        </div>
+        <div data-description-fade class="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-stone-50 via-stone-50/95 to-transparent"></div>
+      </div>
+      <button
+        type="button"
+        data-description-toggle
+        class="mx-auto mt-3 flex items-center gap-1 rounded-[8px] px-4   text-[13px] font-bold text-app-accent transition-all"
+      >
+        <span data-description-toggle-label>Xem thêm</span>
+        <svg class="h-4 w-4 description-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </button>
     </div>
   </section>
 
@@ -808,7 +859,7 @@ $allImages = $car->images;
         @endforelse
       </div>
       @if($car->amenities->count() > 6)
-      <button id="tienich-toggle" onclick="var items=document.querySelectorAll('.tienich-more'); var btn=this; items.forEach(function(el){el.classList.toggle('hidden')}); btn.querySelector('span').textContent=btn.querySelector('span').textContent=='Xem thêm'?'Thu gọn':'Xem thêm'; btn.querySelector('.tienich-arrow').classList.toggle('rotate-180')" class="mx-auto mt-3 flex items-center gap-1 rounded-[8px] px-4 py-2 text-[13px] font-bold text-app-accent transition-all">
+      <button id="tienich-toggle" onclick="var items=document.querySelectorAll('.tienich-more'); var btn=this; items.forEach(function(el){el.classList.toggle('hidden')}); btn.querySelector('span').textContent=btn.querySelector('span').textContent=='Xem thêm'?'Thu gọn':'Xem thêm'; btn.querySelector('.tienich-arrow').classList.toggle('rotate-180')" class="mx-auto mt-3 flex items-center gap-1 rounded-[8px] px-4   text-[13px] font-bold text-app-accent transition-all">
         <span>Xem thêm</span>
         <svg class="h-4 w-4 tienich-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
       </button>

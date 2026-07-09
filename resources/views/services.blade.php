@@ -24,7 +24,7 @@
 <section class="border-b border-app-line bg-white py-10">
   <div class="mx-auto max-w-7xl px-6">
     <div class="mb-8 text-center">
-      <h2 class="text-2xl font-extrabold text-app-ink">Dịch vụ của chúng tôi</h2>
+      <h1 class="text-2xl font-extrabold text-app-ink">Dịch vụ của chúng tôi</h1>
       <p class="mt-2 text-sm font-semibold text-app-muted">10 dịch vụ đáp ứng mọi nhu cầu di chuyển của bạn</p>
     </div>
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -239,11 +239,11 @@
     <h2 class="text-2xl font-extrabold text-app-ink">Bạn cần đặt dịch vụ?</h2>
     <p class="mt-2 text-sm font-semibold text-app-muted">Liên hệ ngay để được tư vấn và báo giá nhanh nhất</p>
     <div class="mt-6 flex flex-wrap justify-center gap-4">
-      <a href="https://zalo.me/0964918047" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-[#0068ff] px-6 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-[#0056d6]">
+      <a href="{{ 'https://zalo.me/' . preg_replace('/\D+/', '', \App\Models\Setting::get('site_phone', '0964918047')) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-[#0068ff] px-6 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-[#0056d6]">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>
         Nhắn tin Zalo để đặt dịch vụ
       </a>
-      <a href="tel:0964918047" class="inline-flex items-center gap-2 rounded-xl border-2 border-app-accent bg-app-accentSoft px-6 py-3.5 text-sm font-extrabold text-app-accent shadow-sm transition-all hover:bg-app-accent hover:text-white">
+      <a href="tel:{{ \App\Models\Setting::get('site_phone', '0964918047') }}" class="inline-flex items-center gap-2 rounded-xl border-2 border-app-accent bg-app-accentSoft px-6 py-3.5 text-sm font-extrabold text-app-accent shadow-sm transition-all hover:bg-app-accent hover:text-white">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" /></svg>
         Gọi ngay: 0964.918.047
       </a>
@@ -466,13 +466,13 @@
 </section>
 
 <section class="px-4 pb-16 pt-6">
-  <a href="https://zalo.me/0964918047" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-[12px] bg-[#0068ff] px-4 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-[#0056d6] active:scale-[0.98]">
+  <a href="{{ 'https://zalo.me/' . preg_replace('/\D+/', '', \App\Models\Setting::get('site_phone', '0964918047')) }}" target="_blank" rel="noopener" class="flex items-center justify-center gap-2 rounded-[12px] bg-[#0068ff] px-4 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-[#0056d6] active:scale-[0.98]">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
     </svg>
     Nhắn tin Zalo để đặt dịch vụ
   </a>
-  <a href="tel:0964918047" class="mt-2 flex items-center justify-center gap-2 rounded-[12px] border-2 border-app-accent bg-app-accentSoft px-4 py-3.5 text-sm font-extrabold text-app-accent transition-all hover:bg-app-accent hover:text-white active:scale-[0.98]">
+  <a href="tel:{{ \App\Models\Setting::get('site_phone', '0964918047') }}" class="mt-2 flex items-center justify-center gap-2 rounded-[12px] border-2 border-app-accent bg-app-accentSoft px-4 py-3.5 text-sm font-extrabold text-app-accent transition-all hover:bg-app-accent hover:text-white active:scale-[0.98]">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
     </svg>

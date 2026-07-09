@@ -15,7 +15,11 @@ class CarsController extends Controller
 {
     public function index()
     {
-        $cars = Car::with('mainImage')->orderBy('sort_order')->paginate(20);
+        $cars = Car::with('mainImage')
+            ->withCount('views as unique_viewers')
+            ->withSum('views as total_views', 'visit_count')
+            ->orderBy('sort_order')
+            ->paginate(20);
         return view('admin.cars.index', compact('cars'));
     }
 

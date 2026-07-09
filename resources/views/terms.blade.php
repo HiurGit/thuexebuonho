@@ -6,7 +6,7 @@
 <meta name="description" content="Điều khoản và điều kiện cho thuê xe tại Buôn Hồ, Đăk Lăk.">
 <meta property="og:title" content="Điều khoản & Điều kiện - Thuê Xe Buôn Hồ">
 <meta property="og:description" content="Điều khoản và điều kiện cho thuê xe tại Buôn Hồ, Đăk Lăk.">
-<meta property="og:image" content="https://thuexebuonho.com/assets/image/bannerMXH.jpg">
+<meta property="og:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/jpeg">
@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Điều khoản & Điều kiện - Thuê Xe Buôn Hồ">
 <meta name="twitter:description" content="Điều khoản và điều kiện cho thuê xe tại Buôn Hồ, Đăk Lăk.">
-<meta name="twitter:image" content="https://thuexebuonho.com/assets/image/bannerMXH.jpg">
+<meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 @endsection
 
 @section('content-desktop')

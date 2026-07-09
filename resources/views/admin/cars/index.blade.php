@@ -33,6 +33,8 @@
                     <th>Nam</th>
                     <th>Gia/ngay</th>
                     <th>Gia/buoi</th>
+                    <th>Khach xem</th>
+                    <th>Luot xem</th>
                     <th>Trang thai</th>
                     <th>Hanh dong</th>
                 </tr>
@@ -53,6 +55,8 @@
                     <td>{{ $car->year ?: '-' }}</td>
                     <td>{{ number_format($car->price_per_day) }}d</td>
                     <td>{{ number_format($car->price_per_session) }}d</td>
+                    <td><span class="badge badge-info">{{ number_format($car->unique_viewers ?? 0) }}</span></td>
+                    <td>{{ number_format($car->total_views ?? 0) }}</td>
                     <td>
                         <select class="form-control form-control-sm status-select" data-id="{{ $car->id }}" data-url="{{ route('admin.cars.status', $car) }}" style="min-width:120px">
                             <option value="available" {{ $car->status == 'available' ? 'selected' : '' }}>San sang</option>
@@ -67,7 +71,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="10" class="text-center text-muted py-4">Chua co xe nao</td></tr>
+                <tr><td colspan="12" class="text-center text-muted py-4">Chua co xe nao</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -82,7 +86,7 @@ $(function() {
         pageLength: 10,
         order: [[0, 'asc']],
         columnDefs: [
-            { orderable: false, targets: [8, 9] }
+            { orderable: false, targets: [10, 11] }
         ],
         language: {
             search: 'Tim kiem:',

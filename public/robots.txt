@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /login
+Disallow: /logout
+Disallow: /_debugbar/
+Disallow: /storage/
+Allow: /
+
+Sitemap: https://thuexebuonho.com/sitemap.xml

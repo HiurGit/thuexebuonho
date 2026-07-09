@@ -2,6 +2,13 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#5fcf86">
+@php
+$googleTagId = trim((string) \App\Models\Setting::get('google_tag_id', ''));
+$sitePhone = trim((string) \App\Models\Setting::get('site_phone', '0964918047'));
+$siteAddress = trim((string) \App\Models\Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak'));
+$siteMapUrl = trim((string) \App\Models\Setting::get('site_map_url', 'https://maps.app.goo.gl/Qr6kWexgKnYdRdpq7'));
+$canonicalUrl = url()->current();
+@endphp
 
 @hasSection('meta')
   @yield('meta')
@@ -28,6 +35,115 @@
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/favicon-16.png') }}">
 <link rel="apple-touch-icon" href="{{ asset('assets/icon-192.png') }}">
 <title>@yield('title', 'Thuê Xe Buôn Hồ - Đưa Đón Khách')</title>
+
+<link rel="canonical" href="{{ $canonicalUrl }}">
+
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'WebSite',
+    'name' => 'Thuê Xe Buôn Hồ',
+    'url' => url('/'),
+    'inLanguage' => 'vi-VN',
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'LocalBusiness',
+    'name' => 'Thuê Xe Buôn Hồ',
+    'url' => url('/'),
+    'telephone' => $sitePhone,
+    'address' => [
+        '@type' => 'PostalAddress',
+        'streetAddress' => $siteAddress,
+        'addressCountry' => 'VN',
+    ],
+    'image' => asset('assets/image/bannerMXH.jpg'),
+    'sameAs' => [
+        $siteMapUrl,
+        'https://www.facebook.com/9999NDT/',
+    ],
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+
+@php
+$breadcrumbItems = [];
+$routeName = request()->route()?->getName();
+
+if ($routeName === 'index') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+    ];
+} elseif ($routeName === 'services') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Dịch vụ', 'url' => route('services')],
+    ];
+} elseif ($routeName === 'huongdan') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Hướng dẫn', 'url' => route('huongdan')],
+    ];
+} elseif ($routeName === 'da-giao') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Đã giao', 'url' => route('da-giao')],
+    ];
+} elseif ($routeName === 'terms') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Điều khoản', 'url' => route('terms')],
+    ];
+} elseif ($routeName === 'privacy') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Chính sách bảo mật', 'url' => route('privacy')],
+    ];
+} elseif ($routeName === 'car-detail') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Danh sách xe', 'url' => route('index') . '#danh-sach-xe'],
+    ];
+    $carForBreadcrumb = $car ?? null;
+    if ($carForBreadcrumb) {
+        $breadcrumbItems[] = ['name' => $carForBreadcrumb->name, 'url' => route('car-detail', $carForBreadcrumb->slug)];
+    }
+}
+@endphp
+
+@if (!empty($breadcrumbItems))
+@php
+$breadcrumbList = [];
+foreach ($breadcrumbItems as $i => $item) {
+    $breadcrumbList[] = [
+        '@type' => 'ListItem',
+        'position' => $i + 1,
+        'name' => $item['name'],
+        'item' => $item['url'],
+    ];
+}
+@endphp
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => $breadcrumbList,
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+@endif
+
+@stack('schemas')
+
+@if ($googleTagId !== '')
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ urlencode($googleTagId) }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', @json($googleTagId));
+  </script>
+@endif
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 

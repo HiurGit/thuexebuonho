@@ -6,7 +6,7 @@
 <meta name="description" content="Chính sách bảo mật thông tin khách hàng của Thuê Xe Tự Lái Buôn Hồ.">
 <meta property="og:title" content="Chính sách bảo mật - Thuê Xe Buôn Hồ">
 <meta property="og:description" content="Chính sách bảo mật thông tin khách hàng của Thuê Xe Tự Lái Buôn Hồ.">
-<meta property="og:image" content="https://thuexebuonho.com/assets/image/bannerMXH.jpg">
+<meta property="og:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/jpeg">
@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Chính sách bảo mật - Thuê Xe Buôn Hồ">
 <meta name="twitter:description" content="Chính sách bảo mật thông tin khách hàng của Thuê Xe Tự Lái Buôn Hồ.">
-<meta name="twitter:image" content="https://thuexebuonho.com/assets/image/bannerMXH.jpg">
+<meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 @endsection
 
 @section('content-desktop')
@@ -111,7 +111,7 @@
         <p>Nếu có bất kỳ câu hỏi nào liên quan đến Chính sách bảo mật, vui lòng liên hệ:</p>
         <ul class="list-inside list-disc space-y-1.5 pl-2">
           <li><strong class="text-app-ink">Tên đơn vị:</strong> Thuê Xe Tự Lái Buôn Hồ</li>
-          <li><strong class="text-app-ink">Địa chỉ:</strong> 07 Chu Văn An, Buôn Hồ, Đăk Lăk</li>
+          <li><strong class="text-app-ink">Địa chỉ:</strong> {{ \App\Models\Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak') }}</li>
           <li><strong class="text-app-ink">Điện thoại:</strong> 0964.918.047</li>
           <li><strong class="text-app-ink">Facebook:</strong> https://www.facebook.com/9999NDT/</li>
         </ul>
@@ -217,7 +217,7 @@
     <p>Nếu có bất kỳ câu hỏi nào liên quan đến Chính sách bảo mật, vui lòng liên hệ:</p>
     <ul class="list-inside list-disc space-y-1.5 pl-2">
       <li><strong class="text-app-ink">Tên đơn vị:</strong> Thuê Xe Tự Lái Buôn Hồ</li>
-      <li><strong class="text-app-ink">Địa chỉ:</strong> 07 Chu Văn An, Buôn Hồ, Đăk Lăk</li>
+      <li><strong class="text-app-ink">Địa chỉ:</strong> {{ \App\Models\Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak') }}</li>
       <li><strong class="text-app-ink">Điện thoại:</strong> 0964.918.047</li>
       <li><strong class="text-app-ink">Facebook:</strong> https://www.facebook.com/9999NDT/</li>
     </ul>

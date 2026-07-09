@@ -350,6 +350,11 @@ return [
         ],
         ['header' => 'HỆ THỐNG'],
         [
+            'text' => 'Thông tin Web',
+            'url' => 'admin/web-info',
+            'icon' => 'fas fa-fw fa-globe',
+        ],
+        [
             'text' => 'Tele',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-cog',
@@ -358,6 +363,11 @@ return [
             'text' => 'Người dùng',
             'url' => 'admin/users',
             'icon' => 'fas fa-fw fa-users',
+        ],
+        [
+            'text' => 'Truy cập website',
+            'url' => 'admin/visitors',
+            'icon' => 'fas fa-fw fa-chart-line',
         ],
     ],
 

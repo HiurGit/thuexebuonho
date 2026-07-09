@@ -1666,6 +1666,54 @@ initBottomNav();
     toggleBottomBar(isEditableField(document.activeElement));
   });
 })();
+
+// ===== CAR DETAIL DESCRIPTION TOGGLE =====
+(function() {
+  function initDescriptionToggles() {
+    document.querySelectorAll('[data-description-wrapper]').forEach(function(wrapper) {
+      if (wrapper.dataset.descriptionBound === '1') return;
+      wrapper.dataset.descriptionBound = '1';
+
+      var content = wrapper.querySelector('[data-description-content]');
+      var fade = wrapper.querySelector('[data-description-fade]');
+      var toggle = wrapper.parentElement ? wrapper.parentElement.querySelector('[data-description-toggle]') : null;
+      var label = toggle ? toggle.querySelector('[data-description-toggle-label]') : null;
+      var arrow = toggle ? toggle.querySelector('.description-arrow') : null;
+
+      if (!content || !toggle || !label) return;
+
+      var collapsedHeight = parseFloat(content.dataset.collapsedHeight || window.getComputedStyle(content).maxHeight);
+      var fullHeight = content.scrollHeight;
+
+      content.style.maxHeight = collapsedHeight + 'px';
+      wrapper.dataset.descriptionExpanded = '0';
+      if (fade) fade.classList.remove('hidden');
+
+      toggle.addEventListener('click', function() {
+        var expanded = wrapper.dataset.descriptionExpanded === '1';
+        if (expanded) {
+          content.style.maxHeight = collapsedHeight + 'px';
+          wrapper.dataset.descriptionExpanded = '0';
+          label.textContent = 'Xem thêm';
+          if (fade) fade.classList.remove('hidden');
+          if (arrow) arrow.classList.remove('rotate-180');
+        } else {
+          content.style.maxHeight = fullHeight + 'px';
+          wrapper.dataset.descriptionExpanded = '1';
+          label.textContent = 'Thu gọn';
+          if (fade) fade.classList.add('hidden');
+          if (arrow) arrow.classList.add('rotate-180');
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDescriptionToggles);
+  } else {
+    initDescriptionToggles();
+  }
+})();
 </script>
 
 

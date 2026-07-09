@@ -4,6 +4,12 @@
   @include('partials.head')
 </head>
 <body class="bg-app-bg font-sans text-app-ink antialiased">
+@php
+  $sitePhone = \App\Models\Setting::get('site_phone', '0964918047');
+  $sitePhoneDisplay = preg_replace('/(\d{4})(\d{3})(\d{3,})/', '$1.$2.$3', $sitePhone) ?: $sitePhone;
+  $siteAddress = \App\Models\Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak');
+  $siteZaloUrl = 'https://zalo.me/' . preg_replace('/\D+/', '', $sitePhone);
+@endphp
 
 <div id="desktop-wrapper" class="hidden lg:block">
   {{-- HEADER --}}
@@ -28,11 +34,11 @@
         <a href="{{ route('terms') }}" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Điều khoản</a>
       </nav>
       <div class="flex items-center gap-3">
-        <a href="tel:0964918047" class="hidden items-center gap-2 rounded-xl bg-app-accent px-4 py-2.5 text-sm font-extrabold text-white transition-all hover:bg-app-green sm:flex">
+        <a href="tel:{{ $sitePhone }}" class="hidden items-center gap-2 rounded-xl bg-app-accent px-4 py-2.5 text-sm font-extrabold text-white transition-all hover:bg-app-green sm:flex">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
           </svg>
-          0964.918.047
+          {{ $sitePhoneDisplay }}
         </a>
         <button id="menu-toggle" class="flex h-11 w-11 items-center justify-center rounded-xl border border-app-line bg-white text-lg text-app-ink lg:hidden">
           <i class="ri-menu-3-line"></i>
@@ -94,7 +100,7 @@
               </div>
               <div>
                 <p class="text-xs text-white/50">Hotline / Zalo</p>
-                <a href="tel:0964918047" class="text-sm font-extrabold text-white hover:text-app-accent">0964.918.047</a>
+                <a href="tel:{{ $sitePhone }}" class="text-sm font-extrabold text-white hover:text-app-accent">{{ $sitePhoneDisplay }}</a>
               </div>
             </li>
             <li class="flex items-center gap-3">
@@ -106,11 +112,11 @@
               </div>
               <div>
                 <p class="text-xs text-white/50">Địa chỉ</p>
-                <p class="text-sm font-semibold text-white">07 Chu Văn An, Buôn Hồ</p>
+                <p class="text-sm font-semibold text-white">{{ $siteAddress }}</p>
               </div>
             </li>
             <li class="flex gap-2 pt-2">
-              <a href="https://zalo.me/0964918047" target="_blank" rel="noopener" class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-[#0068ff]">
+              <a href="{{ $siteZaloUrl }}" target="_blank" rel="noopener" class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-[#0068ff]">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                 </svg>
@@ -273,7 +279,7 @@
         </svg>
       </a>
       <div class="h-px bg-[#EEEEEE] mx-5"></div>
-      <a href="https://zalo.me/0964918047" target="_blank" rel="noopener" class="flex items-center h-[52px] px-5">
+      <a href="{{ $siteZaloUrl }}" target="_blank" rel="noopener" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
         </svg>
@@ -296,18 +302,18 @@
 
     <!-- Card 2: Thông tin -->
     <div class="mt-3 bg-white rounded-[20px] shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-      <a href="tel:0964918047" class="flex items-center h-[52px] px-5">
+      <a href="tel:{{ $sitePhone }}" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/>
         </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">0964.918.047</span>
+        <span class="flex-1 text-base font-medium text-app-ink ml-3">{{ $sitePhoneDisplay }}</span>
       </a>
       <div class="h-px bg-[#EEEEEE] mx-5"></div>
       <div class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
         </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">07 Chu Văn An, Buôn Hồ, Đăk Lăk</span>
+        <span class="flex-1 text-base font-medium text-app-ink ml-3">{{ $siteAddress }}</span>
       </div>
     </div>
 

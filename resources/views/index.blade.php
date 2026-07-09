@@ -22,16 +22,74 @@
 <meta property="og:image:alt" content="Thuê Xe Buôn Hồ - Cho thuê xe tự lái">
 @endsection
 
+@push('schemas')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+    'mainEntity' => [
+        [
+            '@type' => 'Question',
+            'name' => 'Có mấy cách để thuê xe tại Thuê Xe Buôn Hồ?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Có 2 cách: (1) Nhắn tin Zalo trực tiếp, phản hồi nhanh trong 5 phút. (2) Thuê xe qua Web, thao tác ngay trên website không cần cài đặt thêm.',
+            ],
+        ],
+        [
+            '@type' => 'Question',
+            'name' => 'Các bước thuê xe qua Zalo như thế nào?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Bước 1: Mở Zalo và nhắn tin với Shop. Bước 2: Gửi thông tin cần thuê (loại xe, ngày giờ, khu vực và SĐT). Bước 3: Xác nhận và nhận xe - bộ phận tư vấn sẽ gọi lại xác nhận, hẹn lịch giao xe.',
+            ],
+        ],
+        [
+            '@type' => 'Question',
+            'name' => 'Các bước thuê xe qua Web như thế nào?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Bước 1: Chọn hình thức thuê xe (thuê 1 ngày, nhiều ngày hoặc theo buổi). Bước 2: Chọn ngày giờ và nhập số điện thoại. Bước 3: Bấm "Thuê xe nhanh" và chờ xác nhận - nhân viên sẽ gọi lại trong 5-10 phút.',
+            ],
+        ],
+        [
+            '@type' => 'Question',
+            'name' => 'Xe có bảo hiểm không?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Có, xe được trang bị bảo hiểm dân sự bắt buộc và bảo hiểm thân vỏ đầy đủ, an tâm tuyệt đối khi thuê xe.',
+            ],
+        ],
+        [
+            '@type' => 'Question',
+            'name' => 'Có thể trả xe trễ không? Phí phạt thế nào?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Nếu trả xe trễ hơn giờ đã thỏa thuận, phí phạt là 100.000đ/giờ.',
+            ],
+        ],
+        [
+            '@type' => 'Question',
+            'name' => 'Cần chuẩn bị giấy tờ gì khi thuê xe?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Chỉ cần CCCD (bản cứng hoặc VNeID mức 2) và Giấy phép lái xe (GPLX) còn điểm trên VNeTraffic. Nhận xe trong 5 phút.',
+            ],
+        ],
+    ],
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+</script>
+@endpush
+
 @section('content-desktop')
 
-
-
-<!-- ===== HEADER ===== -->
+  <!-- ===== HEADER ===== -->
   
 
   <!-- ===== HERO SECTION ===== -->
   <section id="trang-chu" class="overflow-hidden bg-gradient-to-b from-white to-[#fafaf9]">
     <div class="mx-auto w-full overflow-hidden bg-[#e5e5e3] shadow-sm">
+      <h1 class="sr-only">Thuê Xe Buôn Hồ - Dịch vụ cho thuê xe tự lái và có tài xế tại Buôn Hồ, Đăk Lăk</h1>
       <img src="{{ asset('assets/image/banner-main.png') }}" alt="Thuê xe tự lái cho mọi hành trình" class="h-auto w-full object-cover max-h-[660px]">
     </div>
 
@@ -432,7 +490,7 @@
                 </div>
               </div>
             </div>
-            <a href="https://zalo.me/0964918047" target="_blank" rel="noopener" class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0068ff] px-4 py-3 text-sm font-extrabold text-white transition-all hover:bg-[#0056d6]">
+            <a href="{{ 'https://zalo.me/' . preg_replace('/\D+/', '', \App\Models\Setting::get('site_phone', '0964918047')) }}" target="_blank" rel="noopener" class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0068ff] px-4 py-3 text-sm font-extrabold text-white transition-all hover:bg-[#0056d6]">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
               </svg>
@@ -644,6 +702,7 @@
       <section id="trang-chu" class="relative border-b border-app-line bg-white pb-4 pt-0 text-app-ink">
         <div class="relative">
           <div class="px-0">
+            <h1 class="sr-only">Thuê Xe Buôn Hồ - Dịch vụ cho thuê xe tự lái và có tài xế tại Buôn Hồ, Đăk Lăk</h1>
             <img src="{{ asset('assets/image/banner-main.png') }}" alt="Thuê xe tự lái cho mọi hành trình" class="h-auto w-full object-cover rounded-b-[10px]">
           </div>
         </div>
@@ -1100,7 +1159,7 @@
                   </div>
                 </div>
               </div>
-              <a href="https://zalo.me/0964918047" target="_blank" rel="noopener" class="mt-4 flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#0068ff] px-4 py-3 text-sm font-extrabold text-white transition-all hover:bg-[#0056d6] active:scale-[0.98]">
+              <a href="{{ 'https://zalo.me/' . preg_replace('/\D+/', '', \App\Models\Setting::get('site_phone', '0964918047')) }}" target="_blank" rel="noopener" class="mt-4 flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#0068ff] px-4 py-3 text-sm font-extrabold text-white transition-all hover:bg-[#0056d6] active:scale-[0.98]">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                 </svg>

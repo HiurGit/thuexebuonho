@@ -8,13 +8,15 @@
 
 @section('content')
 @php
-use App\Models\Car;
 use App\Models\Booking;
-$totalCars = Car::count();
+use App\Models\Car;
+
 $availableCars = Car::where('status', 'available')->count();
 $rentedCars = Car::where('status', 'rented')->count();
 $totalBookings = Booking::count();
 $pendingBookings = Booking::where('status', 'pending')->count();
+$todayViews = $visitorSummary['today_views'] ?? 0;
+$todayUniqueVisitors = $visitorSummary['today_unique_visitors'] ?? 0;
 @endphp
 
 <div class="row">
@@ -49,6 +51,19 @@ $pendingBookings = Booking::where('status', 'pending')->count();
         </div>
     </div>
     <div class="col-lg-3 col-6">
+        <div class="small-box bg-secondary">
+            <div class="inner">
+                <h3>{{ $todayViews }}</h3>
+                <p>Khách hoạt động hôm nay</p>
+            </div>
+            <div class="icon"><i class="fas fa-chart-line"></i></div>
+            <a href="{{ route('admin.visitors.index') }}" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3>{{ $rentedCars }}</h3>
@@ -56,6 +71,16 @@ $pendingBookings = Booking::where('status', 'pending')->count();
             </div>
             <div class="icon"><i class="fas fa-exchange-alt"></i></div>
             <a href="{{ route('admin.cars.index') }}" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+            <div class="inner">
+                <h3>{{ $todayUniqueVisitors }}</h3>
+                <p>Khách mới hôm nay</p>
+            </div>
+            <div class="icon"><i class="fas fa-user-friends"></i></div>
+            <a href="{{ route('admin.visitors.index') }}" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>
@@ -69,21 +94,29 @@ $pendingBookings = Booking::where('status', 'pending')->count();
             <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                     <thead>
-                        <tr><th>Tên xe</th><th>Ghế</th><th>Giá/ngày</th><th>Trạng thái</th></tr>
+                        <tr>
+                            <th>Tên xe</th>
+                            <th>Ghế</th>
+                            <th>Giá/ngày</th>
+                            <th>Trạng thái</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        @foreach(Car::orderBy('sort_order')->get() as $car)
-                        <tr>
-                            <td>{{ $car->name }}</td>
-                            <td>{{ $car->seats }} chỗ</td>
-                            <td>{{ number_format($car->price_per_day) }}đ</td>
-                            <td>
-                                @if($car->status == 'available') <span class="badge badge-success">Sẵn sàng</span>
-                                @elseif($car->status == 'rented') <span class="badge badge-warning">Đang thuê</span>
-                                @else <span class="badge badge-danger">Bảo trì</span>
-                                @endif
-                            </td>
-                        </tr>
+                        @foreach (Car::orderBy('sort_order')->get() as $car)
+                            <tr>
+                                <td>{{ $car->name }}</td>
+                                <td>{{ $car->seats }} chỗ</td>
+                                <td>{{ number_format($car->price_per_day) }}d</td>
+                                <td>
+                                    @if ($car->status === 'available')
+                                        <span class="badge badge-success">Sẵn sàng</span>
+                                    @elseif ($car->status === 'rented')
+                                        <span class="badge badge-warning">Đang thuê</span>
+                                    @else
+                                        <span class="badge badge-danger">Bảo trì</span>
+                                    @endif
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -106,4 +139,3 @@ $pendingBookings = Booking::where('status', 'pending')->count();
     </div>
 </div>
 @stop
-

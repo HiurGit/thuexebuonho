@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
@@ -33,7 +35,20 @@ class DashboardController extends Controller
 
     public function index()
     {
-        return view('admin.dashboard');
+        $visitorSummary = [
+            'today_views' => 0,
+            'today_unique_visitors' => 0,
+        ];
+
+        if (Schema::hasTable('visitors')) {
+            $today = now()->startOfDay();
+            $visitorSummary = [
+                'today_views' => Visitor::where('last_visited_at', '>=', $today)->count(),
+                'today_unique_visitors' => Visitor::where('first_visited_at', '>=', $today)->count(),
+            ];
+        }
+
+        return view('admin.dashboard', compact('visitorSummary'));
     }
 
     public function cars()
@@ -53,7 +68,7 @@ class DashboardController extends Controller
 
     public function settings()
     {
-        $telegramSettings = [
+        $settings = [
             'enabled' => Setting::get('telegram_bot_enabled', '0') === '1',
             'bot_token' => Setting::get('telegram_bot_token', ''),
             'chat_id' => Setting::get('telegram_chat_id', ''),
@@ -61,7 +76,43 @@ class DashboardController extends Controller
             'car_detail_message_template' => Setting::get('telegram_car_detail_message_template', self::DEFAULT_TELEGRAM_CAR_DETAIL_TEMPLATE),
         ];
 
-        return view('admin.settings', compact('telegramSettings'));
+        return view('admin.settings', compact('settings'));
+    }
+
+    public function webInfo()
+    {
+        $settings = [
+            'site_phone' => Setting::get('site_phone', '0964918047'),
+            'site_address' => Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak'),
+            'site_map_url' => Setting::get('site_map_url', 'https://maps.app.goo.gl/Qr6kWexgKnYdRdpq7'),
+            'google_tag_id' => Setting::get('google_tag_id', ''),
+        ];
+
+        return view('admin.web-info', compact('settings'));
+    }
+
+    public function updateWebInfo(Request $request)
+    {
+        $validated = $request->validate([
+            'site_phone' => 'nullable|string|max:30',
+            'site_address' => 'nullable|string|max:255',
+            'site_map_url' => 'nullable|url|max:1000',
+            'google_tag_id' => ['nullable', 'string', 'max:50', 'regex:/^(G|AW)-[A-Z0-9]+$/i'],
+        ], [
+            'site_phone.max' => 'So dien thoai khong duoc vuot qua 30 ky tu.',
+            'site_address.max' => 'Dia chi khong duoc vuot qua 255 ky tu.',
+            'site_map_url.url' => 'Link dinh vi phai la URL hop le.',
+            'site_map_url.max' => 'Link dinh vi khong duoc vuot qua 1000 ky tu.',
+            'google_tag_id.max' => 'Ma Google tag khong duoc vuot qua 50 ky tu.',
+            'google_tag_id.regex' => 'Ma Google tag phai co dang G-XXXXXXX hoac AW-XXXXXXX.',
+        ]);
+
+        Setting::set('site_phone', trim((string) ($validated['site_phone'] ?? '')));
+        Setting::set('site_address', trim((string) ($validated['site_address'] ?? '')));
+        Setting::set('site_map_url', trim((string) ($validated['site_map_url'] ?? '')));
+        Setting::set('google_tag_id', strtoupper(trim((string) ($validated['google_tag_id'] ?? ''))));
+
+        return back()->with('success', 'Da cap nhat thong tin web.');
     }
 
     public function updateSettings(Request $request)
@@ -105,7 +156,7 @@ class DashboardController extends Controller
         Setting::set('telegram_quick_message_template', $quickMessageTemplate);
         Setting::set('telegram_car_detail_message_template', $carDetailMessageTemplate);
 
-        return back()->with('success', 'Da cap nhat cau hinh Telegram bot.');
+        return back()->with('success', 'Da cap nhat cau hinh Telegram.');
     }
 
     public function users()
