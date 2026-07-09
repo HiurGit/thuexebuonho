@@ -7,6 +7,7 @@
 <meta property="og:title" content="Thuê Xe Buôn Hồ - Cho thuê xe tự lái">
 <meta property="og:description" content="Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
 <meta property="og:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
+<meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="{{ url()->current() }}">

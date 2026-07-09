@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Car;
+use App\Services\TelegramNotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
-    public function submit(Request $request)
+    public function submit(Request $request, TelegramNotificationService $telegramNotificationService)
     {
         try {
             $validated = $request->validate([
@@ -21,8 +22,10 @@ class BookingController extends Controller
                 'end_date' => 'nullable|string',
                 'session_type' => 'nullable|string|in:sang,chieu,toi,Sang (6h-12h),Chieu (12h-18h),Toi (18h-23h)',
                 'pickup_type' => 'nullable|string|in:shop,delivery',
+                'trip_plan' => 'nullable|string|in:in-province,out-province',
                 'total_price' => 'nullable|integer|min:0',
                 'car_name' => 'nullable|string|max:255',
+                'form_source' => 'nullable|string|in:quick-booking,car-detail',
             ], [
                 'phone.required' => 'Vui long nhap so dien thoai',
                 'phone.regex' => 'So dien thoai khong hop le',
@@ -54,11 +57,23 @@ class BookingController extends Controller
                 'end_time' => $endTime,
                 'session_type' => $sessionType,
                 'pickup_type' => $validated['pickup_type'] ?? 'shop',
+                'trip_plan' => $validated['trip_plan'] ?? 'in-province',
                 'days' => $days,
-                'total_price' => $this->resolveTotalPrice($car, $rentalType, $days, $validated['total_price'] ?? null),
+                'total_price' => $this->resolveTotalPrice(
+                    $car,
+                    $rentalType,
+                    $days,
+                    $validated['total_price'] ?? null,
+                    $validated['trip_plan'] ?? 'in-province'
+                ),
                 'status' => 'pending',
                 'notes' => $carName ? 'Xe khach chon: ' . $carName : null,
             ]);
+
+            $telegramNotificationService->sendNewBookingNotification(
+                $booking,
+                $validated['form_source'] ?? ($validated['car_id'] ?? null ? 'car-detail' : 'quick-booking')
+            );
 
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
@@ -164,14 +179,26 @@ class BookingController extends Controller
         return Carbon::createFromFormat('d/m/Y', $matches[1])->startOfDay();
     }
 
-    private function resolveTotalPrice(?Car $car, string $rentalType, int $days, ?int $submittedTotalPrice = null): int
+    private function resolveTotalPrice(
+        ?Car $car,
+        string $rentalType,
+        int $days,
+        ?int $submittedTotalPrice = null,
+        ?string $tripPlan = null
+    ): int
     {
         if ($car) {
-            return match ($rentalType) {
+            $basePrice = match ($rentalType) {
                 'hourly' => (int) $car->price_per_session,
                 'multi-day' => (int) ($days >= 3 ? $car->price_multi_day : $car->price_per_day) * $days,
                 default => (int) $car->price_per_day,
             };
+
+            $outsideProvinceFee = $tripPlan === 'out-province'
+                ? (int) $car->price_out_province * ($rentalType === 'multi-day' ? max(1, $days) : 1)
+                : 0;
+
+            return $basePrice + $outsideProvinceFee;
         }
 
         if ($submittedTotalPrice !== null) {

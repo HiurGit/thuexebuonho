@@ -17,6 +17,7 @@
                     <option value="usage" {{ old('type') == 'usage' ? 'selected' : '' }}>Hướng dẫn sử dụng xe</option>
                     <option value="accident" {{ old('type') == 'accident' ? 'selected' : '' }}>Xử lý tai nạn</option>
                     <option value="insurance" {{ old('type') == 'insurance' ? 'selected' : '' }}>Xử lý bảo hiểm</option>
+                    <option value="pickup" {{ old('type') == 'pickup' ? 'selected' : '' }}>Hướng dẫn đến nhận xe</option>
                 </select>
                 @error('type') <span class="text-danger">{{ $message }}</span> @enderror
             </div>

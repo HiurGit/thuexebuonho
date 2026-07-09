@@ -17,7 +17,7 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/xe/{slug}', function (string $slug) {
-    $car = \App\Models\Car::with(['images', 'amenities', 'guides'])->where('slug', $slug)->firstOrFail();
+    $car = \App\Models\Car::with(['mainImage', 'images', 'amenities', 'guides'])->where('slug', $slug)->firstOrFail();
     return view('car-detail', compact('car'));
 })->name('car-detail');
 
@@ -60,5 +60,6 @@ Route::prefix('admin')->middleware('admin')->name('admin.')->group(function () {
     Route::resource('global-guides', App\Http\Controllers\Admin\GlobalGuideController::class)->except(['show'])->parameters(['globalGuide' => 'globalGuide']);
     Route::resource('delivered-proofs', App\Http\Controllers\Admin\DeliveredProofController::class)->except(['show'])->parameters(['delivered-proofs' => 'deliveredProof']);
     Route::get('/settings', [App\Http\Controllers\Admin\DashboardController::class, 'settings'])->name('settings');
+    Route::post('/settings', [App\Http\Controllers\Admin\DashboardController::class, 'updateSettings'])->name('settings.update');
     Route::get('/users', [App\Http\Controllers\Admin\DashboardController::class, 'users'])->name('users');
 });

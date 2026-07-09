@@ -63,6 +63,22 @@
                             <option value="toi" {{ old('session_type', $booking->session_type) == 'toi' ? 'selected' : '' }}>Tối (18h-23h)</option>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label>Kế hoạch chuyến đi</label>
+                        <select name="trip_plan" class="form-control">
+                            <option value="in-province" {{ old('trip_plan', $booking->trip_plan ?: 'in-province') == 'in-province' ? 'selected' : '' }}>Di chuyển trong tỉnh</option>
+                            <option value="out-province" {{ old('trip_plan', $booking->trip_plan) == 'out-province' ? 'selected' : '' }}>Di chuyển ngoài tỉnh</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Hình thức nhận xe</label>
+                        <select name="pickup_type" class="form-control">
+                            <option value="shop" {{ old('pickup_type', $booking->pickup_type ?: 'shop') == 'shop' ? 'selected' : '' }}>Nhận tại shop</option>
+                            <option value="delivery" {{ old('pickup_type', $booking->pickup_type) == 'delivery' ? 'selected' : '' }}>Giao xe tận nơi</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-md-6">

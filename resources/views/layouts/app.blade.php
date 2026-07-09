@@ -242,6 +242,8 @@
       </div>
       <div class="h-[env(safe-area-inset-bottom)]"></div>
     </nav>
+    @else
+    @yield('mobile-fixed-bottom')
     @endif
   </div>
 </div>

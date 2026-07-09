@@ -282,11 +282,31 @@ function updateCarDetailPrice(tabMode, days) {
   var pricePerDay = pricingSource ? parseInt(pricingSource.dataset.carPriceDay || '650000', 10) : 650000;
   var pricePerSession = pricingSource ? parseInt(pricingSource.dataset.carPriceSession || '350000', 10) : 350000;
   var priceMultiDay = pricingSource ? parseInt(pricingSource.dataset.carPriceMultiDay || String(pricePerDay), 10) : pricePerDay;
+  var priceOutProvince = pricingSource ? parseInt(pricingSource.dataset.carPriceOutProvince || '0', 10) : 0;
   days = days || 1;
   var totalText, durationText;
-  if (tabMode === 'hourly') { totalText = '350.000đ'; durationText = '1 buổi'; }
-  else if (tabMode === 'multi-day') { totalText = (days * 650000).toLocaleString('vi-VN') + 'đ'; durationText = days + ' ngày'; }
-  else { totalText = '650.000đ'; durationText = '1 ngày'; }
+  var surcharge = 0;
+  var activePanel = getActiveBookingPanel();
+  var selectedTripPlan = activePanel && activePanel.querySelector('.trip-plan-option.trip-plan-out.border-app-accent')
+    ? 'out-province'
+    : 'in-province';
+
+  if (tabMode === 'hourly') {
+    surcharge = selectedTripPlan === 'out-province' ? priceOutProvince : 0;
+    totalText = (pricePerSession + surcharge).toLocaleString('vi-VN') + 'đ';
+    durationText = '1 buổi';
+  }
+  else if (tabMode === 'multi-day') {
+    var dailyRateLegacy = days >= 3 ? priceMultiDay : pricePerDay;
+    surcharge = selectedTripPlan === 'out-province' ? priceOutProvince * days : 0;
+    totalText = ((days * dailyRateLegacy) + surcharge).toLocaleString('vi-VN') + 'đ';
+    durationText = days + ' ngày';
+  }
+  else {
+    surcharge = selectedTripPlan === 'out-province' ? priceOutProvince : 0;
+    totalText = (pricePerDay + surcharge).toLocaleString('vi-VN') + 'đ';
+    durationText = '1 ngày';
+  }
   if (formTotal) formTotal.textContent = totalText;
   if (formDuration) formDuration.textContent = durationText;
   if (bottomTotal) bottomTotal.textContent = totalText;
@@ -305,21 +325,30 @@ updateCarDetailPrice = function(tabMode, days) {
   var pricePerDay = pricingSource ? parseInt(pricingSource.dataset.carPriceDay || '650000', 10) : 650000;
   var pricePerSession = pricingSource ? parseInt(pricingSource.dataset.carPriceSession || '350000', 10) : 350000;
   var priceMultiDay = pricingSource ? parseInt(pricingSource.dataset.carPriceMultiDay || String(pricePerDay), 10) : pricePerDay;
+  var priceOutProvince = pricingSource ? parseInt(pricingSource.dataset.carPriceOutProvince || '0', 10) : 0;
 
   days = days || 1;
 
   var totalText;
   var durationText;
+  var surcharge = 0;
+  var activePanel = getActiveBookingPanel();
+  var selectedTripPlan = activePanel && activePanel.querySelector('.trip-plan-option.trip-plan-out.border-app-accent')
+    ? 'out-province'
+    : 'in-province';
 
   if (tabMode === 'hourly') {
-    totalText = pricePerSession.toLocaleString('vi-VN') + 'đ';
+    surcharge = selectedTripPlan === 'out-province' ? priceOutProvince : 0;
+    totalText = (pricePerSession + surcharge).toLocaleString('vi-VN') + 'đ';
     durationText = '1 buổi';
   } else if (tabMode === 'multi-day') {
     var dailyRate = days >= 3 ? priceMultiDay : pricePerDay;
-    totalText = (days * dailyRate).toLocaleString('vi-VN') + 'đ';
+    surcharge = selectedTripPlan === 'out-province' ? priceOutProvince * days : 0;
+    totalText = ((days * dailyRate) + surcharge).toLocaleString('vi-VN') + 'đ';
     durationText = days + ' ngày';
   } else {
-    totalText = pricePerDay.toLocaleString('vi-VN') + 'đ';
+    surcharge = selectedTripPlan === 'out-province' ? priceOutProvince : 0;
+    totalText = (pricePerDay + surcharge).toLocaleString('vi-VN') + 'đ';
     durationText = '1 ngày';
   }
 
@@ -623,6 +652,7 @@ window.openConfirmModal = function() {
   var confirmStart = document.getElementById('confirm-start');
   var confirmEnd = document.getElementById('confirm-end');
   var confirmPickup = document.getElementById('confirm-pickup');
+  var confirmTripPlan = document.getElementById('confirm-trip-plan');
   var confirmTotal = document.getElementById('confirm-total');
   var confirmDaysRow = document.getElementById('confirm-days-row');
   var confirmDays = document.getElementById('confirm-days');
@@ -672,6 +702,8 @@ window.openConfirmModal = function() {
   }
   var pickupBtn = activePanel ? activePanel.querySelector('.pickup-option.border-app-accent') : null;
   confirmModal.dataset.pickupType = pickupBtn && pickupBtn.classList.contains('pickup-delivery') ? 'delivery' : 'shop';
+  var tripPlanBtn = activePanel ? activePanel.querySelector('.trip-plan-option.border-app-accent') : null;
+  confirmModal.dataset.tripPlan = tripPlanBtn && tripPlanBtn.classList.contains('trip-plan-out') ? 'out-province' : 'in-province';
 
   if (confirmDaysRow) confirmDaysRow.classList.add('hidden');
   if (confirmHoursRow) confirmHoursRow.classList.add('hidden');
@@ -715,6 +747,9 @@ window.openConfirmModal = function() {
 
   var activePickup = activePanel ? activePanel.querySelector('.pickup-option.border-app-accent p:first-of-type') : null;
   if (confirmPickup) confirmPickup.textContent = activePickup ? activePickup.textContent.trim() : 'Nhận tại shop';
+
+  var activeTripPlan = activePanel ? activePanel.querySelector('.trip-plan-option.border-app-accent p:first-of-type') : null;
+  if (confirmTripPlan) confirmTripPlan.textContent = activeTripPlan ? activeTripPlan.textContent.trim() : 'Di chuyá»ƒn trong tá»‰nh';
 
   var totalEl = document.getElementById('form-total') || document.getElementById('bottom-total');
   if (confirmTotal) confirmTotal.textContent = totalEl ? totalEl.textContent : '0đ';
@@ -806,12 +841,14 @@ document.querySelectorAll('[id^="thuexe-submit"]').forEach(btn => {
     setSubmitButtonState(this, true, 'Đang gửi...');
 
     var formData = new FormData();
+    formData.append('form_source', 'quick-booking');
     formData.append('phone', phone);
     formData.append('rental_type', rentalType);
     formData.append('start_date', modal.dataset.startDate || '');
     formData.append('end_date', modal.dataset.endDate || '');
     formData.append('session_type', modal.dataset.sessionType || '');
     formData.append('pickup_type', modal.dataset.pickupType || 'shop');
+    formData.append('trip_plan', modal.dataset.tripPlan || '');
     formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.content || '');
 
     fetch('{{ url("/booking/submit") }}', { method: 'POST', body: formData, headers: { 'Accept': 'application/json' } })
@@ -895,6 +932,56 @@ function initOnReady() {
   }
 
   // Pickup option toggle (car-detail)
+  document.querySelectorAll('.booking-panel').forEach(function(panel) {
+    var parent = panel.parentElement;
+    if (!parent || parent.dataset.tripPlanNormalized === '1') {
+      return;
+    }
+
+    var siblingPanels = Array.from(parent.querySelectorAll(':scope > .booking-panel'));
+    if (!siblingPanels.length) {
+      return;
+    }
+
+    var templateBlock = null;
+    siblingPanels.forEach(function(item) {
+      if (templateBlock) {
+        return;
+      }
+
+      Array.from(item.children).forEach(function(child) {
+        if (!templateBlock && child.querySelector && child.querySelector('.trip-plan-option')) {
+          templateBlock = child.cloneNode(true);
+        }
+      });
+    });
+
+    if (!templateBlock) {
+      return;
+    }
+
+    siblingPanels.forEach(function(item) {
+      Array.from(item.children).forEach(function(child) {
+        if (child.querySelector && child.querySelector('.trip-plan-option')) {
+          child.remove();
+        }
+      });
+
+      var pickupBlock = null;
+      Array.from(item.children).forEach(function(child) {
+        if (!pickupBlock && child.querySelector && child.querySelector('.pickup-option')) {
+          pickupBlock = child;
+        }
+      });
+
+      if (pickupBlock) {
+        item.insertBefore(templateBlock.cloneNode(true), pickupBlock);
+      }
+    });
+
+    parent.dataset.tripPlanNormalized = '1';
+  });
+
   document.querySelectorAll('.pickup-option').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var panel = this.closest('.booking-panel');
@@ -923,6 +1010,47 @@ function initOnReady() {
           bottomPickup.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-0.5 inline-block h-3.5 w-3.5 align-text-bottom text-app-accent"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg>Giao xe tận nơi';
         }
       }
+    });
+  });
+
+  document.querySelectorAll('.trip-plan-option').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var panel = this.closest('.booking-panel');
+      if (!panel) return;
+      panel.querySelectorAll('.trip-plan-option').forEach(function(opt) {
+        opt.classList.remove('border-app-accent', 'bg-green-50');
+        opt.classList.add('border-[#d9e1e7]', 'bg-white');
+        var label = opt.querySelector('p:first-of-type');
+        if (label) {
+          label.classList.remove('text-app-accent');
+          label.classList.add('text-slate-500');
+        }
+      });
+      this.classList.remove('border-[#d9e1e7]', 'bg-white');
+      this.classList.add('border-app-accent', 'bg-green-50');
+      var activeLabel = this.querySelector('p:first-of-type');
+      if (activeLabel) {
+        activeLabel.classList.remove('text-slate-500');
+        activeLabel.classList.add('text-app-accent');
+      }
+
+      var activeDateBtn = panel.querySelector('[data-open-date]');
+      var activeMode = activeDateBtn ? activeDateBtn.dataset.openDate : 'one-day';
+      var selectedMode = activeMode === 'multi-range' ? 'multi-day' : activeMode;
+      var selectedDays = 1;
+      var dateTextEl = activeDateBtn ? activeDateBtn.querySelector('[data-date-text]') : null;
+      var dateText = dateTextEl ? dateTextEl.textContent : '';
+      var dateMatches = dateText.match(/(\d{2}\/\d{2}\/\d{4})/g);
+
+      if (selectedMode === 'multi-day' && dateMatches && dateMatches.length >= 2) {
+        var startParts = dateMatches[0].split('/');
+        var endParts = dateMatches[1].split('/');
+        var startDate = new Date(parseInt(startParts[2], 10), parseInt(startParts[1], 10) - 1, parseInt(startParts[0], 10));
+        var endDate = new Date(parseInt(endParts[2], 10), parseInt(endParts[1], 10) - 1, parseInt(endParts[0], 10));
+        selectedDays = Math.max(1, Math.round((endDate - startDate) / 86400000) + 1);
+      }
+
+      updateCarDetailPrice(selectedMode, selectedDays);
     });
   });
 
@@ -956,6 +1084,7 @@ function initOnReady() {
       this.textContent = 'Đang gửi...';
 
       var formData = new FormData();
+      formData.append('form_source', 'car-detail');
       formData.append('car_id', modal.dataset.carId || '');
       formData.append('car_name', document.getElementById('confirm-car')?.textContent?.trim() || '');
       formData.append('phone', phone);
@@ -964,6 +1093,7 @@ function initOnReady() {
       formData.append('end_date', modal.dataset.endDate || '');
       formData.append('session_type', modal.dataset.sessionType || '');
       formData.append('pickup_type', modal.dataset.pickupType || 'shop');
+      formData.append('trip_plan', modal.dataset.tripPlan || 'in-province');
       formData.append('total_price', (document.getElementById('confirm-total')?.textContent || '').replace(/\D/g, ''));
       formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.content || '');
 
@@ -1290,11 +1420,20 @@ initBottomNav();
   var carGalleryArea = document.getElementById('car-gallery-area');
   if (carGalleryArea) {
     galleryImages = [];
-    carGalleryArea.querySelectorAll('img').forEach(function(img) {
+    carGalleryArea.querySelectorAll('[data-gallery-image]').forEach(function(img) {
       galleryImages.push({ src: img.src, alt: img.alt, label: img.alt, sub: '' });
       img.addEventListener('click', function() {
         var idx = galleryImages.findIndex(function(item) { return item.src === this.src; }.bind(this));
         openLightbox(this.src, this.alt, this.alt, '', 'gallery', idx >= 0 ? idx : 0);
+      });
+    });
+    carGalleryArea.querySelectorAll('[data-open-gallery]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!galleryImages.length) return;
+        var firstImage = galleryImages[0];
+        openLightbox(firstImage.src, firstImage.alt, firstImage.alt, '', 'gallery', 0);
       });
     });
   }
@@ -1484,6 +1623,47 @@ initBottomNav();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
+  });
+})();
+
+// ===== CAR DETAIL MOBILE BOTTOM BAR =====
+(function() {
+  var bottomBar = document.getElementById('car-detail-mobile-bottom-bar');
+  if (!bottomBar) return;
+
+  function isMobileWidth() {
+    return window.innerWidth < 1024;
+  }
+
+  function isEditableField(el) {
+    if (!el) return false;
+    var tag = (el.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable;
+  }
+
+  function toggleBottomBar(hidden) {
+    if (!isMobileWidth()) {
+      bottomBar.classList.remove('hidden');
+      return;
+    }
+    bottomBar.classList.toggle('hidden', !!hidden);
+  }
+
+  document.addEventListener('focusin', function(e) {
+    if (isEditableField(e.target)) {
+      toggleBottomBar(true);
+    }
+  });
+
+  document.addEventListener('focusout', function(e) {
+    if (!isEditableField(e.target)) return;
+    setTimeout(function() {
+      toggleBottomBar(isEditableField(document.activeElement));
+    }, 50);
+  });
+
+  window.addEventListener('resize', function() {
+    toggleBottomBar(isEditableField(document.activeElement));
   });
 })();
 </script>

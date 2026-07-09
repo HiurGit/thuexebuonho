@@ -123,7 +123,7 @@ class BookingController extends Controller
             return $event;
         })->filter(fn ($event) => !empty($event['start']))->values();
 
-        $activeOverlapStatuses = ['pending', 'confirmed', 'delivered'];
+        $activeOverlapStatuses = ['confirmed', 'delivered'];
         $bookingsForOverlap = Booking::with('car')
             ->whereNotNull('car_id')
             ->whereNotNull('start_date')
@@ -166,10 +166,6 @@ class BookingController extends Controller
         $calendarEvents = $calendarEvents->map(function ($event) use ($overlapIds, $overlapMap) {
             $eventId = (int) $event['id'];
             $hasOverlap = $overlapIds->contains($eventId);
-            if ($hasOverlap) {
-                $event['backgroundColor'] = '#dc3545';
-                $event['borderColor'] = '#bd2130';
-            }
             $event['extendedProps']['hasOverlap'] = $hasOverlap;
             $event['extendedProps']['overlapCount'] = count($overlapMap[$eventId] ?? []);
             return $event;
@@ -215,7 +211,7 @@ class BookingController extends Controller
 
         $today = now()->startOfDay();
         $tomorrow = now()->copy()->addDay()->endOfDay();
-        $activeStatuses = ['pending', 'confirmed', 'delivered'];
+        $activeStatuses = ['confirmed', 'delivered'];
 
         $allRelevantBookings = Booking::with('car')
             ->whereNotNull('car_id')
@@ -618,6 +614,7 @@ class BookingController extends Controller
             'end_time' => 'nullable|string',
             'session_type' => 'nullable|string',
             'pickup_type' => 'nullable|in:shop,delivery',
+            'trip_plan' => 'nullable|in:in-province,out-province',
             'days' => 'nullable|integer|min:1',
             'total_price' => 'nullable|numeric',
             'deposit' => 'nullable|numeric',
@@ -625,13 +622,7 @@ class BookingController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // Convert dates from d/m/Y to Y-m-d for MySQL
-        if ($validated['start_date']) {
-            $validated['start_date'] = \Carbon\Carbon::createFromFormat('d/m/Y', $validated['start_date'])->format('Y-m-d');
-        }
-        if ($validated['end_date']) {
-            $validated['end_date'] = \Carbon\Carbon::createFromFormat('d/m/Y', $validated['end_date'])->format('Y-m-d');
-        }
+        $validated = $this->normalizeBookingPayload($validated);
 
         Booking::create($validated);
 
@@ -657,6 +648,7 @@ class BookingController extends Controller
             'end_time' => 'nullable|string',
             'session_type' => 'nullable|string',
             'pickup_type' => 'nullable|in:shop,delivery',
+            'trip_plan' => 'nullable|in:in-province,out-province',
             'days' => 'nullable|integer|min:1',
             'total_price' => 'nullable|numeric',
             'deposit' => 'nullable|numeric',
@@ -664,13 +656,7 @@ class BookingController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // Convert dates from d/m/Y to Y-m-d for MySQL
-        if ($validated['start_date']) {
-            $validated['start_date'] = \Carbon\Carbon::createFromFormat('d/m/Y', $validated['start_date'])->format('Y-m-d');
-        }
-        if ($validated['end_date']) {
-            $validated['end_date'] = \Carbon\Carbon::createFromFormat('d/m/Y', $validated['end_date'])->format('Y-m-d');
-        }
+        $validated = $this->normalizeBookingPayload($validated);
 
         $booking->update($validated);
 
@@ -694,7 +680,10 @@ class BookingController extends Controller
             'status' => 'required|in:pending,confirmed,delivered,completed,cancelled',
         ]);
 
-        $booking->update(['status' => $request->status]);
+        Booking::whereKey($booking->getKey())->update([
+            'status' => $request->status,
+            'updated_at' => now(),
+        ]);
 
         $labels = [
             'pending' => 'Chờ xử lý',
@@ -709,5 +698,36 @@ class BookingController extends Controller
         }
 
         return back()->with('success', 'Đã cập nhật trạng thái.');
+    }
+
+    private function normalizeBookingPayload(array $validated): array
+    {
+        if (!empty($validated['start_date'])) {
+            $validated['start_date'] = Carbon::createFromFormat('d/m/Y', $validated['start_date'])->format('Y-m-d');
+        }
+
+        if (!empty($validated['end_date'])) {
+            $validated['end_date'] = Carbon::createFromFormat('d/m/Y', $validated['end_date'])->format('Y-m-d');
+        }
+
+        $rentalType = $validated['rental_type'] ?? null;
+        $validated['start_time'] = $this->normalizeTimeValue($validated['start_time'] ?? null, '06:00');
+        $validated['end_time'] = $this->normalizeTimeValue(
+            $validated['end_time'] ?? null,
+            $rentalType === 'hourly' ? '12:00' : '22:00'
+        );
+
+        if (($rentalType === 'one-day' || $rentalType === 'hourly') && !empty($validated['start_date']) && empty($validated['end_date'])) {
+            $validated['end_date'] = $validated['start_date'];
+        }
+
+        return $validated;
+    }
+
+    private function normalizeTimeValue(?string $value, string $default): string
+    {
+        $value = trim((string) $value);
+
+        return $value !== '' ? $value : $default;
     }
 }

@@ -683,6 +683,12 @@
                                     @else
                                         1 ngay
                                     @endif
+                                    @if($booking->trip_plan_label)
+                                        <div class="small text-muted">{{ $booking->trip_plan_label }}</div>
+                                    @endif
+                                    @if($booking->pickup_type_label)
+                                        <div class="small text-muted">{{ $booking->pickup_type_label }}</div>
+                                    @endif
                                 </td>
                                 <td>
                                     {{ optional($booking->start_date)->format('d/m/Y') ?: '-' }}

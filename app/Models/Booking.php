@@ -12,7 +12,7 @@ class Booking extends Model
     protected $fillable = [
         'car_id', 'customer_name', 'customer_phone',
         'rental_type', 'start_date', 'end_date', 'start_time', 'end_time',
-        'session_type', 'pickup_type', 'days', 'total_price', 'deposit',
+        'session_type', 'pickup_type', 'trip_plan', 'days', 'total_price', 'deposit',
         'status', 'notes',
     ];
 
@@ -50,6 +50,24 @@ class Booking extends Model
         }
 
         return null;
+    }
+
+    public function getTripPlanLabelAttribute(): ?string
+    {
+        return match ($this->trip_plan) {
+            'out-province' => 'Di chuyen ngoai tinh',
+            'in-province' => 'Di chuyen trong tinh',
+            default => null,
+        };
+    }
+
+    public function getPickupTypeLabelAttribute(): ?string
+    {
+        return match ($this->pickup_type) {
+            'delivery' => 'Giao xe tan noi',
+            'shop' => 'Nhan tai shop',
+            default => null,
+        };
     }
 
     public static function boot()

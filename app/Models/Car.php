@@ -37,6 +37,13 @@ class Car extends Model
         return $this->hasOne(CarImage::class)->where('is_main', true);
     }
 
+    public function getSeoImagePathAttribute(): string
+    {
+        return $this->mainImage?->path
+            ?? $this->images->first()?->path
+            ?? 'assets/image/bannerMXH.jpg';
+    }
+
     public function guides()
     {
         return $this->hasMany(CarGuide::class)->orderBy('sort_order');

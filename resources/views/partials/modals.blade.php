@@ -159,7 +159,7 @@
         </div>
       </a>
 
-      <a href="https://zalo.me/g/your-group-id" target="_blank" rel="noopener" class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white p-3 shadow-sm transition-all hover:bg-violet-50 hover:border-violet-400">
+      <!-- <a href="https://zalo.me/g/your-group-id" target="_blank" rel="noopener" class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white p-3 shadow-sm transition-all hover:bg-violet-50 hover:border-violet-400">
         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#7c3aed" class="h-5 w-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
@@ -172,7 +172,7 @@
         <div class="flex h-8 w-8 items-center justify-center rounded-full bg-violet-50">
           <i class="ri-arrow-right-s-line text-base text-violet-600"></i>
         </div>
-      </a>
+      </a> -->
 
       <a href="https://www.facebook.com/9999NDT/" target="_blank" rel="noopener" class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white p-3 shadow-sm transition-all hover:bg-sky-50 hover:border-sky-500">
         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-50">
@@ -188,8 +188,22 @@
           <i class="ri-arrow-right-s-line text-base text-sky-600"></i>
         </div>
       </a>
-
-      <div class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white p-3 shadow-sm">
+  <a href="https://maps.app.goo.gl/Qr6kWexgKnYdRdpq7" target="_blank" rel="noopener" class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white p-3 shadow-sm transition-all hover:bg-sky-50 hover:border-sky-500">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-50">
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#d97706" class="h-5 w-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+          </svg>
+        </div>
+        <div class="flex-1">
+           <p class="text-xs font-bold text-app-muted">Địa chỉ</p>
+          <p class="text-sm font-extrabold">07 Chu Văn An, Buôn Hồ, Đăk Lăk</p>
+        </div>
+        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-sky-50">
+          <i class="ri-arrow-right-s-line text-base text-sky-600"></i>
+        </div>
+      </a>
+      <!-- <div class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white p-3 shadow-sm">
         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-50">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#d97706" class="h-5 w-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -200,7 +214,7 @@
           <p class="text-xs font-bold text-app-muted">Địa chỉ</p>
           <p class="text-sm font-extrabold">07 Chu Văn An, Buôn Hồ, Đăk Lăk</p>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <a href="https://zalo.me/0964918047" target="_blank" rel="noopener" class="mt-3 flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#0068ff] px-4 py-3 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-[#0056d6] active:scale-[0.98]">
@@ -278,10 +292,7 @@
         </div>
         <h3 class="mt-3 text-xl font-extrabold text-app-ink">Gửi liên lạc thành công!</h3>
         <p class="mt-1 text-sm font-bold text-app-muted">Cảm ơn bạn. Từ 5 đến 10 phút nữa chúng tôi sẽ liên hệ.</p>
-        <div class="mx-auto mt-4 max-w-xs rounded-2xl border border-app-line bg-[#f7faf8] px-4 py-3 text-left shadow-sm">
-          <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-app-accent">Đã ghi nhận</p>
-          <p id="thuexe-success-message" class="mt-1 text-sm font-semibold leading-6 text-slate-700">Yêu cầu của bạn đã vào hệ thống. Nhân viên sẽ gọi lại sớm để xác nhận xe và thời gian thuê.</p>
-        </div>
+       
         <button type="button" id="thuexe-done" class="mt-4 rounded-xl bg-app-accent px-6 py-2.5 text-xs font-extrabold text-white shadow-sm transition-all hover:bg-green-600">Đã hiểu</button>
     </div>
   </div>
@@ -406,6 +417,10 @@
         <div class="flex items-center justify-between border-b border-dashed border-stone-200 pb-2.5">
           <span class="text-xs font-bold text-app-muted">Hình thức nhận</span>
           <span id="confirm-pickup" class="text-sm font-extrabold text-app-ink">Chưa chọn</span>
+        </div>
+        <div class="flex items-center justify-between border-b border-dashed border-stone-200 pb-2.5">
+          <span class="text-xs font-bold text-app-muted">Kế hoạch chuyến đi</span>
+          <span id="confirm-trip-plan" class="text-sm font-extrabold text-app-ink">Trong tỉnh</span>
         </div>
         <div class="flex items-center justify-between pt-1">
           <span class="text-base font-bold text-app-ink">Tổng tiền</span>

@@ -350,7 +350,7 @@ return [
         ],
         ['header' => 'HỆ THỐNG'],
         [
-            'text' => 'Cài đặt',
+            'text' => 'Tele',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-cog',
         ],

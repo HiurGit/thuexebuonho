@@ -11,4 +11,5 @@ class GlobalGuide extends Model
     const TYPE_USAGE = 'usage';
     const TYPE_ACCIDENT = 'accident';
     const TYPE_INSURANCE = 'insurance';
+    const TYPE_PICKUP = 'pickup';
 }

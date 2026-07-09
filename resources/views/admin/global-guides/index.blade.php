@@ -15,11 +15,21 @@
 @endif
 
 @php
-$typeLabels = ['usage' => 'Hướng dẫn sử dụng xe', 'accident' => 'Xử lý tai nạn', 'insurance' => 'Xử lý bảo hiểm'];
-$typeColors = ['usage' => 'success', 'accident' => 'warning', 'insurance' => 'info'];
+$typeLabels = [
+    'usage' => 'Hướng dẫn sử dụng xe',
+    'accident' => 'Xử lý tai nạn',
+    'insurance' => 'Xử lý bảo hiểm',
+    'pickup' => 'Hướng dẫn đến nhận xe',
+];
+$typeColors = [
+    'usage' => 'success',
+    'accident' => 'warning',
+    'insurance' => 'info',
+    'pickup' => 'primary',
+];
 @endphp
 
-@foreach(['usage', 'accident', 'insurance'] as $type)
+@foreach(['pickup', 'usage', 'accident', 'insurance'] as $type)
 <div class="card mb-4">
     <div class="card-header">
         <h3 class="card-title font-weight-bold">
@@ -46,7 +56,7 @@ $typeColors = ['usage' => 'success', 'accident' => 'warning', 'insurance' => 'in
                     <td class="text-muted small">{!! Str::limit(strip_tags($guide->content), 120) !!}</td>
                     <td>
                         <a href="{{ route('admin.global-guides.edit', $guide) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                        <form action="{{ route('admin.global-guides.destroy', $guide) }}" method="POST" class="d-inline" onsubmit="return confirm('Xoá mục này?')">
+                        <form action="{{ route('admin.global-guides.destroy', $guide) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa mục này?')">
                             @csrf @method('DELETE')
                             <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                         </form>

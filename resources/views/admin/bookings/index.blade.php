@@ -57,6 +57,12 @@
                         @else
                             <span class="badge badge-secondary">Theo buoi</span>
                         @endif
+                        @if($b->trip_plan_label)
+                            <div class="text-muted small">{{ $b->trip_plan_label }}</div>
+                        @endif
+                        @if($b->pickup_type_label)
+                            <div class="text-muted small">{{ $b->pickup_type_label }}</div>
+                        @endif
                     </td>
                     <td>
                         @if($b->rental_type == 'hourly' && $b->session_type)
