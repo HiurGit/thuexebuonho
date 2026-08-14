@@ -327,6 +327,11 @@ return [
             'icon' => 'fas fa-fw fa-star',
         ],
         [
+            'text' => 'Cộng tác viên',
+            'url' => 'admin/collaborators',
+            'icon' => 'fas fa-fw fa-handshake',
+        ],
+        [
             'text' => 'Đặt xe',
             'url' => 'admin/bookings',
             'icon' => 'fas fa-fw fa-calendar-check',
@@ -347,6 +352,22 @@ return [
             'text' => 'Đã giao',
             'url' => 'admin/delivered-proofs',
             'icon' => 'fas fa-fw fa-images',
+        ],
+        [
+            'text' => 'Banner',
+            'url' => 'admin/banners',
+            'icon' => 'fas fa-fw fa-images',
+        ],
+        ['header' => 'CHECK KHÁCH THUÊ'],
+        [
+            'text' => 'Khách thuê',
+            'url' => 'admin/check-khach-thue',
+            'icon' => 'fas fa-fw fa-user-slash',
+        ],
+        [
+            'text' => 'Báo cáo',
+            'url' => 'admin/reports',
+            'icon' => 'fas fa-fw fa-file-alt',
         ],
         ['header' => 'HỆ THỐNG'],
         [

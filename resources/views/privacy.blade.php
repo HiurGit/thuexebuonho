@@ -113,7 +113,7 @@
           <li><strong class="text-app-ink">Tên đơn vị:</strong> Thuê Xe Tự Lái Buôn Hồ</li>
           <li><strong class="text-app-ink">Địa chỉ:</strong> {{ \App\Models\Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak') }}</li>
           <li><strong class="text-app-ink">Điện thoại:</strong> 0964.918.047</li>
-          <li><strong class="text-app-ink">Facebook:</strong> https://www.facebook.com/9999NDT/</li>
+          <li><strong class="text-app-ink">Facebook:</strong> {{ \App\Models\Setting::get('site_facebook', 'https://www.facebook.com/9999NDT/') }}</li>
         </ul>
         <p class="mt-2">Chúng tôi sẽ tiếp nhận và phản hồi trong thời gian sớm nhất.</p>
       </div>
@@ -219,7 +219,7 @@
       <li><strong class="text-app-ink">Tên đơn vị:</strong> Thuê Xe Tự Lái Buôn Hồ</li>
       <li><strong class="text-app-ink">Địa chỉ:</strong> {{ \App\Models\Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak') }}</li>
       <li><strong class="text-app-ink">Điện thoại:</strong> 0964.918.047</li>
-      <li><strong class="text-app-ink">Facebook:</strong> https://www.facebook.com/9999NDT/</li>
+      <li><strong class="text-app-ink">Facebook:</strong> {{ \App\Models\Setting::get('site_facebook', 'https://www.facebook.com/9999NDT/') }}</li>
     </ul>
     <p class="mt-2">Chúng tôi sẽ tiếp nhận và phản hồi trong thời gian sớm nhất.</p>
   </div>

@@ -22,7 +22,7 @@ class GlobalGuideController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'type' => 'required|in:usage,accident,insurance,pickup',
+            'type' => 'required|in:usage,accident,insurance,pickup,insurance_rules',
             'section_title' => 'required|string|max:255',
             'content' => 'required|string',
             'sort_order' => 'nullable|integer|min:0',
@@ -41,7 +41,7 @@ class GlobalGuideController extends Controller
     public function update(Request $request, GlobalGuide $globalGuide)
     {
         $request->validate([
-            'type' => 'required|in:usage,accident,insurance,pickup',
+            'type' => 'required|in:usage,accident,insurance,pickup,insurance_rules',
             'section_title' => 'required|string|max:255',
             'content' => 'required|string',
             'sort_order' => 'nullable|integer|min:0',

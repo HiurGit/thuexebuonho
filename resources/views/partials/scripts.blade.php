@@ -3,6 +3,55 @@
 <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
 
 <script>
+// ===== LOADING BAR =====
+(function() {
+  var bar = document.getElementById('htx-loading-bar');
+  if (!bar) return;
+  var progress = 0, timer = null;
+
+  function show() {
+    bar.classList.add('htx-active');
+    progress = 0;
+    bar.style.width = '0%';
+    tick();
+  }
+
+  function tick() {
+    clearTimeout(timer);
+    if (progress < 70) {
+      progress += Math.random() * 15 + 5;
+      if (progress > 70) progress = 70;
+      bar.style.width = progress + '%';
+      timer = setTimeout(tick, 200 + Math.random() * 300);
+    }
+  }
+
+  function finish() {
+    clearTimeout(timer);
+    bar.style.width = '100%';
+    setTimeout(function() {
+      bar.classList.remove('htx-active');
+      setTimeout(function() { bar.style.width = '0%'; }, 300);
+    }, 400);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    show();
+    window.addEventListener('load', finish);
+  });
+
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[href]');
+    if (!link) return;
+    var href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.target === '_blank') return;
+    var url;
+    try { url = new URL(href, location.origin); } catch(_) { return; }
+    if (url.origin !== location.origin) return;
+    show();
+  });
+})();
+
 // ===== TOAST NOTIFICATION =====
 var toastTimer;
 window.showToast = function(msg, icon) {
@@ -267,8 +316,39 @@ allTabs.forEach(function(tab) {
     panelsStale.forEach(function(panel) { panel.classList.add('hidden'); });
     var panel = wrapper.querySelector('#' + panelId) || wrapper.querySelector('#' + fallbackPanelId);
     if (panel) panel.classList.remove('hidden');
-    
-    updateCarDetailPrice(target);
+
+    var prevPhone = '';
+    wrapper.querySelectorAll('.booking-panel').forEach(function(p) {
+      if (p !== panel) {
+        var inp = p.querySelector('[data-phone-input]');
+        if (inp && inp.value) prevPhone = inp.value;
+      }
+    });
+    var newPhone = panel ? panel.querySelector('[data-phone-input]') : null;
+    if (newPhone && prevPhone && !newPhone.value) {
+      newPhone.value = prevPhone;
+      newPhone.dispatchEvent(new Event('input'));
+      savePhoneToStorage(prevPhone);
+    }
+
+    if (target === 'multi-day') {
+      var multiDayPanel = panel || wrapper.querySelector('#panel-multi-day');
+      var dateBtnEl = multiDayPanel ? multiDayPanel.querySelector('[data-open-date]') : null;
+      var dateTextEl = dateBtnEl ? dateBtnEl.querySelector('[data-date-text]') : null;
+      var dateText = dateTextEl ? dateTextEl.textContent : '';
+      var dateMatches = dateText.match(/(\d{2}\/\d{2}\/\d{4})/g);
+      var days = 1;
+      if (dateMatches && dateMatches.length >= 2) {
+        var sP = dateMatches[0].split('/');
+        var eP = dateMatches[1].split('/');
+        var sD = new Date(parseInt(sP[2], 10), parseInt(sP[1], 10) - 1, parseInt(sP[0], 10));
+        var eD = new Date(parseInt(eP[2], 10), parseInt(eP[1], 10) - 1, parseInt(eP[0], 10));
+        days = Math.max(1, Math.round((eD - sD) / 86400000) + 1);
+      }
+      updateCarDetailPrice('multi-day', days);
+    } else {
+      updateCarDetailPrice(target);
+    }
   });
 });
 
@@ -375,6 +455,16 @@ function normalizePhone(phone) {
   return (phone || '').replace(/\D/g, '').slice(0, 10);
 }
 
+var PHONE_STORAGE_KEY = 'booking_phone';
+
+function savePhoneToStorage(phone) {
+  try { localStorage.setItem(PHONE_STORAGE_KEY, phone); } catch(e) {}
+}
+
+function loadPhoneFromStorage() {
+  try { return localStorage.getItem(PHONE_STORAGE_KEY) || ''; } catch(e) { return ''; }
+}
+
 function validatePhone(phone) {
   var digitsOnly = normalizePhone(phone);
   if (!digitsOnly.length) return 'Vui lòng nhập số điện thoại';
@@ -432,12 +522,29 @@ function initPhoneValidation() {
         this.value = normalizedPhone;
       }
       validatePhoneField(this, this.dataset.phoneTouched === '1');
+      var phone = normalizePhone(this.value);
+      if (validatePhone(phone)) {
+        try { localStorage.removeItem(PHONE_STORAGE_KEY); } catch(e) {}
+      } else {
+        savePhoneToStorage(phone);
+      }
     });
 
     phoneInput.addEventListener('blur', function() {
       this.dataset.phoneTouched = '1';
       validatePhoneField(this, true);
     });
+  });
+}
+
+function restorePhoneFromStorage() {
+  var saved = loadPhoneFromStorage();
+  if (!saved) return;
+  document.querySelectorAll('[data-phone-input]').forEach(function(input) {
+    if (!input.value) {
+      input.value = saved;
+      input.dispatchEvent(new Event('input'));
+    }
   });
 }
 
@@ -892,6 +999,7 @@ document.querySelectorAll('[id^="thuexe-done"]').forEach(btn => {
 // ===== SWIPER =====
 function initOnReady() {
   initPhoneValidation();
+  restorePhoneFromStorage();
 
   var navSwiperEl = document.querySelector('.nav-swiper');
   var navSwiper = null;
@@ -930,6 +1038,73 @@ function initOnReady() {
       pagination: { el: '.car-gallery-pagination', clickable: true }
     });
   }
+
+  // Banner price swiper (danh-sach-xe)
+  var bannerPriceSwiperEl = document.querySelector('.banner-price-swiper');
+  if (bannerPriceSwiperEl && typeof Swiper !== 'undefined' && !bannerPriceSwiperEl.classList.contains('swiper-initialized')) {
+    new Swiper(bannerPriceSwiperEl, {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      grabCursor: true,
+      loop: true,
+      autoplay: { delay: 4000, disableOnInteraction: false },
+      pagination: { el: '.banner-price-pagination', clickable: true }
+    });
+  }
+
+  var bannerPriceSwiperMobileEl = document.querySelector('.banner-price-swiper-mobile');
+  if (bannerPriceSwiperMobileEl && typeof Swiper !== 'undefined' && !bannerPriceSwiperMobileEl.classList.contains('swiper-initialized')) {
+    new Swiper(bannerPriceSwiperMobileEl, {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      grabCursor: true,
+      loop: true,
+      autoplay: { delay: 4000, disableOnInteraction: false },
+      pagination: { el: '.banner-price-pagination-mobile', clickable: true }
+    });
+  }
+
+  // Card car swipers — click vs swipe detection
+  document.querySelectorAll('.card-car-swiper, .card-car-swiper-mobile').forEach(function(el) {
+    if (typeof Swiper !== 'undefined' && !el.classList.contains('swiper-initialized')) {
+      var touchStartX = 0;
+      var touchStartY = 0;
+      new Swiper(el, {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        grabCursor: true,
+        preventClicks: false,
+        preventClicksOnTransition: false,
+        pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
+        on: {
+          touchStart: function(swiper, e) {
+            var touch = e.touches ? e.touches[0] : e;
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+          },
+          touchEnd: function(swiper, e) {
+            var endX, endY;
+            if (e && e.changedTouches && e.changedTouches[0]) {
+              endX = e.changedTouches[0].clientX;
+              endY = e.changedTouches[0].clientY;
+            } else if (swiper.touches) {
+              endX = swiper.touches.endX;
+              endY = swiper.touches.endY;
+            }
+            if (endX === undefined) return;
+            var dx = Math.abs(endX - touchStartX);
+            var dy = Math.abs(endY - touchStartY);
+            if (dx < 10 && dy < 10) {
+              var article = swiper.el.closest('article');
+              if (article) article.click();
+            }
+          }
+        }
+      });
+      var pag = el.querySelector('.swiper-pagination');
+      if (pag) pag.addEventListener('click', function(e) { e.stopPropagation(); });
+    }
+  });
 
   // Pickup option toggle (car-detail)
   document.querySelectorAll('.booking-panel').forEach(function(panel) {
@@ -1211,16 +1386,6 @@ function initBottomNav() {
     }
   }
 
-  function openContactModal() {
-    var isDesktop = window.innerWidth >= 1024;
-    var modalId = isDesktop ? 'contact-desktop-modal' : 'contact-mobile-modal';
-    var modal = document.getElementById(modalId);
-    if (modal) {
-      modal.classList.remove("hidden");
-      document.body.style.overflow = "hidden";
-    }
-  }
-
   navItems.forEach(function(item) {
     var href = item.getAttribute("href");
     if (href && href !== "#") {
@@ -1231,22 +1396,10 @@ function initBottomNav() {
     }
   });
 
-  // Contact button: open modal directly
-  var contactBtn = document.getElementById("nav-contact");
-  if (contactBtn) {
-    contactBtn.addEventListener("click", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      setActiveNav(this);
-      openContactModal();
-    });
-  }
-
   // Other nav links with href="#": highlight only (no navigation needed)
   navItems.forEach(function(item) {
     var href = item.getAttribute("href");
     if (href !== "#") return;
-    if (item.id === "nav-contact") return;
     item.addEventListener("click", function(e) {
       e.preventDefault();
       setActiveNav(this);
@@ -1258,8 +1411,6 @@ initBottomNav();
 // ===== CONTACT MODAL: close on overlay click =====
 [
   'date-modal',
-  'contact-desktop-modal',
-  'contact-mobile-modal',
   'thuexe-modal',
   'thuexe-modal-mobile',
   'confirm-modal'
@@ -1438,6 +1589,16 @@ initBottomNav();
     });
   }
 
+  // Lien-he avatar lightbox
+  document.querySelectorAll('.avatar-clickable').forEach(function(img) {
+    img.addEventListener('click', function() {
+      var label = this.dataset.label || this.alt || '';
+      var sub = this.dataset.sub || '';
+      galleryImages = [{ src: this.src, alt: this.alt, label: label, sub: sub }];
+      openLightbox(this.src, this.alt, label, sub, 'single', 0);
+    });
+  });
+
   if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
   if (lightboxPrev) lightboxPrev.addEventListener('click', function(e) { e.stopPropagation(); showGalleryIndex(galleryIndex - 1); });
   if (lightboxNext) lightboxNext.addEventListener('click', function(e) { e.stopPropagation(); showGalleryIndex(galleryIndex + 1); });
@@ -1498,7 +1659,7 @@ initBottomNav();
   var guideBtnMobile = document.getElementById('guide-btn-mobile');
   var guidePopupMobile = document.getElementById('guide-popup-mobile');
   if (guideBtnMobile && guidePopupMobile) {
-    var guideOpenMobile = false;
+    var guideOpenMobile = true;
     guideBtnMobile.addEventListener('click', function() {
       closeMobileActionsMenu();
       guideOpenMobile = !guideOpenMobile;

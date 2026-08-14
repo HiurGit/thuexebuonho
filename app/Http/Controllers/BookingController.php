@@ -27,9 +27,9 @@ class BookingController extends Controller
                 'car_name' => 'nullable|string|max:255',
                 'form_source' => 'nullable|string|in:quick-booking,car-detail',
             ], [
-                'phone.required' => 'Vui long nhap so dien thoai',
-                'phone.regex' => 'So dien thoai khong hop le',
-                'rental_type.required' => 'Vui long chon loai thue',
+                'phone.required' => 'Vui lòng nhập số điện thoại',
+                'phone.regex' => 'Số điện thoại không hợp lệ',
+                'rental_type.required' => 'Vui lòng chọn loại thuê',
             ]);
 
             $rentalType = $validated['rental_type'] === 'multi-range'
@@ -67,7 +67,7 @@ class BookingController extends Controller
                     $validated['trip_plan'] ?? 'in-province'
                 ),
                 'status' => 'pending',
-                'notes' => $carName ? 'Xe khach chon: ' . $carName : null,
+                'notes' => $carName ? 'Xe khách chọn: ' . $carName : null,
             ]);
 
             $telegramNotificationService->sendNewBookingNotification(
@@ -78,17 +78,17 @@ class BookingController extends Controller
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Dat xe thanh cong! Chung toi se lien he ban trong 5-10 phut.',
+                    'message' => 'Đặt xe thành công! Chúng tôi sẽ liên hệ bạn trong 5-10 phút.',
                     'booking_id' => $booking->id,
                 ]);
             }
 
-            return back()->with('success', 'Dat xe thanh cong!');
+            return back()->with('success', 'Đặt xe thành công!');
         } catch (ValidationException $e) {
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => collect($e->errors())->flatten()->first() ?: 'Du lieu chua hop le.',
+                    'message' => collect($e->errors())->flatten()->first() ?: 'Dữ liệu chưa hợp lệ.',
                     'errors' => $e->errors(),
                 ], 422);
             }
@@ -100,12 +100,12 @@ class BookingController extends Controller
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Khong the luu don dat xe luc nay, vui long thu lai.',
+                    'message' => 'Không thể lưu đơn đặt xe lúc này, vui lòng thử lại.',
                 ], 500);
             }
 
             return back()->withErrors([
-                'booking' => 'Khong the luu don dat xe luc nay, vui long thu lai.',
+                'booking' => 'Không thể lưu đơn đặt xe lúc này, vui lòng thử lại.',
             ]);
         }
     }
@@ -145,13 +145,13 @@ class BookingController extends Controller
 
             if (!$startDate || !$endDate) {
                 throw ValidationException::withMessages([
-                    'date' => 'Vui long chon khoang ngay thue hop le.',
+                    'date' => 'Vui lòng chọn khoảng ngày thuê hợp lệ.',
                 ]);
             }
 
             if ($endDate->lt($startDate)) {
                 throw ValidationException::withMessages([
-                    'date' => 'Ngay tra xe phai sau ngay nhan xe.',
+                    'date' => 'Ngày trả xe phải sau ngày nhận xe.',
                 ]);
             }
 
@@ -163,7 +163,7 @@ class BookingController extends Controller
 
         if (!$startDate) {
             throw ValidationException::withMessages([
-                'date' => 'Vui long chon ngay thue hop le.',
+                'date' => 'Vui lòng chọn ngày thuê hợp lệ.',
             ]);
         }
 

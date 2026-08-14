@@ -1,17 +1,17 @@
 @extends('adminlte::page')
 
-@section('title', 'Don dat xe')
+@section('title', 'Đơn đặt xe')
 @section('plugins.Datatables', true)
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center">
-        <h1>Don dat xe</h1>
+        <h1>Đơn đặt xe</h1>
         <div>
             <a href="{{ route('admin.bookings.calendar') }}" class="btn btn-outline-primary mr-2">
-                <i class="fas fa-calendar-alt mr-1"></i> Lich thue xe
+                <i class="fas fa-calendar-alt mr-1"></i> Lịch thuê xe
             </a>
             <a href="{{ route('admin.bookings.create') }}" class="btn btn-success">
-                <i class="fas fa-plus mr-1"></i> Them don
+                <i class="fas fa-plus mr-1"></i> Thêm đơn
             </a>
         </div>
     </div>
@@ -26,18 +26,18 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Khach hang</th>
+                    <th>Khách hàng</th>
                     <th>SDT</th>
                     <th>Xe</th>
-                    <th>Loai thue</th>
-                    <th>Buoi</th>
-                    <th>Ngay nhan</th>
-                    <th>Ngay tra</th>
-                    <th>Don gia</th>
-                    <th>Tong tien</th>
-                    <th>Trang thai</th>
-                    <th>Ngay tao</th>
-                    <th>Hanh dong</th>
+                    <th>Loại thuê</th>
+                    <th>Buổi</th>
+                    <th>Ngày nhận</th>
+                    <th>Ngày trả</th>
+                    <th>Đơn giá</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,17 +45,17 @@
                 <tr id="row-{{ $b->id }}">
                     <td>{{ $loop->iteration }}</td>
                     <td>
-                        <a href="{{ route('admin.bookings.edit', $b) }}">{{ $b->customer_name ?: 'Khach ' . substr($b->customer_phone, -4) }}</a>
+                        <a href="{{ route('admin.bookings.edit', $b) }}">{{ $b->customer_name ?: 'Khách ' . substr($b->customer_phone, -4) }}</a>
                     </td>
                     <td>{{ $b->customer_phone }}</td>
                     <td>{{ $b->car ? $b->car->name : '-' }}</td>
                     <td>
                         @if($b->rental_type == 'one-day')
-                            <span class="badge badge-info">1 ngay</span>
+                            <span class="badge badge-info">1 ngày</span>
                         @elseif($b->rental_type == 'multi-day')
-                            <span class="badge badge-primary">Nhieu ngay ({{ $b->days }} ngay)</span>
+                            <span class="badge badge-primary">Nhiều ngày ({{ $b->days }} ngày)</span>
                         @else
-                            <span class="badge badge-secondary">Theo buoi</span>
+                            <span class="badge badge-secondary">Theo buổi</span>
                         @endif
                         @if($b->trip_plan_label)
                             <div class="text-muted small">{{ $b->trip_plan_label }}</div>
@@ -98,30 +98,30 @@
                                 : (int) $b->total_price;
                         @endphp
                         {{ number_format($unitPrice) }}d
-                        <span class="text-muted small">/{{ $b->rental_type === 'hourly' ? 'buoi' : 'ngay' }}</span>
+                        <span class="text-muted small">/{{ $b->rental_type === 'hourly' ? 'buổi' : 'ngày' }}</span>
                     </td>
                     <td><strong>{{ number_format($b->total_price) }}d</strong></td>
                     <td>
                         <select class="form-control form-control-sm status-select" data-id="{{ $b->id }}" data-url="{{ route('admin.bookings.status', $b) }}" style="min-width:130px">
-                            <option value="pending" {{ $b->status == 'pending' ? 'selected' : '' }}>Cho xu ly</option>
-                            <option value="confirmed" {{ $b->status == 'confirmed' ? 'selected' : '' }}>Da xac nhan</option>
-                            <option value="delivered" {{ $b->status == 'delivered' ? 'selected' : '' }}>Da giao</option>
-                            <option value="completed" {{ $b->status == 'completed' ? 'selected' : '' }}>Hoan thanh</option>
-                            <option value="cancelled" {{ $b->status == 'cancelled' ? 'selected' : '' }}>Da huy</option>
+                            <option value="pending" {{ $b->status == 'pending' ? 'selected' : '' }}>Chờ xử lý</option>
+                            <option value="confirmed" {{ $b->status == 'confirmed' ? 'selected' : '' }}>Đã xác nhận</option>
+                            <option value="delivered" {{ $b->status == 'delivered' ? 'selected' : '' }}>Đã giao</option>
+                            <option value="completed" {{ $b->status == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
+                            <option value="cancelled" {{ $b->status == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
                         </select>
                     </td>
                     <td>{{ $b->created_at->format('d/m/Y H:i') }}</td>
                     <td>
-                        <a href="{{ route('admin.bookings.edit', $b) }}" class="btn btn-sm btn-primary" title="Sua">
+                        <a href="{{ route('admin.bookings.edit', $b) }}" class="btn btn-sm btn-primary" title="Sửa">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $b->id }}" data-url="{{ route('admin.bookings.destroy', $b) }}" title="Xoa">
+                        <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $b->id }}" data-url="{{ route('admin.bookings.destroy', $b) }}" title="Xóa">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="13" class="text-center text-muted py-4">Chua co don dat xe nao</td></tr>
+                <tr><td colspan="13" class="text-center text-muted py-4">Chưa có đơn đặt xe nào</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -139,16 +139,16 @@ $(function() {
             { orderable: false, targets: [10, 12] }
         ],
         language: {
-            search: 'Tim kiem:',
-            lengthMenu: 'Hien _MENU_ dong',
-            info: 'Hien thi _START_ den _END_ / _TOTAL_ don',
-            infoEmpty: 'Khong co du lieu',
-            zeroRecords: 'Khong tim thay don dat xe phu hop',
+            search: 'Tìm kiếm:',
+            lengthMenu: 'Hiện _MENU_ dòng',
+            info: 'Hiển thị _START_ đến _END_ / _TOTAL_ đơn',
+            infoEmpty: 'Không có dữ liệu',
+            zeroRecords: 'Không tìm thấy đơn đặt xe phù hợp',
             paginate: {
-                first: 'Dau',
-                last: 'Cuoi',
+                first: 'Đầu',
+                last: 'Cuối',
                 next: 'Sau',
-                previous: 'Truoc'
+                previous: 'Trước'
             }
         }
     });
@@ -166,7 +166,7 @@ $(function() {
         var id = $btn.data('id');
         var url = $btn.data('url');
         var $row = $btn.closest('tr');
-        if (!confirm('Xoa don #' + id + '?')) return;
+        if (!confirm('Xóa đơn #' + id + '?')) return;
 
         $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
 
@@ -176,10 +176,10 @@ $(function() {
             data: { _token: '{{ csrf_token() }}' },
             success: function(res) {
                 bookingsTable.row($row).remove().draw(false);
-                showToast(res.message || 'Da xoa');
+                showToast(res.message || 'Đã xóa');
             },
             error: function() {
-                showToast('Loi khi xoa', 'error');
+                showToast('Lỗi khi xóa', 'error');
                 $btn.prop('disabled', false).html('<i class="fas fa-trash"></i>');
             }
         });
@@ -195,10 +195,10 @@ $(function() {
             type: 'POST',
             data: { _token: '{{ csrf_token() }}', status: newStatus },
             success: function(res) {
-                showToast(res.message || 'Da cap nhat trang thai');
+                showToast(res.message || 'Đã cập nhật trạng thái');
             },
             error: function() {
-                showToast('Loi khi cap nhat trang thai', 'error');
+                showToast('Lỗi khi cập nhật trạng thái', 'error');
             }
         });
     });

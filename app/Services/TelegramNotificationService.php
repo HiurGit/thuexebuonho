@@ -10,28 +10,28 @@ use Illuminate\Support\Facades\Log;
 
 class TelegramNotificationService
 {
-    private const DEFAULT_QUICK_TEMPLATE = "DON DAT XE NHANH\n"
-        . "Ma don: {ma_don}\n"
-        . "Nguon: {nguon_form}\n"
-        . "So dien thoai: {so_dien_thoai}\n"
-        . "Loai thue: {loai_thue}\n"
-        . "Ngay thue: {ngay_thue}\n"
-        . "Khung gio: {khung_gio}";
+    private const DEFAULT_QUICK_TEMPLATE = "ĐƠN ĐẶT XE NHANH\n"
+        . "Mã đơn: {ma_don}\n"
+        . "Nguồn: {nguon_form}\n"
+        . "Số điện thoại: {so_dien_thoai}\n"
+        . "Loại thuê: {loai_thue}\n"
+        . "Ngày thuê: {ngay_thue}\n"
+        . "Khung giờ: {khung_gio}";
 
-    private const DEFAULT_CAR_DETAIL_TEMPLATE = "DON DAT XE CHI TIET\n"
-        . "Ma don: {ma_don}\n"
-        . "Nguon: {nguon_form}\n"
+    private const DEFAULT_CAR_DETAIL_TEMPLATE = "ĐƠN ĐẶT XE CHI TIẾT\n"
+        . "Mã đơn: {ma_don}\n"
+        . "Nguồn: {nguon_form}\n"
         . "Xe: {ten_xe}\n"
-        . "Khach: {ten_khach}\n"
-        . "So dien thoai: {so_dien_thoai}\n"
-        . "Loai thue: {loai_thue}\n"
-        . "Ngay thue: {ngay_thue}\n"
-        . "Khung gio: {khung_gio}\n"
-        . "Ke hoach: {ke_hoach_chuyen_di}\n"
-        . "Nhan xe: {hinh_thuc_nhan_xe}\n"
-        . "So ngay: {so_ngay}\n"
-        . "Tong tien: {tong_tien}\n"
-        . "Ghi chu: {ghi_chu}";
+        . "Khách: {ten_khach}\n"
+        . "Số điện thoại: {so_dien_thoai}\n"
+        . "Loại thuê: {loai_thue}\n"
+        . "Ngày thuê: {ngay_thue}\n"
+        . "Khung giờ: {khung_gio}\n"
+        . "Kế hoạch: {ke_hoach_chuyen_di}\n"
+        . "Nhận xe: {hinh_thuc_nhan_xe}\n"
+        . "Số ngày: {so_ngay}\n"
+        . "Tổng tiền: {tong_tien}\n"
+        . "Ghi chú: {ghi_chu}";
 
     public function sendNewBookingNotification(Booking $booking, string $formSource = 'quick-booking'): void
     {
@@ -91,31 +91,31 @@ class TelegramNotificationService
     {
         $carName = $booking->car?->name
             ?? $this->extractCarNameFromNotes($booking->notes)
-            ?? 'Khach chua chon xe';
+            ?? 'Khách chưa chọn xe';
 
         $rentalTypeLabel = match ($booking->rental_type) {
-            'multi-day' => 'Thue nhieu ngay',
-            'hourly' => 'Thue theo ca',
-            default => 'Thue 1 ngay',
+            'multi-day' => 'Thuê nhiều ngày',
+            'hourly' => 'Thuê theo ca',
+            default => 'Thuê 1 ngày',
         };
 
         $dateLabel = $booking->start_date
             ? $booking->start_date->format('d/m/Y')
-            : 'Chua ro';
+            : 'Chưa rõ';
 
         if ($booking->rental_type === 'multi-day' && $booking->end_date) {
             $dateLabel .= ' - ' . $booking->end_date->format('d/m/Y');
         }
 
         $timeLabel = $booking->booking_time_label ?? '06:00 - 22:00';
-        $pickupLabel = $booking->pickup_type === 'delivery' ? 'Giao xe tan noi' : 'Nhan xe tai cua hang';
-        $tripPlanLabel = $booking->trip_plan === 'out-province' ? 'Di chuyen ngoai tinh' : 'Di chuyen trong tinh';
+        $pickupLabel = $booking->pickup_type === 'delivery' ? 'Giao xe tận nơi' : 'Nhận xe tại cửa hàng';
+        $tripPlanLabel = $booking->trip_plan === 'out-province' ? 'Di chuyển ngoài tỉnh' : 'Di chuyển trong tỉnh';
 
         return [
             '{ma_don}' => e('#' . $booking->id),
-            '{nguon_form}' => e($formSource === 'car-detail' ? 'Chi tiet xe' : 'Thue xe nhanh'),
-            '{ten_khach}' => e($booking->customer_name ?: 'Khach le'),
-            '{so_dien_thoai}' => e($booking->customer_phone ?: 'Khong co'),
+            '{nguon_form}' => e($formSource === 'car-detail' ? 'Chi tiết xe' : 'Thuê xe nhanh'),
+            '{ten_khach}' => e($booking->customer_name ?: 'Khách lẻ'),
+            '{so_dien_thoai}' => e($booking->customer_phone ?: 'Không có'),
             '{ten_xe}' => e($carName),
             '{loai_thue}' => e($rentalTypeLabel),
             '{ngay_thue}' => e($dateLabel),
@@ -123,8 +123,8 @@ class TelegramNotificationService
             '{ke_hoach_chuyen_di}' => e($tripPlanLabel),
             '{hinh_thuc_nhan_xe}' => e($pickupLabel),
             '{so_ngay}' => e((string) max(1, (int) $booking->days)),
-            '{tong_tien}' => e(number_format((int) $booking->total_price) . 'd'),
-            '{ghi_chu}' => e($booking->notes ?: 'Khong co'),
+            '{tong_tien}' => e(number_format((int) $booking->total_price) . 'đ'),
+            '{ghi_chu}' => e($booking->notes ?: 'Không có'),
         ];
     }
 
@@ -152,7 +152,7 @@ class TelegramNotificationService
             return null;
         }
 
-        $prefix = 'Xe khach chon: ';
+        $prefix = 'Xe khách chọn: ';
 
         if (str_starts_with($notes, $prefix)) {
             return trim(substr($notes, strlen($prefix)));
@@ -164,7 +164,7 @@ class TelegramNotificationService
     private function ensureCarDetailTemplateFields(string $template): string
     {
         if (! str_contains($template, '{hinh_thuc_nhan_xe}')) {
-            $template .= "\nNhan xe: {hinh_thuc_nhan_xe}";
+            $template .= "\nNhận xe: {hinh_thuc_nhan_xe}";
         }
 
         return $template;
@@ -175,18 +175,18 @@ class TelegramNotificationService
         if (! str_contains($template, '{ke_hoach_chuyen_di}')) {
             if (str_contains($template, '{hinh_thuc_nhan_xe}')) {
                 $template = str_replace(
-                    "Nhan xe: {hinh_thuc_nhan_xe}",
-                    "Ke hoach: {ke_hoach_chuyen_di}\nNhan xe: {hinh_thuc_nhan_xe}",
+                    "Nhận xe: {hinh_thuc_nhan_xe}",
+                    "Kế hoạch: {ke_hoach_chuyen_di}\nNhận xe: {hinh_thuc_nhan_xe}",
                     $template
                 );
             } elseif (str_contains($template, '{khung_gio}')) {
                 $template = str_replace(
-                    "Khung gio: {khung_gio}",
-                    "Khung gio: {khung_gio}\nKe hoach: {ke_hoach_chuyen_di}",
+                    "Khung giờ: {khung_gio}",
+                    "Khung giờ: {khung_gio}\nKế hoạch: {ke_hoach_chuyen_di}",
                     $template
                 );
             } else {
-                $template .= "\nKe hoach: {ke_hoach_chuyen_di}";
+                $template .= "\nKế hoạch: {ke_hoach_chuyen_di}";
             }
         }
 

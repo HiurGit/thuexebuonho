@@ -127,7 +127,7 @@
   </div>
 </div>
 
-<div id="guide-popup-mobile" class="hidden border-b border-app-line bg-amber-50/80 px-4 py-3">
+<div id="guide-popup-mobile" class="border-b border-app-line bg-amber-50/80 px-4 py-3">
   <div class="rounded-xl border border-amber-200 bg-white p-3 text-xs font-bold text-app-ink shadow-sm">
     <p>Đây là nơi shop ghi lại những khách hàng đã được phục vụ:</p>
     <p>• Hình ảnh giao xe thực tế</p>

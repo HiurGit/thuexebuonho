@@ -2,20 +2,29 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#5fcf86">
+<meta name="robots" content="max-image-preview:large">
+<meta name="googlebot" content="max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 @php
 $googleTagId = trim((string) \App\Models\Setting::get('google_tag_id', ''));
 $sitePhone = trim((string) \App\Models\Setting::get('site_phone', '0964918047'));
 $siteAddress = trim((string) \App\Models\Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak'));
 $siteMapUrl = trim((string) \App\Models\Setting::get('site_map_url', 'https://maps.app.goo.gl/Qr6kWexgKnYdRdpq7'));
+$siteFacebook = trim((string) \App\Models\Setting::get('site_facebook', 'https://www.facebook.com/9999NDT/'));
+$siteKeywords = trim((string) \App\Models\Setting::get('site_keywords', ''));
+$siteDescription = trim((string) \App\Models\Setting::get('site_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'));
 $canonicalUrl = url()->current();
 @endphp
+
+@if ($siteKeywords !== '')
+<meta name="keywords" content="{{ $siteKeywords }}">
+@endif
 
 @hasSection('meta')
   @yield('meta')
 @else
-  <meta name="description" content="Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
+  <meta name="description" content="{{ $siteDescription }}">
   <meta property="og:title" content="Thuê Xe Buôn Hồ - Đưa Đón Khách">
-  <meta property="og:description" content="Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
+  <meta property="og:description" content="{{ $siteDescription }}">
   <meta property="og:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -27,7 +36,7 @@ $canonicalUrl = url()->current();
   <meta property="og:image:alt" content="Thuê Xe Buôn Hồ - Dịch vụ cho thuê xe">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Thuê Xe Buôn Hồ - Đưa Đón Khách">
-  <meta name="twitter:description" content="Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
+  <meta name="twitter:description" content="{{ $siteDescription }}">
   <meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 @endif
 
@@ -62,7 +71,7 @@ $canonicalUrl = url()->current();
     'image' => asset('assets/image/bannerMXH.jpg'),
     'sameAs' => [
         $siteMapUrl,
-        'https://www.facebook.com/9999NDT/',
+        $siteFacebook,
     ],
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
 </script>
@@ -85,6 +94,11 @@ if ($routeName === 'index') {
         ['name' => 'Trang chủ', 'url' => route('index')],
         ['name' => 'Hướng dẫn', 'url' => route('huongdan')],
     ];
+} elseif ($routeName === 'cars.index') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Danh sách xe', 'url' => route('cars.index')],
+    ];
 } elseif ($routeName === 'da-giao') {
     $breadcrumbItems = [
         ['name' => 'Trang chủ', 'url' => route('index')],
@@ -103,12 +117,17 @@ if ($routeName === 'index') {
 } elseif ($routeName === 'car-detail') {
     $breadcrumbItems = [
         ['name' => 'Trang chủ', 'url' => route('index')],
-        ['name' => 'Danh sách xe', 'url' => route('index') . '#danh-sach-xe'],
+        ['name' => 'Danh sách xe', 'url' => route('cars.index')],
     ];
     $carForBreadcrumb = $car ?? null;
     if ($carForBreadcrumb) {
         $breadcrumbItems[] = ['name' => $carForBreadcrumb->name, 'url' => route('car-detail', $carForBreadcrumb->slug)];
     }
+} elseif ($routeName === 'lien-he') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Liên hệ', 'url' => route('lien-he')],
+    ];
 }
 @endphp
 
@@ -147,16 +166,43 @@ foreach ($breadcrumbItems as $i => $item) {
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preload" href="{{ asset('assets/fonts/nunito/nunito-vietnamese.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ asset('assets/fonts/nunito/nunito-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
+@if(request()->routeIs('car-detail'))
+<link rel="preload" as="image" href="{{ asset('assets/image/giaotannoi.png') }}">
+<link rel="preload" as="image" href="{{ asset('assets/image/nhantaishop.png') }}">
+<link rel="preload" as="image" href="{{ asset('assets/image/icon-TrongTinh.png') }}">
+<link rel="preload" as="image" href="{{ asset('assets/image/icon-NgoaiTinh.png') }}">
+@endif
 
-<link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor/fontawesome/css/all.min.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
+<link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="{{ asset('assets/vendor/fontawesome/css/all.min.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="{{ asset('assets/vendor/flatpickr/flatpickr.min.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript>
+  <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/fontawesome/css/all.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
+</noscript>
 
 <style>
+  @font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('{{ asset("assets/fonts/nunito/nunito-vietnamese.woff2") }}') format('woff2');
+    unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+  }
+  @font-face {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('{{ asset("assets/fonts/nunito/nunito-latin.woff2") }}') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
   html, body { margin: 0; padding: 0; }
   #date-picker-holder .flatpickr-calendar, #date-picker-holder-mobile .flatpickr-calendar { width: 100%; max-width: none; border: 0; box-shadow: none; font-family: "Nunito", sans-serif; }
   #date-picker-holder .flatpickr-months, #date-picker-holder .flatpickr-weekdays, #date-picker-holder .flatpickr-days,
@@ -191,6 +237,10 @@ foreach ($breadcrumbItems as $i => $item) {
   #drawer-panel { transition: transform 0.3s ease; }
   .proof-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
   .proof-card:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(18, 18, 18, 0.08); }
+  .banner-price-pagination .swiper-pagination-bullet,
+  .banner-price-pagination-mobile .swiper-pagination-bullet { background: #d4d4d8; }
+  .banner-price-pagination .swiper-pagination-bullet-active,
+  .banner-price-pagination-mobile .swiper-pagination-bullet-active { background: #5fcf86; }
   .proof-card:active { transform: scale(0.97); }
   .section-title { display: flex; align-items: center; gap: 10px; }
   .section-title::before { content: ''; display: block; width: 4px; height: 18px; background: #5fcf86; border-radius: 2px; flex-shrink: 0; }
@@ -201,6 +251,16 @@ foreach ($breadcrumbItems as $i => $item) {
   .car-gallery-swiper .swiper-pagination { position: absolute; bottom: 16px !important; left: 0 !important; right: 0 !important; width: 100% !important; display: flex !important; align-items: center; justify-content: center; gap: 6px; z-index: 10; }
   .car-gallery-swiper .swiper-pagination-bullet { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.5); opacity: 1; transition: all 0.3s ease; }
   .car-gallery-swiper .swiper-pagination-bullet-active { width: 16px; height: 5px; border-radius: 2.5px; background: #fff; }
+
+  .card-car-swiper-wrap, .card-car-swiper-wrap-mobile { position: relative; overflow: hidden; border-radius: 12px; background: #f5f5f4; }
+  .card-car-swiper-wrap-mobile { border-radius: 10px; }
+  .card-car-swiper, .card-car-swiper-mobile { width: 100%; height: 100%; }
+  .card-car-swiper .swiper-slide, .card-car-swiper-mobile .swiper-slide { width: 100%; height: auto; }
+  .card-car-swiper img, .card-car-swiper-mobile img { display: block; width: 100%; }
+  .card-car-swiper .swiper-pagination, .card-car-swiper-mobile .swiper-pagination { position: absolute; bottom: 6px !important; left: 0 !important; right: 0 !important; display: flex !important; justify-content: center; gap: 4px; z-index: 10; }
+  .card-car-swiper .swiper-pagination-bullet, .card-car-swiper-mobile .swiper-pagination-bullet { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.6); opacity: 1; transition: all 0.3s ease; }
+  .card-car-swiper .swiper-pagination-bullet-active, .card-car-swiper-mobile .swiper-pagination-bullet-active { width: 14px; height: 5px; border-radius: 2.5px; background: #fff; }
+
   #lightbox-swiper { width: 100%; }
   #lightbox-swiper .swiper-wrapper { align-items: center; }
   #lightbox-swiper .swiper-slide { display: flex; align-items: center; justify-content: center; min-height: 50vh; }
@@ -214,7 +274,13 @@ foreach ($breadcrumbItems as $i => $item) {
     transform: none !important;
   }
   html { scroll-behavior: smooth; }
-  #htx-loading-bar { position: fixed; top: 0; left: 0; z-index: 9999; height: 3px; background: #5fcf86; width: 0; transition: width 0.3s ease; opacity: 0; }
-  body.is-loading { cursor: wait; }
-  body.is-loading * { pointer-events: none; }
+  #htx-loading-bar {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    height: 3px; width: 0;
+    background: linear-gradient(90deg, #5fcf86, #4ade80, #22c55e);
+    box-shadow: 0 0 8px rgba(95, 207, 134, 0.6);
+    transition: width 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+  #htx-loading-bar.htx-active { opacity: 1; }
 </style>

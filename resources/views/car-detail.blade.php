@@ -5,12 +5,13 @@
 @php
 $mainImage = $car->seo_image_path;
 $allImages = $car->images;
+$carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' . number_format($car->price_per_session) . 'đ/buổi. Giá rẻ, uy tín, thủ tục nhanh gọn.';
 @endphp
 
 @section('meta')
-<meta name="description" content="Thuê {{ $car->name }} tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
+<meta name="description" content="{{ $carDesc }}">
 <meta property="og:title" content="{{ $car->name }} - Thuê Xe Buôn Hồ">
-<meta property="og:description" content="Thuê {{ $car->name }} tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
+<meta property="og:description" content="{{ $carDesc }}">
 <meta property="og:image" content="{{ asset($mainImage) }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -22,7 +23,7 @@ $allImages = $car->images;
 <meta property="og:image:alt" content="{{ $car->name }} - Thuê Xe Buôn Hồ">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $car->name }} - Thuê Xe Buôn Hồ">
-<meta name="twitter:description" content="Thuê {{ $car->name }} tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
+<meta name="twitter:description" content="{{ $carDesc }}">
 <meta name="twitter:image" content="{{ asset($mainImage) }}">
 @endsection
 
@@ -73,7 +74,7 @@ $allImages = $car->images;
         </div>
         <div id="car-gallery-area">
           <div class="overflow-hidden rounded-2xl bg-white shadow-card">
-            <img loading="lazy" src="{{ asset($mainImage) }}" alt="{{ $car->name }}" data-gallery-image class="aspect-[8/5] w-full cursor-pointer object-cover">
+            <img loading="eager" fetchpriority="high" src="{{ asset($mainImage) }}" alt="{{ $car->name }}" data-gallery-image class="aspect-[8/5] w-full cursor-pointer object-cover">
           </div>
           @if($allImages->count() > 1)
           <div class="mt-2 grid grid-cols-3 gap-2">
@@ -132,17 +133,17 @@ $allImages = $car->images;
                 </label>
                 <button type="button" data-open-date="one-day" class="w-full rounded-xl border border-[#d9e1e7] bg-white px-3 py-2.5 text-left">
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Thời gian thuê</p>
-                  <p id="one-day-date-title" data-date-text class="mt-1 text-[13px] font-semibold text-slate-700">Từ 06:00, 27/06/2026 <br> Đến 22:00, 27/06/2026</p>
+                  <p id="one-day-date-title" data-date-text data-selected="1" class="mt-1 text-[13px] font-semibold text-slate-700">Từ 06:00, {{ now()->addDay()->format("d/m/Y") }}<br>Đến 22:00, {{ now()->addDay()->format("d/m/Y") }}</p>
                 </button>
                 <div class="space-y-1">
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Kế hoạch chuyến đi</p>
                   <div class="grid grid-cols-2 gap-2">
                     <button type="button" class="trip-plan-option trip-plan-in rounded-xl border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/icon-TrongTinh.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/icon-TrongTinh.png') }}" alt="Di chuyển trong tỉnh" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-app-accent">Di chuyển trong tỉnh</p>
                     </button>
                     <button type="button" class="trip-plan-option trip-plan-out rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" alt="Di chuyển ngoài tỉnh" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Di chuyển ngoài tỉnh</p>
                     </button>
                   </div>
@@ -151,14 +152,14 @@ $allImages = $car->images;
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Hình thức nhận xe</p>
                   <div class="grid grid-cols-2 gap-2">
                     <button type="button" class="pickup-option pickup-shop rounded-xl border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/nhantaishop.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/nhantaishop.png') }}" alt="Nhận tại shop" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-app-accent">Nhận tại shop</p>
                       <p class="text-[10px] text-slate-400">{{ $car->address }}</p>
                     </button>
                     <button type="button" class="pickup-option pickup-delivery rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/giaotannoi.png') }}" alt="Giao xe tận nơi" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Giao xe tận nơi</p>
-                      <p class="text-[10px] text-slate-400">Free 5 km</p>
+                      <p class="text-[10px] text-slate-400">Miễn phí giao xe</p>
                     </button>
                   </div>
                 </div>
@@ -177,17 +178,17 @@ $allImages = $car->images;
                 </label>
                 <button type="button" data-open-date="multi-range" class="w-full rounded-xl border border-[#d9e1e7] bg-white px-3 py-2.5 text-left">
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Thời gian thuê</p>
-                  <p id="multi-range-title" data-date-text class="mt-1 text-[13px] font-semibold text-slate-700">Từ 06:00, 27/06/2026 <br> Đến 22:00, 29/06/2026</p>
+                  <p id="multi-range-title" data-date-text data-selected="1" class="mt-1 text-[13px] font-semibold text-slate-700">Từ 06:00, {{ now()->addDay()->format("d/m/Y") }}<br>Đến 22:00, {{ now()->addDays(3)->format("d/m/Y") }}</p>
                 </button>
                 <div class="space-y-1">
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Kế hoạch chuyến đi</p>
                   <div class="grid grid-cols-2 gap-2">
                     <button type="button" class="trip-plan-option trip-plan-in rounded-xl border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/icon-TrongTinh.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/icon-TrongTinh.png') }}" alt="Di chuyển trong tỉnh" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-app-accent">Di chuyển trong tỉnh</p>
                     </button>
                     <button type="button" class="trip-plan-option trip-plan-out rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" alt="Di chuyển ngoài tỉnh" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Di chuyển ngoài tỉnh</p>
                     </button>
                   </div>
@@ -196,14 +197,14 @@ $allImages = $car->images;
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Hình thức nhận xe</p>
                   <div class="grid grid-cols-2 gap-2">
                     <button type="button" class="pickup-option pickup-shop rounded-xl border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/nhantaishop.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/nhantaishop.png') }}" alt="Nhận tại shop" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-app-accent">Nhận tại shop</p>
                       <p class="text-[10px] text-slate-400">{{ $car->address }}</p>
                     </button>
                     <button type="button" class="pickup-option pickup-delivery rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/giaotannoi.png') }}" alt="Giao xe tận nơi" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Giao xe tận nơi</p>
-                      <p class="text-[10px] text-slate-400">Free 5 km</p>
+                      <p class="text-[10px] text-slate-400">Miễn phí giao xe</p>
                     </button>
                   </div>
                 </div>
@@ -222,17 +223,17 @@ $allImages = $car->images;
                 </label>
                 <button type="button" data-open-date="hourly" class="w-full rounded-xl border border-[#d9e1e7] bg-white px-3 py-2.5 text-left">
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Thời gian thuê</p>
-                  <p id="hourly-date-title" data-date-text class="mt-1 text-[13px] font-semibold text-slate-700">Sáng (6h-12h), 27/06/2026</p>
+                  <p id="hourly-date-title" data-date-text data-selected="1" class="mt-1 text-[13px] font-semibold text-slate-700">Sáng (6h-12h), {{ now()->format("d/m/Y") }}</p>
                 </button>
                 <div class="space-y-1">
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Kế hoạch chuyến đi</p>
                   <div class="grid grid-cols-2 gap-2">
                     <button type="button" class="trip-plan-option trip-plan-in rounded-xl border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/icon-TrongTinh.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/icon-TrongTinh.png') }}" alt="Di chuyển trong tỉnh" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-app-accent">Di chuyển trong tỉnh</p>
                     </button>
                     <button type="button" class="trip-plan-option trip-plan-out rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" alt="Di chuyển ngoài tỉnh" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Di chuyển ngoài tỉnh</p>
                     </button>
                   </div>
@@ -241,14 +242,14 @@ $allImages = $car->images;
                   <p class="text-[11px] font-bold text-[#a1a1aa]">Hình thức nhận xe</p>
                   <div class="grid grid-cols-2 gap-2">
                     <button type="button" class="pickup-option pickup-shop rounded-xl border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/nhantaishop.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/nhantaishop.png') }}" alt="Nhận tại shop" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-app-accent">Nhận tại shop</p>
                       <p class="text-[10px] text-slate-400">{{ $car->address }}</p>
                     </button>
                     <button type="button" class="pickup-option pickup-delivery rounded-xl border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                      <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-12 w-12 rounded-lg object-contain">
+                      <img loading="eager" src="{{ asset('assets/image/giaotannoi.png') }}" alt="Giao xe tận nơi" class="mx-auto block h-12 w-12 rounded-lg object-contain">
                       <p class="mt-0.5 text-[11px] font-bold text-slate-500">Giao xe tận nơi</p>
-                      <p class="text-[10px] text-slate-400">Free 5 km</p>
+                      <p class="text-[10px] text-slate-400">Miễn phí giao xe</p>
                     </button>
                   </div>
                 </div>
@@ -284,27 +285,27 @@ $allImages = $car->images;
       <h2 class="section-title text-lg font-extrabold">Thông số kỹ thuật</h2>
       <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div class="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-chungtoi/icon-baohiem.png') }}" class="h-14 w-14 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-chungtoi/icon-baohiem.png') }}" alt="Bảo hiểm" class="h-14 w-14 shrink-0 rounded-xl object-contain">
           <div><p class="text-xs font-bold text-app-muted">Bảo hiểm</p><p class="mt-0.5 text-base font-extrabold">{{ $car->insurance }}</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-namsanxuat.png') }}" class="h-14 w-14 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thongso/icon-namsanxuat.png') }}" alt="Năm sản xuất" class="h-14 w-14 shrink-0 rounded-xl object-contain">
           <div><p class="text-xs font-bold text-app-muted">Năm sản xuất</p><p class="mt-0.5 text-base font-extrabold">{{ $car->year }}</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-chôngi.png') }}" class="h-14 w-14 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thongso/icon-chôngi.png') }}" alt="Số chỗ" class="h-14 w-14 shrink-0 rounded-xl object-contain">
           <div><p class="text-xs font-bold text-app-muted">Số chỗ</p><p class="mt-0.5 text-base font-extrabold">{{ $car->seats }} chỗ</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-hopho.png') }}" class="h-14 w-14 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thongso/icon-hopho.png') }}" alt="Hộp số" class="h-14 w-14 shrink-0 rounded-xl object-contain">
           <div><p class="text-xs font-bold text-app-muted">Hộp số</p><p class="mt-0.5 text-base font-extrabold">{{ $car->transmission }}</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-nhienlieu.png') }}" class="h-14 w-14 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thongso/icon-nhienlieu.png') }}" alt="Nhiên liệu" class="h-14 w-14 shrink-0 rounded-xl object-contain">
           <div><p class="text-xs font-bold text-app-muted">Nhiên liệu</p><p class="mt-0.5 text-base font-extrabold">{{ $car->fuel }}</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-tieuhao.png') }}" class="h-14 w-14 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thongso/icon-tieuhao.png') }}" alt="Tiêu hao" class="h-14 w-14 shrink-0 rounded-xl object-contain">
           <div><p class="text-xs font-bold text-app-muted">Tiêu hao</p><p class="mt-0.5 text-base font-extrabold">{{ $car->fuel_consumption }}</p></div>
         </div>
       </div>
@@ -313,15 +314,15 @@ $allImages = $car->images;
       <h2 class="section-title text-lg font-extrabold">Giấy tờ thuê xe</h2>
       <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white px-5 py-4 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-giayto/icon-CCCD.png') }}" class="h-14 w-20 shrink-0 rounded-lg">
+          <img loading="eager" src="{{ asset('assets/icon-giayto/icon-CCCD.png') }}" alt="Căn cước công dân" class="h-14 w-20 shrink-0 rounded-lg">
           <div><p class="text-sm font-bold">Căn cước công dân (CCCD)</p><p class="mt-0.5 text-xs text-app-muted">Bản cứng hoặc mềm VNeID mức 2 đều được</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white px-5 py-4 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-giayto/icon-GPLX.png') }}" class="h-14 w-20 shrink-0 rounded-lg">
+          <img loading="eager" src="{{ asset('assets/icon-giayto/icon-GPLX.png') }}" alt="Giấy phép lái xe" class="h-14 w-20 shrink-0 rounded-lg">
           <div><p class="text-sm font-bold">Giấy phép lái xe (GPLX)</p><p class="mt-0.5 text-xs text-app-muted">Bản cứng hoặc mềm VNeID mức 2 đều được</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white px-5 py-4 shadow-sm sm:col-span-2">
-          <img loading="lazy" src="{{ asset('assets/icon-giayto/icon-diemGPLX.png') }}" class="h-14 w-20 shrink-0 rounded-lg">
+          <img loading="eager" src="{{ asset('assets/icon-giayto/icon-diemGPLX.png') }}" alt="Điểm GPLX trên VNeTraffic" class="h-14 w-20 shrink-0 rounded-lg">
           <div><p class="text-sm font-bold">GPLX còn điểm trên VNeTraffic</p><p class="mt-0.5 text-xs text-app-muted">Yêu cầu GPLX còn hiệu lực và đủ điểm theo quy định</p></div>
         </div>
       </div>
@@ -329,7 +330,7 @@ $allImages = $car->images;
     <section>
       <h2 class="section-title text-lg font-extrabold">Địa chỉ cửa hàng</h2>
       <div class="mt-4 flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/image/icon-thuexe.png') }}" class="h-20 w-24 shrink-0 rounded-xl object-contain">
+        <img loading="eager" src="{{ asset('assets/image/icon-thuexe.png') }}" alt="Địa chỉ nhận xe" class="h-20 w-24 shrink-0 rounded-xl object-contain">
         <div><p class="text-xs font-bold text-app-muted">Địa chỉ nhận xe</p><p class="mt-0.5 text-lg font-extrabold">{{ $car->address }}</p></div>
       </div>
     </section>
@@ -337,11 +338,11 @@ $allImages = $car->images;
       <h2 class="section-title text-lg font-extrabold">Cọc và thế chấp</h2>
       <div class="mt-4 space-y-3">
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white px-5 py-4 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-cocvathechap/icon-coctien.png') }}" class="h-16 w-16 shrink-0 rounded-xl">
+          <img loading="eager" src="{{ asset('assets/icon-cocvathechap/icon-coctien.png') }}" alt="Tiền cọc giữ slot" class="h-16 w-16 shrink-0 rounded-xl">
           <div><p class="text-sm font-bold">Tiền cọc giữ slot xe</p><p class="mt-0.5 text-xs text-app-muted">{{ number_format($car->deposit_min) }}đ - {{ number_format($car->deposit_max) }}đ (tuỳ xe, tuỳ thời gian)</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white px-5 py-4 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-cocvathechap/icon-xethechap.png') }}" class="h-16 w-16 shrink-0 rounded-xl">
+          <img loading="eager" src="{{ asset('assets/icon-cocvathechap/icon-xethechap.png') }}" alt="Thuê xe có thế chấp" class="h-16 w-16 shrink-0 rounded-xl">
           <div><p class="text-sm font-bold">Thuê xe có thế chấp</p><p class="mt-0.5 text-xs text-app-muted">Người thuê cần chuẩn bị: Tiền {{ number_format($car->deposit_asset) }}đ hoặc Xe máy tương đương {{ number_format($car->deposit_asset) }}đ giấy tờ chính chủ</p></div>
         </div>
       </div>
@@ -353,7 +354,7 @@ $allImages = $car->images;
           <div data-description-content data-collapsed-height="160" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 160px;">
             <p class="text-sm leading-7 text-app-muted">{!! nl2br(e($car->description)) !!}</p>
           </div>
-          <div data-description-fade class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-stone-50 via-stone-50/95 to-transparent"></div>
+           <div data-description-fade class="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-stone-50/70 via-stone-50/60 to-transparent"></div>
         </div>
         <button
           type="button"
@@ -369,25 +370,25 @@ $allImages = $car->images;
       <h2 class="section-title text-lg font-extrabold">Bảng giá thuê</h2>
       <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div class="flex flex-col items-center gap-3 rounded-2xl border border-app-line bg-white p-5 text-center shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thuexe/thue-1gio.png') }}" class="h-16 w-16 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thuexe/thue-1gio.png') }}" alt="Thuê theo buổi" class="h-16 w-16 shrink-0 rounded-xl object-contain">
           <p class="text-sm font-bold">Theo buổi</p>
           <p class="text-lg font-extrabold text-app-accent">{{ number_format($car->price_per_session) }}đ <span class="text-xs font-semibold text-app-muted">/ buổi</span></p>
         </div>
         <div class="flex flex-col items-center gap-3 rounded-2xl border-2 border-app-accent bg-white p-5 text-center shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thuexe/thue-1ngay.png') }}" class="h-16 w-16 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thuexe/thue-1ngay.png') }}" alt="Thuê 1 ngày" class="h-16 w-16 shrink-0 rounded-xl object-contain">
           <p class="text-sm font-bold">1 ngày <span class="ml-1 inline-block rounded-full bg-app-accentSoft px-2 py-0.5 text-[10px] font-extrabold text-app-accent">Phổ biến</span></p>
           <p class="text-lg font-extrabold text-app-accent">{{ number_format($car->price_per_day) }}đ <span class="text-xs font-semibold text-app-muted">/ ngày</span></p>
           <p class="text-xs text-app-muted">Trong tỉnh Đăk Lăk</p>
         </div>
         <div class="flex flex-col items-center gap-3 rounded-2xl border border-app-line bg-white p-5 text-center shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thuexe/thue-nhieungay.png') }}" class="h-16 w-16 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thuexe/thue-nhieungay.png') }}" alt="Thuê nhiều ngày" class="h-16 w-16 shrink-0 rounded-xl object-contain">
           <p class="text-sm font-bold">3 ngày trở lên</p>
           @php $multiDayDiscount = $car->price_per_day - $car->price_multi_day; @endphp
           <p class="text-lg font-extrabold">{{ number_format($car->price_multi_day) }}đ <span class="text-xs font-semibold text-app-muted">/ ngày</span></p>
           <p class="text-xs text-app-muted">Giảm {{ number_format($multiDayDiscount) }}đ/ngày</p>
         </div>
         <div class="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-app-line bg-white p-5 text-center shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/icon-thuexe/thue-ngoaitinh.png') }}" class="h-16 w-16 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thuexe/thue-ngoaitinh.png') }}" alt="Thuê ra tỉnh" class="h-16 w-16 shrink-0 rounded-xl object-contain">
           <p class="text-sm font-bold">Phụ phí ra tỉnh</p>
           <p class="text-lg font-extrabold">+{{ number_format($car->price_out_province) }}đ <span class="text-xs font-semibold text-app-muted">/ ngày</span></p>
           <p class="text-xs text-app-muted">Đi liên tỉnh</p>
@@ -401,7 +402,7 @@ $allImages = $car->images;
         <div class="flex flex-col items-center gap-2 rounded-2xl bg-stone-50 px-3 py-4 text-center transition-all hover:shadow-sm">
           <div class="flex h-12 w-12 items-center justify-center rounded-full bg-app-accentSoft">
             @if($amenity->icon)
-            <img loading="lazy" src="{{ asset(\Illuminate\Support\Str::startsWith($amenity->icon, 'storage/') ? $amenity->icon : 'assets/' . ltrim($amenity->icon, '/')) }}" alt="{{ $amenity->name }}" class="h-10 w-10 object-contain">
+            <img loading="eager" src="{{ asset(\Illuminate\Support\Str::startsWith($amenity->icon, 'storage/') ? $amenity->icon : 'assets/' . ltrim($amenity->icon, '/')) }}" alt="{{ $amenity->name }}" class="h-10 w-10 object-contain">
             @else
             <span class="text-base font-extrabold text-app-accent">{{ substr($amenity->name, 0, 1) }}</span>
             @endif
@@ -417,20 +418,20 @@ $allImages = $car->images;
       <h2 class="section-title text-lg font-extrabold">Phụ phí có thể phát sinh</h2>
       <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/svg-phuthuphatsinh/phi-cauduong.png') }}" class="h-16 w-16 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/svg-phuthuphatsinh/phi-cauduong.png') }}" alt="Phí cầu đường" class="h-16 w-16 shrink-0 rounded-xl object-contain">
           <div><p class="text-sm font-bold">Phí cầu đường</p><p class="mt-1 text-xs leading-5 text-app-muted">Chủ xe có thể yêu cầu thanh toán các khoản lệ phí cầu đường phát sinh trên tài khoản VETC trong thời gian thuê xe.</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/svg-phuthuphatsinh/phi-nhienlieu.png') }}" class="h-16 w-16 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/svg-phuthuphatsinh/phi-nhienlieu.png') }}" alt="Phụ thu nhiên liệu" class="h-16 w-16 shrink-0 rounded-xl object-contain">
           <div><p class="text-sm font-bold">Phụ thu nhiên liệu</p><p class="mt-1 text-xs leading-5 text-app-muted">Chủ xe chỉ thu khi vạch xăng thấp hơn lúc nhận xe. Trả lại đúng vạch xăng như lúc nhận để không phải trả phí này.</p></div>
         </div>
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/svg-phuthuphatsinh/phi-quagio.png') }}" class="h-16 w-16 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/svg-phuthuphatsinh/phi-quagio.png') }}" alt="Phí trả trễ" class="h-16 w-16 shrink-0 rounded-xl object-contain">
           <div class="flex-1"><p class="text-sm font-bold">Phí trả trễ</p><p class="mt-1 text-xs leading-5 text-app-muted">Áp dụng khi trả xe trễ hơn giờ đã thỏa thuận.</p></div>
           <p class="shrink-0 text-lg font-extrabold text-app-accent">100.000đ <span class="text-xs font-semibold text-app-muted">/ giờ</span></p>
         </div>
         <div class="flex items-center gap-4 rounded-2xl border border-app-line bg-white p-5 shadow-sm">
-          <img loading="lazy" src="{{ asset('assets/svg-phuthuphatsinh/phi-vesinh.png') }}" class="h-16 w-16 shrink-0 rounded-xl object-contain">
+          <img loading="eager" src="{{ asset('assets/svg-phuthuphatsinh/phi-vesinh.png') }}" alt="Phí vệ sinh" class="h-16 w-16 shrink-0 rounded-xl object-contain">
           <div class="flex-1"><p class="text-sm font-bold">Phí nặng mùi hôi - thuốc lá</p><p class="mt-1 text-xs leading-5 text-app-muted">Chủ xe sẽ dựa vào tình trạng vệ sinh xe lúc khách hàng trả xe để thu phí.</p></div>
           <p class="shrink-0 text-lg font-extrabold text-app-accent">250.000đ</p>
         </div>
@@ -519,12 +520,12 @@ $allImages = $car->images;
       <div class="swiper-wrapper">
         @forelse($allImages as $img)
         <div class="swiper-slide">
-          <img loading="lazy" src="{{ asset($img->path) }}" alt="{{ $car->name }}" class="block aspect-[4/3] w-full object-cover">
+          <img src="{{ asset($img->path) }}" alt="{{ $car->name }}" @if($loop->first) loading="eager" fetchpriority="high" @else loading="lazy" @endif class="block aspect-[4/3] w-full object-cover">
         </div>
         @empty
           @if($mainImage)
           <div class="swiper-slide">
-            <img loading="lazy" src="{{ asset($mainImage) }}" alt="{{ $car->name }}" class="block aspect-[4/3] w-full object-cover">
+            <img loading="eager" fetchpriority="high" src="{{ asset($mainImage) }}" alt="{{ $car->name }}" class="block aspect-[4/3] w-full object-cover">
           </div>
           @else
           <div class="swiper-slide">
@@ -577,18 +578,18 @@ $allImages = $car->images;
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 shrink-0 text-app-accent">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                 </svg>
-                <p id="one-day-date-title-mobile" data-date-text class="text-[14px] font-semibold leading-5 text-slate-700">Từ 06:00, 27/06/2026<br>Đến 22:00, 27/06/2026</p>
+                <p id="one-day-date-title-mobile" data-date-text data-selected="1" class="text-[14px] font-semibold leading-5 text-slate-700">Từ 06:00, {{ now()->addDay()->format("d/m/Y") }}<br>Đến 22:00, {{ now()->addDay()->format("d/m/Y") }}</p>
               </div>
             </button>
             <div class="space-y-1.5">
               <p class="text-xs font-bold text-[#a1a1aa]">Kế hoạch chuyến đi</p>
               <div class="grid grid-cols-2 gap-1.5">
                 <button type="button" class="trip-plan-option trip-plan-in rounded-[10px] border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/icon-TrongTinh.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/icon-TrongTinh.png') }}" alt="Di chuyển trong tỉnh" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-app-accent">Di chuyển trong tỉnh</p>
                 </button>
                 <button type="button" class="trip-plan-option trip-plan-out rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" alt="Di chuyển ngoài tỉnh" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Di chuyển ngoài tỉnh</p>
                 </button>
               </div>
@@ -597,14 +598,14 @@ $allImages = $car->images;
               <p class="text-xs font-bold text-[#a1a1aa]">Hình thức nhận xe</p>
               <div class="grid grid-cols-2 gap-1.5">
                 <button type="button" class="pickup-option pickup-shop rounded-[10px] border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/nhantaishop.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/nhantaishop.png') }}" alt="Nhận tại shop" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-app-accent">Nhận tại shop</p>
                   <p class="text-[10px] text-slate-400">{{ $car->address }}</p>
                 </button>
                 <button type="button" class="pickup-option pickup-delivery rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/giaotannoi.png') }}" alt="Giao xe tận nơi" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Giao xe tận nơi</p>
-                  <p class="text-[10px] text-slate-400">Free 5 km</p>
+                  <p class="text-[10px] text-slate-400">Miễn phí giao xe</p>
                 </button>
               </div>
             </div>
@@ -627,18 +628,18 @@ $allImages = $car->images;
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 shrink-0 text-app-accent">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                 </svg>
-                <p id="multi-range-title-mobile" data-date-text class="text-[14px] font-semibold leading-5 text-slate-700">Từ 06:00, 27/06/2026<br>Đến 22:00, 29/06/2026</p>
+                <p id="multi-range-title-mobile" data-date-text data-selected="1" class="text-[14px] font-semibold leading-5 text-slate-700">Từ 06:00, {{ now()->addDay()->format("d/m/Y") }}<br>Đến 22:00, {{ now()->addDays(3)->format("d/m/Y") }}</p>
               </div>
             </button>
             <div class="space-y-1.5">
               <p class="text-xs font-bold text-[#a1a1aa]">Kế hoạch chuyến đi</p>
               <div class="grid grid-cols-2 gap-1.5">
                 <button type="button" class="trip-plan-option trip-plan-in rounded-[10px] border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/icon-TrongTinh.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/icon-TrongTinh.png') }}" alt="Di chuyển trong tỉnh" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-app-accent">Di chuyển trong tỉnh</p>
                 </button>
                 <button type="button" class="trip-plan-option trip-plan-out rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" alt="Di chuyển ngoài tỉnh" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Di chuyển ngoài tỉnh</p>
                 </button>
               </div>
@@ -647,14 +648,14 @@ $allImages = $car->images;
               <p class="text-xs font-bold text-[#a1a1aa]">Hình thức nhận xe</p>
               <div class="grid grid-cols-2 gap-1.5">
                 <button type="button" class="pickup-option pickup-shop rounded-[10px] border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/nhantaishop.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/nhantaishop.png') }}" alt="Nhận tại shop" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-app-accent">Nhận tại shop</p>
                   <p class="text-[10px] text-slate-400">{{ $car->address }}</p>
                 </button>
                 <button type="button" class="pickup-option pickup-delivery rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/giaotannoi.png') }}" alt="Giao xe tận nơi" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Giao xe tận nơi</p>
-                  <p class="text-[10px] text-slate-400">Free 5 km</p>
+                  <p class="text-[10px] text-slate-400">Miễn phí giao xe</p>
                 </button>
               </div>
             </div>
@@ -677,18 +678,18 @@ $allImages = $car->images;
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4 shrink-0 text-app-accent">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
                 </svg>
-                <p id="hourly-date-title-mobile" data-date-text class="text-[14px] font-semibold leading-5 text-slate-700">Sáng (6h-12h), 27/06/2026</p>
+                <p id="hourly-date-title-mobile" data-date-text data-selected="1" class="text-[14px] font-semibold leading-5 text-slate-700">Sáng (6h-12h), {{ now()->format("d/m/Y") }}</p>
               </div>
             </button>
             <div class="space-y-1.5">
               <p class="text-xs font-bold text-[#a1a1aa]">Kế hoạch chuyến đi</p>
               <div class="grid grid-cols-2 gap-1.5">
                 <button type="button" class="trip-plan-option trip-plan-in rounded-[10px] border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/icon-TrongTinh.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/icon-TrongTinh.png') }}" alt="Di chuyển trong tỉnh" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-app-accent">Di chuyển trong tỉnh</p>
                 </button>
                 <button type="button" class="trip-plan-option trip-plan-out rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/icon-NgoaiTinh.png') }}" alt="Di chuyển ngoài tỉnh" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Di chuyển ngoài tỉnh</p>
                 </button>
               </div>
@@ -697,14 +698,14 @@ $allImages = $car->images;
               <p class="text-xs font-bold text-[#a1a1aa]">Hình thức nhận xe</p>
               <div class="grid grid-cols-2 gap-1.5">
                 <button type="button" class="pickup-option pickup-shop rounded-[10px] border-2 border-app-accent bg-green-50 px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/nhantaishop.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/nhantaishop.png') }}" alt="Nhận tại shop" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-app-accent">Nhận tại shop</p>
                   <p class="text-[10px] text-slate-400">{{ $car->address }}</p>
                 </button>
                 <button type="button" class="pickup-option pickup-delivery rounded-[10px] border-2 border-[#d9e1e7] bg-white px-2 py-1.5 text-center transition-all">
-                  <img loading="lazy" src="{{ asset('assets/image/giaotannoi.png') }}" class="mx-auto block h-14 w-14 rounded-xl object-contain">
+                  <img loading="eager" src="{{ asset('assets/image/giaotannoi.png') }}" alt="Giao xe tận nơi" class="mx-auto block h-14 w-14 rounded-xl object-contain">
                   <p class="mt-0.5 text-[12px] font-bold text-slate-500">Giao xe tận nơi</p>
-                  <p class="text-[10px] text-slate-400">Free 5 km</p>
+                  <p class="text-[10px] text-slate-400">Miễn phí giao xe</p>
                 </button>
               </div>
             </div>
@@ -719,27 +720,27 @@ $allImages = $car->images;
     <h2 class="section-title text-base font-extrabold">Thông số kỹ thuật</h2>
     <div class="mt-4 grid grid-cols-2 gap-3">
       <div class="flex items-center gap-4 rounded-[12px] bg-white p-4 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-chungtoi/icon-baohiem.png') }}" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
+        <img loading="eager" src="{{ asset('assets/icon-chungtoi/icon-baohiem.png') }}" alt="Bảo hiểm" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
         <div><p class="text-xs font-bold text-app-muted">Bảo hiểm</p><p class="mt-0.5 text-base font-extrabold">{{ $car->insurance }}</p></div>
       </div>
       <div class="flex items-center gap-4 rounded-[12px] bg-white p-4 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-namsanxuat.png') }}" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
+        <img loading="eager" src="{{ asset('assets/icon-thongso/icon-namsanxuat.png') }}" alt="Năm sản xuất" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
         <div><p class="text-xs font-bold text-app-muted">Năm sản xuất</p><p class="mt-0.5 text-base font-extrabold">{{ $car->year }}</p></div>
       </div>
       <div class="flex items-center gap-4 rounded-[12px] bg-white p-4 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-chôngi.png') }}" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
+        <img loading="eager" src="{{ asset('assets/icon-thongso/icon-chôngi.png') }}" alt="Số chỗ" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
         <div><p class="text-xs font-bold text-app-muted">Số chỗ</p><p class="mt-0.5 text-base font-extrabold">{{ $car->seats }} chỗ</p></div>
       </div>
       <div class="flex items-center gap-4 rounded-[12px] bg-white p-4 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-hopho.png') }}" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
+        <img loading="eager" src="{{ asset('assets/icon-thongso/icon-hopho.png') }}" alt="Hộp số" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
         <div><p class="text-xs font-bold text-app-muted">Hộp số</p><p class="mt-0.5 text-base font-extrabold">{{ $car->transmission }}</p></div>
       </div>
       <div class="flex items-center gap-4 rounded-[12px] bg-white p-4 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-nhienlieu.png') }}" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
+        <img loading="eager" src="{{ asset('assets/icon-thongso/icon-nhienlieu.png') }}" alt="Nhiên liệu" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
         <div><p class="text-xs font-bold text-app-muted">Nhiên liệu</p><p class="mt-0.5 text-base font-extrabold">{{ $car->fuel }}</p></div>
       </div>
       <div class="flex items-center gap-4 rounded-[12px] bg-white p-4 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-thongso/icon-tieuhao.png') }}" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
+        <img loading="eager" src="{{ asset('assets/icon-thongso/icon-tieuhao.png') }}" alt="Tiêu hao" class="h-12 w-12 shrink-0 rounded-[12px] object-contain">
         <div><p class="text-xs font-bold text-app-muted">Tiêu hao</p><p class="mt-0.5 text-base font-extrabold">{{ $car->fuel_consumption }}</p></div>
       </div>
     </div>
@@ -749,15 +750,15 @@ $allImages = $car->images;
     <h2 class="section-title text-base font-extrabold">Giấy tờ thuê xe</h2>
     <div class="mt-4 space-y-2.5">
       <div class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-giayto/icon-CCCD.png') }}" class="h-12 w-16 shrink-0 rounded-[5px]">
+        <img loading="eager" src="{{ asset('assets/icon-giayto/icon-CCCD.png') }}" alt="Căn cước công dân" class="h-12 w-16 shrink-0 rounded-[5px]">
         <div><p class="text-sm font-bold">Căn cước công dân (CCCD)</p><p class="mt-0.5 text-xs text-app-muted">Bản cứng hoặc mềm VNeID mức 2 đều được</p></div>
       </div>
       <div class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-giayto/icon-GPLX.png') }}" class="h-12 w-16 shrink-0 rounded-[5px]">
+        <img loading="eager" src="{{ asset('assets/icon-giayto/icon-GPLX.png') }}" alt="Giấy phép lái xe" class="h-12 w-16 shrink-0 rounded-[5px]">
         <div><p class="text-sm font-bold">Giấy phép lái xe (GPLX)</p><p class="mt-0.5 text-xs text-app-muted">Bản cứng hoặc mềm VNeID mức 2 đều được</p></div>
       </div>
       <div class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-giayto/icon-diemGPLX.png') }}" class="h-12 w-16 shrink-0 rounded-[5px]">
+        <img loading="eager" src="{{ asset('assets/icon-giayto/icon-diemGPLX.png') }}" alt="Điểm GPLX trên VNeTraffic" class="h-12 w-16 shrink-0 rounded-[5px]">
         <div><p class="text-sm font-bold">GPLX còn điểm trên VNeTraffic</p><p class="mt-0.5 text-xs text-app-muted">Yêu cầu GPLX còn hiệu lực và đủ điểm theo quy định</p></div>
       </div>
     </div>
@@ -766,7 +767,7 @@ $allImages = $car->images;
   <section class="bg-white px-4 py-3">
     <h2 class="section-title text-base font-extrabold">Địa chỉ cửa hàng</h2>
     <div class="mt-4 flex items-center gap-4 rounded-[12px] bg-white p-4 shadow-sm">
-      <img loading="lazy" src="{{ asset('assets/image/icon-thuexe.png') }}" class="h-16 w-20 shrink-0 rounded-[12px] object-contain">
+      <img loading="eager" src="{{ asset('assets/image/icon-thuexe.png') }}" alt="Địa chỉ nhận xe" class="h-16 w-20 shrink-0 rounded-[12px] object-contain">
       <div><p class="text-xs font-bold text-app-muted">Địa chỉ nhận xe</p><p class="mt-0.5 text-base font-extrabold">{{ $car->address }}</p></div>
     </div>
   </section>
@@ -775,11 +776,11 @@ $allImages = $car->images;
     <h2 class="section-title text-base font-extrabold">Cọc và thế chấp</h2>
     <div class="mt-4 space-y-2.5">
       <div class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-cocvathechap/icon-coctien.png') }}" class="h-16 w-16 shrink-0 rounded-[10px]">
+        <img loading="eager" src="{{ asset('assets/icon-cocvathechap/icon-coctien.png') }}" alt="Tiền cọc giữ slot" class="h-16 w-16 shrink-0 rounded-[10px]">
         <div><p class="text-sm font-bold">Tiền cọc giữ slot xe</p><p class="mt-0.5 text-xs text-app-muted">{{ number_format($car->deposit_min) }}đ - {{ number_format($car->deposit_max) }}đ (tuỳ xe, tuỳ thời gian)</p></div>
       </div>
       <div class="flex items-center gap-3 rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
-        <img loading="lazy" src="{{ asset('assets/icon-cocvathechap/icon-xethechap.png') }}" class="h-16 w-16 shrink-0 rounded-[10px]">
+        <img loading="eager" src="{{ asset('assets/icon-cocvathechap/icon-xethechap.png') }}" alt="Thuê xe có thế chấp" class="h-16 w-16 shrink-0 rounded-[10px]">
         <div><p class="text-sm font-bold">Thuê xe có thế chấp</p><p class="mt-0.5 text-xs text-app-muted">Người thuê cần chuẩn bị: Tiền {{ number_format($car->deposit_asset) }}đ hoặc Xe máy tương đương {{ number_format($car->deposit_asset) }}đ giấy tờ chính chủ</p></div>
       </div>
     </div>
@@ -792,7 +793,7 @@ $allImages = $car->images;
           <div data-description-content data-collapsed-height="128" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 128px;">
           <p class="text-sm leading-6 text-app-muted">{!! nl2br(e($car->description)) !!}</p>
         </div>
-        <div data-description-fade class="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-stone-50 via-stone-50/95 to-transparent"></div>
+        <div data-description-fade class="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-stone-50/70 via-stone-50/60 to-transparent"></div>
       </div>
       <button
         type="button"
@@ -810,14 +811,14 @@ $allImages = $car->images;
     <div class="mt-4 space-y-2.5">
       <div class="flex items-center justify-between rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
         <div class="flex items-center gap-3">
-          <img loading="lazy" src="{{ asset('assets/icon-thuexe/thue-1gio.png') }}" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thuexe/thue-1gio.png') }}" alt="Thuê theo buổi" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
           <p class="text-sm font-bold">Theo buổi</p>
         </div>
         <p class="text-base font-extrabold text-app-accent">{{ number_format($car->price_per_session) }}đ <span class="text-xs font-semibold text-app-muted">/ buổi</span></p>
       </div>
       <div class="flex items-center justify-between rounded-[12px] border-2 border-app-accent bg-white px-4 py-3.5 shadow-sm">
         <div class="flex items-center gap-3">
-          <img loading="lazy" src="{{ asset('assets/icon-thuexe/thue-1ngay.png') }}" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thuexe/thue-1ngay.png') }}" alt="Thuê 1 ngày" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
           <div><p class="text-sm font-bold">1 ngày</p><p class="text-xs font-semibold text-app-muted">Trong tỉnh Đăk Lăk</p></div>
         </div>
         <p class="text-base font-extrabold text-app-accent">{{ number_format($car->price_per_day) }}đ <span class="text-xs font-semibold text-app-muted">/ ngày</span></p>
@@ -825,14 +826,14 @@ $allImages = $car->images;
       @php $multiDayDiscount = $car->price_per_day - $car->price_multi_day; @endphp
       <div class="flex items-center justify-between rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
         <div class="flex items-center gap-3">
-          <img loading="lazy" src="{{ asset('assets/icon-thuexe/thue-nhieungay.png') }}" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thuexe/thue-nhieungay.png') }}" alt="Thuê nhiều ngày" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
           <div><p class="text-sm font-bold">3 ngày trở lên</p><p class="text-xs font-semibold text-app-muted">Giảm {{ number_format($multiDayDiscount) }}đ/ngày</p></div>
         </div>
         <p class="text-base font-extrabold">{{ number_format($car->price_multi_day) }}đ <span class="text-xs font-semibold text-app-muted">/ ngày</span></p>
       </div>
       <div class="flex items-center justify-between rounded-[12px] border border-dashed border-app-line bg-white px-4 py-3.5 shadow-sm">
         <div class="flex items-center gap-3">
-          <img loading="lazy" src="{{ asset('assets/icon-thuexe/thue-ngoaitinh.png') }}" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
+          <img loading="eager" src="{{ asset('assets/icon-thuexe/thue-ngoaitinh.png') }}" alt="Thuê ra tỉnh" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
           <div><p class="text-sm font-bold">Phụ phí ra tỉnh</p><p class="text-xs font-semibold text-app-muted">Áp dụng khi đi liên tỉnh</p></div>
         </div>
         <p class="text-base font-extrabold">+{{ number_format($car->price_out_province) }}đ <span class="text-xs font-semibold text-app-muted">/ ngày</span></p>
@@ -847,7 +848,7 @@ $allImages = $car->images;
         <div class="flex flex-col items-center gap-2 rounded-[12px] bg-stone-50 px-3 py-4 text-center transition-all hover:shadow-sm @if($i >= 6) tienich-item hidden tienich-more @endif">
           <div class="flex h-10 w-10 items-center justify-center rounded-full bg-app-accentSoft">
             @if($amenity->icon)
-            <img loading="lazy" src="{{ asset(\Illuminate\Support\Str::startsWith($amenity->icon, 'storage/') ? $amenity->icon : 'assets/' . ltrim($amenity->icon, '/')) }}" alt="{{ $amenity->name }}" class="h-10 w-10 object-contain">
+            <img loading="eager" src="{{ asset(\Illuminate\Support\Str::startsWith($amenity->icon, 'storage/') ? $amenity->icon : 'assets/' . ltrim($amenity->icon, '/')) }}" alt="{{ $amenity->name }}" class="h-10 w-10 object-contain">
             @else
             <span class="text-base font-extrabold text-app-accent">{{ substr($amenity->name, 0, 1) }}</span>
             @endif
@@ -871,26 +872,26 @@ $allImages = $car->images;
     <div class="mt-3 space-y-2.5">
       <div class="flex items-center justify-between rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
         <div class="flex items-center gap-3">
-          <img loading="lazy" src="{{ asset('assets/svg-phuthuphatsinh/phi-cauduong.png') }}" alt="Phí cầu đường" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
+          <img loading="eager" src="{{ asset('assets/svg-phuthuphatsinh/phi-cauduong.png') }}" alt="Phí cầu đường" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
           <div><p class="text-sm font-bold">Phí cầu đường</p><p class="mt-1 text-xs leading-5 text-app-muted">Chủ xe có thể yêu cầu thanh toán tất cả các khoản lệ phí cầu đường phát sinh trên tài khoản VETC trong thời gian thuê xe.</p></div>
         </div>
       </div>
       <div class="flex items-center justify-between rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
         <div class="flex items-center gap-3">
-          <img loading="lazy" src="{{ asset('assets/svg-phuthuphatsinh/phi-nhienlieu.png') }}" alt="Phụ thu nhiên liệu" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
+          <img loading="eager" src="{{ asset('assets/svg-phuthuphatsinh/phi-nhienlieu.png') }}" alt="Phụ thu nhiên liệu" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
           <div><p class="text-sm font-bold">Phụ thu nhiên liệu</p><p class="mt-1 text-xs leading-5 text-app-muted">Chủ xe chỉ thu khi vạch xăng thấp hơn lúc nhận xe. Trả lại đúng vạch xăng như lúc nhận để không phải trả phí này.</p></div>
         </div>
       </div>
       <div class="flex items-center justify-between rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
         <div class="flex items-center gap-3">
-          <img loading="lazy" src="{{ asset('assets/svg-phuthuphatsinh/phi-quagio.png') }}" alt="Phí trả trễ" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
+          <img loading="eager" src="{{ asset('assets/svg-phuthuphatsinh/phi-quagio.png') }}" alt="Phí trả trễ" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
           <div><p class="text-sm font-bold">Phí trả trễ</p><p class="mt-1 text-xs leading-5 text-app-muted">Áp dụng khi trả xe trễ hơn giờ đã thỏa thuận.</p></div>
         </div>
         <div class="shrink-0 text-right"><p class="text-base font-extrabold text-app-accent">100.000đ <span class="text-xs font-semibold text-app-muted">/ giờ</span></p></div>
       </div>
       <div class="flex items-center justify-between rounded-[12px] border border-app-line bg-white px-4 py-3.5 shadow-sm">
         <div class="flex items-center gap-3">
-          <img loading="lazy" src="{{ asset('assets/svg-phuthuphatsinh/phi-vesinh.png') }}" alt="Phí nặng mùi hôi" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
+          <img loading="eager" src="{{ asset('assets/svg-phuthuphatsinh/phi-vesinh.png') }}" alt="Phí nặng mùi hôi" class="h-16 w-16 shrink-0 rounded-[10px] object-contain">
           <div><p class="text-sm font-bold">Phí nặng mùi hôi - thuốc lá</p><p class="mt-1 text-xs leading-5 text-app-muted">Chủ xe sẽ dựa vào tình trạng vệ sinh xe lúc khách hàng trả xe để thu phí.</p></div>
         </div>
         <div class="shrink-0 text-right"><p class="text-base font-extrabold text-app-accent">250.000đ</p></div>

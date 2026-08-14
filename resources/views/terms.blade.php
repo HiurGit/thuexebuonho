@@ -212,12 +212,6 @@
       </section>
     </div>
 
-    <div class="mt-6 text-center">
-      <a href="{{ route('index') }}" class="inline-flex items-center gap-2 rounded-xl bg-app-accent px-6 py-3 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-app-green">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
-        Quay lại Trang chủ
-      </a>
-    </div>
   </main>
 @endsection
 
@@ -408,10 +402,4 @@
     </div>
   </section>
 
-  <section class="bg-white px-4 py-3 pb-28 text-center">
-    <a href="{{ route('index') }}" class="inline-flex items-center gap-2 rounded-[10px] bg-app-accent px-6 py-3 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-green-600 active:scale-[0.98]">
-      <i class="ri-arrow-left-line"></i>
-      Quay lại Trang chủ
-    </a>
-  </section>
 @endsection

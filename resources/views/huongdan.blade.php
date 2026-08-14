@@ -3,9 +3,9 @@
 @section('title', 'Hướng dẫn - Thuê Xe Buôn Hồ')
 
 @section('meta')
-<meta name="description" content="Hướng dẫn sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe khi thuê xe tại Buôn Hồ.">
+<meta name="description" content="Quá trình sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe khi thuê xe tại Buôn Hồ.">
 <meta property="og:title" content="Hướng dẫn - Thuê Xe Buôn Hồ">
-<meta property="og:description" content="Hướng dẫn sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe khi thuê xe tại Buôn Hồ.">
+<meta property="og:description" content="Quá trình sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe khi thuê xe tại Buôn Hồ.">
 <meta property="og:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -15,17 +15,17 @@
 <meta property="og:locale" content="vi_VN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Hướng dẫn - Thuê Xe Buôn Hồ">
-<meta name="twitter:description" content="Hướng dẫn sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe khi thuê xe tại Buôn Hồ.">
+<meta name="twitter:description" content="Quá trình sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe khi thuê xe tại Buôn Hồ.">
 <meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:alt" content="Thuê Xe Buôn Hồ - Hướng dẫn">
 @endsection
 
 @php
-$globalGuideTypes = ['pickup', 'usage', 'accident', 'insurance'];
+$globalGuideTypes = ['pickup', 'usage', 'accident', 'insurance_rules', 'insurance', 'terms'];
 $typeInfo = [
     'usage' => [
-        'label' => 'Hướng dẫn sử dụng xe',
+        'label' => 'Quá trình sử dụng xe',
         'desc' => 'Hướng dẫn chi tiết cách sử dụng xe an toàn và hiệu quả từ khi nhận xe đến khi trả xe.',
         'icon' => 'assets/icon-huongdan/icon-sudung.png',
     ],
@@ -33,6 +33,11 @@ $typeInfo = [
         'label' => 'Xử lý tai nạn',
         'desc' => 'Quy trình xử lý khi xảy ra tai nạn, đảm bảo an toàn và bảo vệ quyền lợi của bạn.',
         'icon' => 'assets/icon-huongdan/icon-tainan.png',
+    ],
+    'insurance_rules' => [
+        'label' => 'Quy tắc bảo hiểm',
+        'desc' => 'Phạm vi bảo hiểm, các điểm loại trừ và mức giảm trừ bồi thường của bảo hiểm.',
+        'icon' => 'assets/icon-huongdan/icon-quytacbaohiem.png',
     ],
     'insurance' => [
         'label' => 'Xử lý bảo hiểm',
@@ -44,6 +49,12 @@ $typeInfo = [
         'desc' => 'Chuẩn bị giấy tờ, hình thức đặt cọc, hoàn cọc và các lưu ý phát sinh khi đến nhận xe.',
         'icon' => 'assets/icon-giayto/icon-CCCD.png',
     ],
+    'terms' => [
+        'label' => 'Điều khoản ',
+        'desc' => 'Điều khoản và điều kiện khi thuê xe.',
+        'icon' => 'assets/icon-huongdan/icon-quytac.png',
+        'url' => route('terms'),
+    ],
 ];
 @endphp
 
@@ -52,18 +63,20 @@ $typeInfo = [
   <section class="border-b border-app-line bg-white">
     <div class="mx-auto max-w-7xl px-5 py-4">
       <h1 class="text-2xl font-extrabold text-app-ink">Hướng dẫn</h1>
-      <p class="mt-1 text-sm font-semibold text-app-muted">Hướng dẫn sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe</p>
+      <p class="mt-1 text-sm font-semibold text-app-muted">Quá trình sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe</p>
     </div>
   </section>
 
   <main class="mx-auto max-w-7xl space-y-8 px-5 py-6">
     <section>
       <h2 class="section-title mb-4 text-lg font-extrabold">Hướng dẫn chung</h2>
-      <div class="grid grid-cols-4 gap-4">
+      <div class="grid grid-cols-3 gap-4">
         @foreach($globalGuideTypes as $type)
         @php $info = $typeInfo[$type]; @endphp
-        <div class="guide-card cursor-pointer rounded-2xl border border-app-line bg-white p-5 shadow-sm transition-all hover:border-app-accent hover:shadow-card" onclick="document.getElementById('modal-{{ $type }}').classList.remove('hidden');document.body.style.overflow='hidden'">
+        <div class="guide-card cursor-pointer rounded-2xl border border-app-line bg-white p-5 shadow-sm transition-all hover:border-app-accent hover:shadow-card" @if(isset($info['url'])) onclick="window.location.href='{{ $info['url'] }}'" @else onclick="document.getElementById('modal-{{ $type }}').classList.remove('hidden');document.body.style.overflow='hidden'" @endif>
+          @if(!empty($info['icon']))
           <img src="{{ asset($info['icon']) }}" alt="{{ $info['label'] }}" class="mb-3 h-20 w-20 object-contain">
+          @endif
           <h3 class="mb-2 text-base font-extrabold text-app-ink">{{ $info['label'] }}</h3>
           <p class="mb-4 text-sm leading-relaxed text-app-muted">{{ $info['desc'] }}</p>
           <div class="flex items-center gap-1.5 text-sm font-bold text-app-accent">
@@ -123,17 +136,23 @@ $typeInfo = [
     @endif
 
     <div class="space-y-3 text-sm">
+      @if($type === 'insurance_rules')
+      <img src="{{ asset('assets/icon-huongdan/quytac_baohiem1.jpg') }}" alt="Quy tắc bảo hiểm 1" class="w-full rounded-xl border border-app-line bg-white object-contain" loading="lazy">
+      <img src="{{ asset('assets/icon-huongdan/quytac_baohiem2.jpg') }}" alt="Quy tắc bảo hiểm 2" class="w-full rounded-xl border border-app-line bg-white object-contain" loading="lazy">
+      <img src="{{ asset('assets/icon-huongdan/quytac_baohiem3.jpg') }}" alt="Quy tắc bảo hiểm 3" class="w-full rounded-xl border border-app-line bg-white object-contain" loading="lazy">
+      @else
       @forelse($items as $guide)
       <div class="rounded-xl border border-app-line bg-white p-3">
         <h4 class="mb-1.5 flex items-center gap-2 text-base font-extrabold text-app-ink">
           <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-app-accentSoft text-xs font-extrabold text-app-accent">{{ $loop->iteration }}</span>
           {{ $guide->section_title }}
         </h4>
-        <div class="ml-8 space-y-2 leading-relaxed text-app-muted">{!! $guide->content !!}</div>
+        <div class="ml-8 space-y-2 leading-relaxed text-app-muted whitespace-pre-line">{!! $guide->content !!}</div>
       </div>
       @empty
       <p class="py-6 text-center text-app-muted">Nội dung đang được cập nhật...</p>
       @endforelse
+      @endif
     </div>
     <div class="mt-4">
       <button type="button" onclick="this.closest('[id^=modal-]').classList.add('hidden');document.body.style.overflow=''" class="w-full rounded-xl bg-app-accent px-4 py-2.5 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-app-green active:scale-[0.98]">Đã hiểu</button>
@@ -247,9 +266,11 @@ function closeVideoViewer() {
         <div class="space-y-2">
           @foreach($globalGuideTypes as $type)
           @php $info = $typeInfo[$type]; @endphp
-          <div class="guide-card cursor-pointer rounded-xl border border-app-line bg-white p-3.5 shadow-sm transition-all active:scale-[0.98]" onclick="document.getElementById('modal-{{ $type }}').classList.remove('hidden');document.body.style.overflow='hidden'">
+          <div class="guide-card cursor-pointer rounded-xl border border-app-line bg-white p-3.5 shadow-sm transition-all active:scale-[0.98]" @if(isset($info['url'])) onclick="window.location.href='{{ $info['url'] }}'" @else onclick="document.getElementById('modal-{{ $type }}').classList.remove('hidden');document.body.style.overflow='hidden'" @endif>
             <div class="flex items-start gap-3">
+              @if(!empty($info['icon']))
               <img src="{{ asset($info['icon']) }}" alt="{{ $info['label'] }}" class="h-14 w-14 shrink-0 object-contain">
+              @endif
               <div class="min-w-0 flex-1">
                 <h3 class="text-sm font-extrabold text-app-ink">{{ $info['label'] }}</h3>
                 <p class="mt-0.5 text-xs leading-relaxed text-app-muted">{{ $info['desc'] }}</p>

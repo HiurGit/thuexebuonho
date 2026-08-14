@@ -1,17 +1,17 @@
 @extends('adminlte::page')
 
-@section('title', 'Danh sach xe')
+@section('title', 'Danh sách xe')
 @section('plugins.Datatables', true)
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center">
-        <h1>Danh sach xe</h1>
+        <h1>Danh sách xe</h1>
         <div>
             <a href="{{ route('admin.bookings.calendar') }}" class="btn btn-outline-primary mr-2">
-                <i class="fas fa-calendar-alt mr-1"></i> Lich thue xe
+                <i class="fas fa-calendar-alt mr-1"></i> Lịch thuê xe
             </a>
             <a href="{{ route('admin.cars.create') }}" class="btn btn-success">
-                <i class="fas fa-plus mr-1"></i> Them xe
+                <i class="fas fa-plus mr-1"></i> Thêm xe
             </a>
         </div>
     </div>
@@ -27,16 +27,16 @@
                 <tr>
                     <th>#</th>
                     <th>Xe</th>
-                    <th>Ghe</th>
-                    <th>Hop so</th>
-                    <th>Nhien lieu</th>
-                    <th>Nam</th>
-                    <th>Gia/ngay</th>
-                    <th>Gia/buoi</th>
-                    <th>Khach xem</th>
-                    <th>Luot xem</th>
-                    <th>Trang thai</th>
-                    <th>Hanh dong</th>
+                    <th>Ghế</th>
+                    <th>Hộp số</th>
+                    <th>Nhiên liệu</th>
+                    <th>Năm</th>
+                    <th>Giá/ngày</th>
+                    <th>Giá/buổi</th>
+                    <th>Khách xem</th>
+                    <th>Lượt xem</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,7 +49,7 @@
                         @endif
                         <a href="{{ route('admin.cars.edit', $car) }}"><strong>{{ $car->name }}</strong></a>
                     </td>
-                    <td>{{ $car->seats }} cho</td>
+                    <td>{{ $car->seats }} chỗ</td>
                     <td>{{ $car->transmission }}</td>
                     <td>{{ $car->fuel }}</td>
                     <td>{{ $car->year ?: '-' }}</td>
@@ -59,19 +59,19 @@
                     <td>{{ number_format($car->total_views ?? 0) }}</td>
                     <td>
                         <select class="form-control form-control-sm status-select" data-id="{{ $car->id }}" data-url="{{ route('admin.cars.status', $car) }}" style="min-width:120px">
-                            <option value="available" {{ $car->status == 'available' ? 'selected' : '' }}>San sang</option>
-                            <option value="rented" {{ $car->status == 'rented' ? 'selected' : '' }}>Dang thue</option>
-                            <option value="maintenance" {{ $car->status == 'maintenance' ? 'selected' : '' }}>Bao tri</option>
+                            <option value="available" {{ $car->status == 'available' ? 'selected' : '' }}>Sẵn sàng</option>
+                            <option value="rented" {{ $car->status == 'rented' ? 'selected' : '' }}>Đang thuê</option>
+                            <option value="maintenance" {{ $car->status == 'maintenance' ? 'selected' : '' }}>Bảo trì</option>
                         </select>
                     </td>
                     <td>
-                        <a href="{{ route('admin.bookings.calendar', ['car_id' => $car->id]) }}" class="btn btn-sm btn-info" title="Lich thue"><i class="fas fa-calendar-day"></i></a>
-                        <a href="{{ route('admin.cars.edit', $car) }}" class="btn btn-sm btn-primary" title="Sua"><i class="fas fa-edit"></i></a>
-                        <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $car->id }}" data-url="{{ route('admin.cars.destroy', $car) }}" title="Xoa"><i class="fas fa-trash"></i></button>
+                        <a href="{{ route('admin.bookings.calendar', ['car_id' => $car->id]) }}" class="btn btn-sm btn-info" title="Lịch thuê"><i class="fas fa-calendar-day"></i></a>
+                        <a href="{{ route('admin.cars.edit', $car) }}" class="btn btn-sm btn-primary" title="Sửa"><i class="fas fa-edit"></i></a>
+                        <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $car->id }}" data-url="{{ route('admin.cars.destroy', $car) }}" title="Xóa"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="12" class="text-center text-muted py-4">Chua co xe nao</td></tr>
+                <tr><td colspan="12" class="text-center text-muted py-4">Chưa có xe nào</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -89,16 +89,16 @@ $(function() {
             { orderable: false, targets: [10, 11] }
         ],
         language: {
-            search: 'Tim kiem:',
-            lengthMenu: 'Hien _MENU_ dong',
-            info: 'Hien thi _START_ den _END_ / _TOTAL_ xe',
-            infoEmpty: 'Khong co du lieu',
-            zeroRecords: 'Khong tim thay xe phu hop',
+            search: 'Tìm kiếm:',
+            lengthMenu: 'Hiện _MENU_ dòng',
+            info: 'Hiển thị _START_ đến _END_ / _TOTAL_ xe',
+            infoEmpty: 'Không có dữ liệu',
+            zeroRecords: 'Không tìm thấy xe phù hợp',
             paginate: {
-                first: 'Dau',
-                last: 'Cuoi',
+                first: 'Đầu',
+                last: 'Cuối',
                 next: 'Sau',
-                previous: 'Truoc'
+                previous: 'Trước'
             }
         }
     });
@@ -114,16 +114,16 @@ $(function() {
     $(document).on('click', '.btn-delete', function() {
         var $btn = $(this), id = $btn.data('id'), url = $btn.data('url');
         var $row = $btn.closest('tr');
-        if (!confirm('Xoa xe #' + id + '?')) return;
+        if (!confirm('Xóa xe #' + id + '?')) return;
         $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
         $.ajax({
             url: url, type: 'DELETE', data: { _token: '{{ csrf_token() }}' },
             success: function(res) {
                 carsTable.row($row).remove().draw(false);
-                showToast(res.message || 'Da xoa');
+                showToast(res.message || 'Đã xóa');
             },
             error: function() {
-                showToast('Loi khi xoa', 'error');
+                showToast('Lỗi khi xóa', 'error');
                 $btn.prop('disabled', false).html('<i class="fas fa-trash"></i>');
             }
         });
@@ -133,8 +133,8 @@ $(function() {
         var $sel = $(this), url = $sel.data('url');
         $.ajax({
             url: url, type: 'POST', data: { _token: '{{ csrf_token() }}', status: $sel.val() },
-            success: function(res) { showToast(res.message || 'Da cap nhat'); },
-            error: function() { showToast('Loi cap nhat', 'error'); }
+            success: function(res) { showToast(res.message || 'Đã cập nhật'); },
+            error: function() { showToast('Lỗi cập nhật', 'error'); }
         });
     });
 });

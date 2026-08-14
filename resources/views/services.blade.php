@@ -6,16 +6,26 @@
 <meta name="description" content="Tất cả dịch vụ cho thuê xe tại Buôn Hồ, Đăk Lăk. Thuê xe tự lái, đưa đón sân bay, du lịch...">
 <meta property="og:title" content="Dịch vụ - Thuê Xe Buôn Hồ">
 <meta property="og:description" content="Tất cả dịch vụ cho thuê xe tại Buôn Hồ, Đăk Lăk.">
+<meta property="og:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Thuê Xe Buôn Hồ">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Dịch vụ thuê xe - Thuê Xe Buôn Hồ">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Dịch vụ - Thuê Xe Buôn Hồ">
 <meta name="twitter:description" content="Tất cả dịch vụ cho thuê xe tại Buôn Hồ, Đăk Lăk.">
+<meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 @endsection
 
 @section('content-desktop')
 <section class="bg-white">
   <div class="mx-auto max-w-7xl px-6 py-8">
     <div class="overflow-hidden rounded-2xl bg-[#f5f5f4] shadow-sm">
-      <img src="{{ asset('assets/image/banner-thuexe.png') }}" alt="Dịch vụ thuê xe" class="h-auto w-full object-cover">
+      <img src="{{ asset('assets/image/banner-thuexe.png') }}" alt="Dịch vụ thuê xe" loading="eager" fetchpriority="high" class="h-auto w-full object-cover">
     </div>
     <p class="mt-3 text-center text-sm font-bold text-app-muted">Tất cả dịch vụ đều có tài xế hoặc tự lái theo yêu cầu</p>
   </div>

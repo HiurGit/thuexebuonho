@@ -16,20 +16,22 @@
 
 @php
 $typeLabels = [
-    'usage' => 'Hướng dẫn sử dụng xe',
+    'usage' => 'Quá trình sử dụng xe',
     'accident' => 'Xử lý tai nạn',
+    'insurance_rules' => 'Quy tắc bảo hiểm',
     'insurance' => 'Xử lý bảo hiểm',
     'pickup' => 'Hướng dẫn đến nhận xe',
 ];
 $typeColors = [
     'usage' => 'success',
     'accident' => 'warning',
+    'insurance_rules' => 'danger',
     'insurance' => 'info',
     'pickup' => 'primary',
 ];
 @endphp
 
-@foreach(['pickup', 'usage', 'accident', 'insurance'] as $type)
+@foreach(['pickup', 'usage', 'accident', 'insurance_rules', 'insurance'] as $type)
 <div class="card mb-4">
     <div class="card-header">
         <h3 class="card-title font-weight-bold">

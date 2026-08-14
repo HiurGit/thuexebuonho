@@ -11,7 +11,7 @@
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title mb-0">Cau hinh Telegram</h3>
+                    <h3 class="card-title mb-0">Cấu hình Telegram</h3>
                 </div>
                 <form action="{{ route('admin.settings.update') }}" method="POST">
                     @csrf
@@ -33,7 +33,7 @@
                                     {{ old('telegram_bot_enabled', $settings['enabled']) ? 'checked' : '' }}
                                 >
                                 <label class="custom-control-label" for="telegram_bot_enabled">
-                                    Bat gui thong bao Telegram khi co khach dat xe
+                                    Bật gửi thông báo Telegram khi có khách đặt xe
                                 </label>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                                 id="telegram_bot_token"
                                 name="telegram_bot_token"
                                 value="{{ old('telegram_bot_token', $settings['bot_token']) }}"
-                                placeholder="Vi du: 123456789:AA..."
+                                placeholder="Ví dụ: 123456789:AA..."
                             >
                             @error('telegram_bot_token')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -54,14 +54,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="telegram_chat_id">Nhom chat ID</label>
+                            <label for="telegram_chat_id">Nhóm chat ID</label>
                             <input
                                 type="text"
                                 class="form-control @error('telegram_chat_id') is-invalid @enderror"
                                 id="telegram_chat_id"
                                 name="telegram_chat_id"
                                 value="{{ old('telegram_chat_id', $settings['chat_id']) }}"
-                                placeholder="Vi du: -1001234567890"
+                                placeholder="Ví dụ: -1001234567890"
                             >
                             @error('telegram_chat_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -69,45 +69,45 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="telegram_quick_message_template">Mau Tele form nhanh</label>
+                            <label for="telegram_quick_message_template">Mẫu Tele form nhanh</label>
                             <textarea
                                 class="form-control @error('telegram_quick_message_template') is-invalid @enderror"
                                 id="telegram_quick_message_template"
                                 name="telegram_quick_message_template"
                                 rows="10"
-                                placeholder="Nhap noi dung thong bao gui Telegram cho form trang chu"
+                                placeholder="Nhập nội dung thông báo gửi Telegram cho form trang chủ"
                             >{{ old('telegram_quick_message_template', $settings['quick_message_template']) }}</textarea>
                             @error('telegram_quick_message_template')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <small class="form-text text-muted">
-                                Dung cho form Thue xe nhanh o trang chu. Form nay hop nhat voi: {ma_don}, {nguon_form}, {so_dien_thoai}, {loai_thue}, {ngay_thue}, {khung_gio}. Noi dung dong trong {...} se tu dong hien dam tren Telegram.
+                                Dùng cho form Thuê xe nhanh ở trang chủ. Form này hợp nhất với: {ma_don}, {nguon_form}, {so_dien_thoai}, {loai_thue}, {ngay_thue}, {khung_gio}. Nội dung dòng trong {...} sẽ tự động hiện đậm trên Telegram.
                             </small>
                         </div>
 
                         <div class="form-group">
-                            <label for="telegram_car_detail_message_template">Mau Tele form chi tiet xe</label>
+                            <label for="telegram_car_detail_message_template">Mẫu Tele form chi tiết xe</label>
                             <textarea
                                 class="form-control @error('telegram_car_detail_message_template') is-invalid @enderror"
                                 id="telegram_car_detail_message_template"
                                 name="telegram_car_detail_message_template"
                                 rows="10"
-                                placeholder="Nhap noi dung thong bao gui Telegram cho form chi tiet xe"
+                                placeholder="Nhập nội dung thông báo gửi Telegram cho form chi tiết xe"
                             >{{ old('telegram_car_detail_message_template', $settings['car_detail_message_template']) }}</textarea>
                             @error('telegram_car_detail_message_template')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <small class="form-text text-muted">
-                                Dung cho form dat xe trong trang chi tiet tung xe. Form nay co du thong tin hon nhu {ten_xe}, {tong_tien}, {ke_hoach_chuyen_di}, {hinh_thuc_nhan_xe}, {so_ngay}, {ghi_chu}. Noi dung dong trong {...} se tu dong hien dam tren Telegram.
+                                Dùng cho form đặt xe trong trang chi tiết từng xe. Form này có đủ thông tin hơn như {ten_xe}, {tong_tien}, {ke_hoach_chuyen_di}, {hinh_thuc_nhan_xe}, {so_ngay}, {ghi_chu}. Nội dung dòng trong {...} sẽ tự động hiện đậm trên Telegram.
                             </small>
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center flex-wrap">
                         <p class="text-muted mb-2 mb-md-0">
-                            Trang nay chi dung de cau hinh bot Telegram va noi dung thong bao.
+                            Trang này chỉ dùng để cấu hình bot Telegram và nội dung thông báo.
                         </p>
                         <button type="submit" class="btn btn-primary">
-                            Luu cau hinh
+                            Lưu cấu hình
                         </button>
                     </div>
                 </form>
@@ -117,50 +117,50 @@
         <div class="col-lg-4">
             <div class="card card-outline card-info">
                 <div class="card-header">
-                    <h3 class="card-title mb-0">Cach lay thong tin</h3>
+                    <h3 class="card-title mb-0">Cách lấy thông tin</h3>
                 </div>
                 <div class="card-body">
                     <ol class="pl-3 mb-0">
-                        <li>Tao bot bang BotFather va lay bot token.</li>
-                        <li>Them bot vao nhom Telegram can nhan thong bao.</li>
-                        <li>Lay chat ID cua nhom, thuong co dang -100...</li>
-                        <li>Co 2 mau rieng: form nhanh va form chi tiet xe. He thong se tu chon dung mau khi gui.</li>
+                        <li>Tạo bot bằng BotFather và lấy bot token.</li>
+                        <li>Thêm bot vào nhóm Telegram cần nhận thông báo.</li>
+                        <li>Lấy chat ID của nhóm, thường có dạng -100...</li>
+                        <li>Có 2 mẫu riêng: form nhanh và form chi tiết xe. Hệ thống sẽ tự chọn đúng mẫu khi gửi.</li>
                     </ol>
                 </div>
             </div>
 
             <div class="card card-outline card-secondary">
                 <div class="card-header">
-                    <h3 class="card-title mb-0">Bien dong form nhanh</h3>
+                    <h3 class="card-title mb-0">Biến động form nhanh</h3>
                 </div>
                 <div class="card-body">
-                    <div class="mb-2"><code>{ma_don}</code> ma don booking</div>
-                    <div class="mb-2"><code>{nguon_form}</code> nguon gui form</div>
-                    <div class="mb-2"><code>{so_dien_thoai}</code> so dien thoai</div>
-                    <div class="mb-2"><code>{loai_thue}</code> loai thue</div>
-                    <div class="mb-2"><code>{ngay_thue}</code> ngay hoac khoang ngay thue</div>
-                    <div class="mb-0"><code>{khung_gio}</code> khung gio / ca thue</div>
+                    <div class="mb-2"><code>{ma_don}</code> mã đơn booking</div>
+                    <div class="mb-2"><code>{nguon_form}</code> nguồn gửi form</div>
+                    <div class="mb-2"><code>{so_dien_thoai}</code> số điện thoại</div>
+                    <div class="mb-2"><code>{loai_thue}</code> loại thuê</div>
+                    <div class="mb-2"><code>{ngay_thue}</code> ngày hoặc khoảng ngày thuê</div>
+                    <div class="mb-0"><code>{khung_gio}</code> khung giờ / ca thuê</div>
                 </div>
             </div>
 
             <div class="card card-outline card-secondary">
                 <div class="card-header">
-                    <h3 class="card-title mb-0">Bien dong form chi tiet xe</h3>
+                    <h3 class="card-title mb-0">Biến động form chi tiết xe</h3>
                 </div>
                 <div class="card-body">
-                    <div class="mb-2"><code>{ma_don}</code> ma don booking</div>
-                    <div class="mb-2"><code>{nguon_form}</code> nguon gui form</div>
-                    <div class="mb-2"><code>{ten_khach}</code> ten khach</div>
-                    <div class="mb-2"><code>{so_dien_thoai}</code> so dien thoai</div>
-                    <div class="mb-2"><code>{ten_xe}</code> ten xe</div>
-                    <div class="mb-2"><code>{loai_thue}</code> loai thue</div>
-                    <div class="mb-2"><code>{ngay_thue}</code> ngay hoac khoang ngay thue</div>
-                    <div class="mb-2"><code>{khung_gio}</code> khung gio / ca thue</div>
-                    <div class="mb-2"><code>{ke_hoach_chuyen_di}</code> trong tinh hoac ngoai tinh</div>
-                    <div class="mb-2"><code>{hinh_thuc_nhan_xe}</code> tai shop hoac giao tan noi</div>
-                    <div class="mb-2"><code>{so_ngay}</code> tong so ngay</div>
-                    <div class="mb-2"><code>{tong_tien}</code> tong tien booking</div>
-                    <div class="mb-0"><code>{ghi_chu}</code> ghi chu booking</div>
+                    <div class="mb-2"><code>{ma_don}</code> mã đơn booking</div>
+                    <div class="mb-2"><code>{nguon_form}</code> nguồn gửi form</div>
+                    <div class="mb-2"><code>{ten_khach}</code> tên khách</div>
+                    <div class="mb-2"><code>{so_dien_thoai}</code> số điện thoại</div>
+                    <div class="mb-2"><code>{ten_xe}</code> tên xe</div>
+                    <div class="mb-2"><code>{loai_thue}</code> loại thuê</div>
+                    <div class="mb-2"><code>{ngay_thue}</code> ngày hoặc khoảng ngày thuê</div>
+                    <div class="mb-2"><code>{khung_gio}</code> khung giờ / ca thuê</div>
+                    <div class="mb-2"><code>{ke_hoach_chuyen_di}</code> trong tỉnh hoặc ngoài tỉnh</div>
+                    <div class="mb-2"><code>{hinh_thuc_nhan_xe}</code> tại shop hoặc giao tận nơi</div>
+                    <div class="mb-2"><code>{so_ngay}</code> tổng số ngày</div>
+                    <div class="mb-2"><code>{tong_tien}</code> tổng tiền booking</div>
+                    <div class="mb-0"><code>{ghi_chu}</code> ghi chú booking</div>
                 </div>
             </div>
         </div>

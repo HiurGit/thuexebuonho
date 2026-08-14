@@ -4,6 +4,7 @@ Disallow: /login
 Disallow: /logout
 Disallow: /_debugbar/
 Disallow: /storage/
-Allow: /
+Allow: /assets/
+Allow: /storage/app/public/
 
 Sitemap: https://thuexebuonho.com/sitemap.xml

@@ -2,12 +2,33 @@
 
 @section('title', 'Thuê Xe Buôn Hồ - Cho thuê xe tự lái')
 
+{{--
+================================================================
+  TRANG CHỦ - INDEX (Desktop + Mobile)
+  File: resources/views/index.blade.php
+================================================================
+  SECTION 1: #trang-chu       - HERO (Banner + Booking Card)
+  SECTION 2: #danh-sach-xe   - Danh sách xe nổi bật
+  SECTION 3: #dich-vu        - Dịch vụ nhận chạy (11 dịch vụ)
+  SECTION 4: #bang-gia       - Bảng giá cho thuê xe (4 mức + ví dụ)
+  SECTION 5: #huong-dan      - Hướng dẫn đặt xe (Zalo + Web)
+  SECTION 6: #phat-sinh      - Phụ thu có thể phát sinh
+  SECTION 7: #chung-toi      - Tại sao chọn chúng tôi? (12 ưu điểm)
+================================================================
+--}}
+
 @section('meta')
-<meta name="description" content="Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
-<meta property="og:title" content="Thuê Xe Buôn Hồ - Cho thuê xe tự lái">
-<meta property="og:description" content="Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
-<meta property="og:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
-<meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
+@php
+    $homeDesc = \App\Models\Setting::get('home_meta_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.');
+    $homeOgTitle = \App\Models\Setting::get('home_og_title', 'Thuê Xe Buôn Hồ - Cho thuê xe tự lái');
+    $homeOgDesc = \App\Models\Setting::get('home_og_description', $homeDesc);
+    $homeOgImage = \App\Models\Setting::get('home_og_image', 'assets/image/bannerMXH.jpg');
+@endphp
+<meta name="description" content="{{ $homeDesc }}">
+<meta property="og:title" content="{{ $homeOgTitle }}">
+<meta property="og:description" content="{{ $homeOgDesc }}">
+<meta property="og:image" content="{{ asset($homeOgImage) }}">
+<meta name="twitter:image" content="{{ asset($homeOgImage) }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="{{ url()->current() }}">
@@ -15,11 +36,11 @@
 <meta property="og:site_name" content="Thuê Xe Buôn Hồ">
 <meta property="og:locale" content="vi_VN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Thuê Xe Buôn Hồ - Cho thuê xe tự lái">
-<meta name="twitter:description" content="Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.">
-<meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
+<meta name="twitter:title" content="{{ $homeOgTitle }}">
+<meta name="twitter:description" content="{{ $homeOgDesc }}">
+<meta name="twitter:image" content="{{ asset($homeOgImage) }}">
 <meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:alt" content="Thuê Xe Buôn Hồ - Cho thuê xe tự lái">
+<meta property="og:image:alt" content="{{ $homeOgTitle }}">
 @endsection
 
 @push('schemas')
@@ -83,14 +104,18 @@
 
 @section('content-desktop')
 
-  <!-- ===== HEADER ===== -->
-  
-
-  <!-- ===== HERO SECTION ===== -->
+  <!-- ============================================================
+       DESKTOP - SECTION 1: HERO SECTION (Banner + Booking Card)
+       ID: #trang-chu
+       ============================================================ -->
   <section id="trang-chu" class="overflow-hidden bg-gradient-to-b from-white to-[#fafaf9]">
     <div class="mx-auto w-full overflow-hidden bg-[#e5e5e3] shadow-sm">
       <h1 class="sr-only">Thuê Xe Buôn Hồ - Dịch vụ cho thuê xe tự lái và có tài xế tại Buôn Hồ, Đăk Lăk</h1>
-      <img src="{{ asset('assets/image/banner-main.png') }}" alt="Thuê xe tự lái cho mọi hành trình" class="h-auto w-full object-cover max-h-[660px]">
+      @if($heroBanner)
+      <img src="{{ asset($heroBanner->image) }}" alt="{{ $heroBanner->title }}" loading="eager" fetchpriority="high" class="h-auto w-full object-cover max-h-[660px]">
+      @else
+      <img src="{{ asset('assets/image/banner-main.png') }}" alt="Thuê xe tự lái cho mọi hành trình" loading="eager" fetchpriority="high" class="h-auto w-full object-cover max-h-[660px]">
+      @endif
     </div>
 
     <div id="booking-card" class="relative -mt-64 mx-auto max-w-2xl rounded-xl border border-app-line bg-white p-1.5 shadow-lg">
@@ -199,23 +224,54 @@
     </div>
 
   </section>
+  <!-- END SECTION 1: HERO -->
 
-  <!-- ===== DANH SÁCH XE ===== -->
+  <!-- ============================================================
+       DESKTOP - SECTION 2: DANH SÁCH XE NỔI BẬT
+       ID: #danh-sach-xe
+       ============================================================ -->
   <section id="danh-sach-xe" class="border-b border-app-line">
     <div class="mx-auto max-w-7xl rounded-b-2xl bg-[#f5f5f4] px-6 pb-10">
       <div class="text-center">
         <h2 class="inline-block rounded-b-xl bg-[#5fcf86] px-8 py-3 text-3xl font-extrabold text-white">Danh sách xe nổi bật</h2>
         <p class="mt-3 text-sm font-semibold text-app-muted"></p>
       </div>
+      <div class="mt-6 overflow-hidden rounded-2xl">
+        <div class="swiper banner-price-swiper">
+          <div class="swiper-wrapper">
+            @forelse($priceBanners as $pb)
+            <div class="swiper-slide">
+              <img src="{{ asset($pb->image) }}" alt="{{ $pb->title }}" loading="eager" fetchpriority="high" class="h-auto w-full object-cover">
+            </div>
+            @empty
+            <div class="swiper-slide">
+              <img src="{{ asset('assets/banner-price/banner-gia1.png') }}" alt="Banner giá" class="h-auto w-full object-cover">
+            </div>
+            @endforelse
+          </div>
+          <div class="swiper-pagination banner-price-pagination"></div>
+        </div>
+      </div>
       @if($cars->count() > 0)
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @foreach($cars as $car)
         <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer rounded-2xl border border-app-line bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-card">
-          <div class="overflow-hidden rounded-xl bg-[#f5f5f4]">
-            @if($car->mainImage)
-            <img src="{{ asset($car->mainImage->path) }}" alt="{{ $car->name }}" class="h-auto w-full object-cover" style="aspect-ratio: 280/210;">
+          <div class="card-car-swiper-wrap cursor-pointer" style="aspect-ratio: 280/210;">
+            @if($car->images->count())
+            <div class="swiper card-car-swiper">
+              <div class="swiper-wrapper">
+                @foreach($car->images as $img)
+                <div class="swiper-slide">
+                  <img src="{{ asset($img->path) }}" alt="{{ $car->name }}" class="h-full w-full object-cover">
+                </div>
+                @endforeach
+              </div>
+              <div class="swiper-pagination"></div>
+            </div>
+            @elseif($car->mainImage)
+            <img src="{{ asset($car->mainImage->path) }}" alt="{{ $car->name }}" class="h-full w-full object-cover">
             @else
-            <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted" style="aspect-ratio: 280/210;">{{ $car->name }}</div>
+            <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted">{{ $car->name }}</div>
             @endif
           </div>
           <div class="mt-4">
@@ -260,8 +316,12 @@
       @endif
     </div>
   </section>
+  <!-- END SECTION 2: DANH SÁCH XE -->
 
-  <!-- ===== DỊCH VỤ ===== -->
+  <!-- ============================================================
+       DESKTOP - SECTION 3: DỊCH VỤ NHẬN CHẠY (11 dịch vụ)
+       ID: #dich-vu
+       ============================================================ -->
   <section id="dich-vu" class="border-b border-app-line bg-white py-10">
     <div class="mx-auto max-w-7xl px-6">
       <div class="overflow-hidden rounded-2xl border border-app-line bg-[#f5f5f4]">
@@ -360,8 +420,12 @@
       </div>
     </div>
   </section>
+  <!-- END SECTION 3: DỊCH VỤ -->
 
-  <!-- ===== BẢNG GIÁ ===== -->
+  <!-- ============================================================
+       DESKTOP - SECTION 4: BẢNG GIÁ CHO THUÊ XE (4 mức giá + ví dụ)
+       ID: #bang-gia
+       ============================================================ -->
   <section id="bang-gia" class="border-b border-app-line bg-white py-10">
     <div class="mx-auto max-w-7xl px-6">
       <div class="overflow-hidden rounded-2xl border border-app-line bg-[#f5f5f4] shadow-sm">
@@ -442,8 +506,12 @@
       </div>
     </div>
   </section>
+  <!-- END SECTION 4: BẢNG GIÁ -->
 
-  <!-- ===== HƯỚNG DẪN THUÊ XE ===== -->
+  <!-- ============================================================
+       DESKTOP - SECTION 5: HƯỚNG DẪN ĐẶT XE (Zalo + Web)
+       ID: #huong-dan
+       ============================================================ -->
   <section id="huong-dan" class="border-b border-app-line bg-white py-10">
     <div class="mx-auto max-w-7xl px-6">
       <div class="overflow-hidden rounded-2xl border border-app-line bg-[#f5f5f4] shadow-sm">
@@ -546,8 +614,12 @@
       </div>
     </div>
   </section>
+  <!-- END SECTION 5: HƯỚNG DẪN -->
 
-  <!-- ===== PHỤ THU PHÁT SINH ===== -->
+  <!-- ============================================================
+       DESKTOP - SECTION 6: PHỤ THU CÓ THỂ PHÁT SINH
+       ID: #phat-sinh
+       ============================================================ -->
   <section id="phat-sinh" class="border-b border-app-line bg-white py-10">
     <div class="mx-auto max-w-7xl px-6">
       <div class="overflow-hidden rounded-2xl border border-app-line bg-[#f5f5f4] shadow-sm">
@@ -591,8 +663,12 @@
       </div>
     </div>
   </section>
+  <!-- END SECTION 6: PHỤ THU -->
 
-  <!-- ===== CHÚNG TÔI CÓ ===== -->
+  <!-- ============================================================
+       DESKTOP - SECTION 7: TẠI SAO CHỌN CHÚNG TÔI? (12 ưu điểm)
+       ID: #chung-toi
+       ============================================================ -->
   <section id="chung-toi" class="border-b border-app-line bg-white py-10">
     <div class="mx-auto max-w-7xl px-6">
       <div class="overflow-hidden rounded-2xl border border-app-line bg-[#f5f5f4]">
@@ -690,25 +766,57 @@
       </div>
     </div>
   </section>
+  <!-- END SECTION 7: TẠI SAO CHỌN CHÚNG TÔI -->
+
+  <!-- ============================================================
+       DESKTOP - SECTION 8: BẢN ĐỒ VỊ TRÍ CỬA HÀNG
+       ID: #ban-do
+       ============================================================ -->
+  <section id="ban-do" class="bg-white py-10">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-6 text-center">
+        <h2 class="text-2xl font-extrabold text-app-ink">Vị trí cửa hàng</h2>
+        <p class="mt-2 text-sm font-semibold text-app-muted">07 Chu Văn An, Buôn Hồ, Đắk Lắk</p>
+      </div>
+      <div class="overflow-hidden rounded-2xl border border-app-line shadow-sm">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243.05795650418517!2d108.26486600298888!3d12.91239379451464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x316e1d45da2bce3f%3A0x392028fcc9b8fca!2zVGh1w6ogWGUgQnXDtG4gSOG7kw!5e0!3m2!1svi!2s!4v1783877732052!5m2!1svi!2s"
+          width="100%" height="450" style="border:0;"
+          allowfullscreen loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          title="Vị trí cửa hàng Thuê Xe Buôn Hồ">
+        </iframe>
+      </div>
+    </div>
+  </section>
+  <!-- END SECTION 8: BẢN ĐỒ -->
+
+  <!-- END DESKTOP CONTENT -->
 
   @endsection
 
 @section('content-mobile')
 
-    
-
+  <!-- ============================================================
+       MOBILE - SECTION 1: HERO SECTION (Banner + Booking Card)
+       ID: #trang-chu (mobile)
+       ============================================================ -->
 
     <main class="flex-1 overflow-y-auto" style="scroll-behavior: smooth">
       <section id="trang-chu" class="relative border-b border-app-line bg-white pb-4 pt-0 text-app-ink">
         <div class="relative">
           <div class="px-0">
             <h1 class="sr-only">Thuê Xe Buôn Hồ - Dịch vụ cho thuê xe tự lái và có tài xế tại Buôn Hồ, Đăk Lăk</h1>
+            @if($heroBanner)
+            <img src="{{ asset($heroBanner->image) }}" alt="{{ $heroBanner->title }}" class="h-auto w-full object-cover rounded-b-[10px]">
+            @else
             <img src="{{ asset('assets/image/banner-main.png') }}" alt="Thuê xe tự lái cho mọi hành trình" class="h-auto w-full object-cover rounded-b-[10px]">
+            @endif
           </div>
         </div>
 
         <div id="booking-card-mobile" class="relative -mt-3 mx-4 rounded-[10px] border border-app-line bg-white p-1 shadow-lg">
-          <div id="tab-container-mobile" class="grid grid-cols-3 gap-0 overflow-hidden rounded-t-[10px] bg-[#f4f4f3] text-center text-[10px] font-extrabold">
+          <div id="tab-container-mobile" class="grid grid-cols-3 gap-0 overflow-hidden rounded-t-[10px] bg-[#f4f4f3] text-center text-[11px] font-extrabold">
             <button data-tab="one-day" class="banner-tab rounded-none bg-app-accent px-0 py-1.5 leading-tight text-white">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto mb-0.5 h-4 w-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
@@ -812,18 +920,51 @@
           </div>
         </div>
       </section>
+      <!-- END MOBILE SECTION 1: HERO -->
       
+      <!-- ============================================================
+           MOBILE - SECTION 2: DANH SÁCH XE NỔI BẬT
+           ID: #danh-sach-xe (mobile)
+           ============================================================ -->
 <section id="danh-sach-xe" class="border-b border-app-line bg-white px-4 py-5">
     
+
+      <div class="mt-2 overflow-hidden rounded-[10px]">
+        <div class="swiper banner-price-swiper-mobile">
+          <div class="swiper-wrapper">
+            @forelse($priceBanners as $pb)
+            <div class="swiper-slide">
+              <img src="{{ asset($pb->image) }}" alt="{{ $pb->title }}" loading="eager" fetchpriority="high" class="h-auto w-full object-cover">
+            </div>
+            @empty
+            <div class="swiper-slide">
+              <img src="{{ asset('assets/banner-price/banner-gia1.png') }}" alt="Banner giá" class="h-auto w-full object-cover">
+            </div>
+            @endforelse
+          </div>
+          <div class="swiper-pagination banner-price-pagination-mobile"></div>
+        </div>
+      </div>
 
         <div class="mt-3 space-y-3">
           @forelse($cars as $car)
            <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer rounded-[10px] border border-app-line bg-white p-3">
-            <div class="overflow-hidden rounded-[10px] bg-[#f5f5f4]">
-              @if($car->mainImage)
-              <img src="{{ asset($car->mainImage->path) }}" alt="{{ $car->name }}" class="h-auto w-full object-cover" style="aspect-ratio: 280/210;">
+            <div class="card-car-swiper-wrap-mobile cursor-pointer" style="aspect-ratio: 280/210;">
+              @if($car->images->count())
+              <div class="swiper card-car-swiper-mobile">
+                <div class="swiper-wrapper">
+                  @foreach($car->images as $img)
+                  <div class="swiper-slide">
+                    <img src="{{ asset($img->path) }}" alt="{{ $car->name }}" class="h-full w-full object-cover">
+                  </div>
+                  @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+              </div>
+              @elseif($car->mainImage)
+              <img src="{{ asset($car->mainImage->path) }}" alt="{{ $car->name }}" class="h-full w-full object-cover">
               @else
-              <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted" style="aspect-ratio: 280/210;">{{ $car->name }}</div>
+              <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted">{{ $car->name }}</div>
               @endif
             </div>
             <div class="mt-3">
@@ -871,8 +1012,12 @@
           @endforelse
         </div>
       </section>
+      <!-- END MOBILE SECTION 2: DANH SÁCH XE -->
       
-<!-- === Các Dịch Vụ Nhận Chạy === -->
+      <!-- ============================================================
+           MOBILE - SECTION 3: DỊCH VỤ NHẬN CHẠY (11 dịch vụ - Swiper)
+           ID: #dich-vu (mobile)
+           ============================================================ -->
       <section id="dich-vu" class="border-b border-app-line bg-white px-4 py-5">
        
 
@@ -1013,10 +1158,14 @@
           <span class="block h-0.5 w-6 rounded-full bg-app-accent/30"></span>
         </div>
       </section>
+      <!-- END MOBILE SECTION 3: DỊCH VỤ -->
 
       
 
-      <!-- === BẢNG GIÁ CHO THUÊ XE === -->
+      <!-- ============================================================
+           MOBILE - SECTION 4: BẢNG GIÁ CHO THUÊ XE (4 mức giá + ví dụ)
+           ID: #bang-gia (mobile)
+           ============================================================ -->
       <section id="bang-gia" class="border-b border-app-line bg-white px-4 py-6">
         <div class="overflow-hidden rounded-[10px] border border-app-line bg-[#f5f5f4] shadow-sm">
           <img src="{{ asset('assets/image/banner-banggia.png') }}" alt="Bảng giá thuê xe" class="h-auto w-full object-cover">
@@ -1114,8 +1263,12 @@
        
         </div>
       </section>
+      <!-- END MOBILE SECTION 4: BẢNG GIÁ -->
 
-      <!-- === HƯỚNG DẪN ĐẶT XE === -->
+      <!-- ============================================================
+           MOBILE - SECTION 5: HƯỚNG DẪN ĐẶT XE (Zalo + Web + Hotline)
+           ID: #huong-dan (mobile)
+           ============================================================ -->
       <section id="huong-dan" class="border-b border-app-line bg-white px-4 py-6">
         <div class="overflow-hidden rounded-[10px] border border-app-line bg-[#f5f5f4] shadow-sm">
           <img src="{{ asset('assets/image/banner-huongdan.png') }}" alt="Hướng dẫn đặt xe" class="h-auto w-full object-cover">
@@ -1228,8 +1381,12 @@
           </div>
         </div>
       </section>
+      <!-- END MOBILE SECTION 5: HƯỚNG DẪN -->
 
-      <!-- === PHỤ THU CÓ THỂ PHÁT SINH === -->
+      <!-- ============================================================
+           MOBILE - SECTION 6: PHỤ THU CÓ THỂ PHÁT SINH
+           ID: #phat-sinh (mobile)
+           ============================================================ -->
       <section id="phat-sinh" class="border-b border-app-line bg-white px-4 py-6">
         <div class="overflow-hidden rounded-[10px] border border-app-line bg-[#f5f5f4] shadow-sm">
           <img src="{{ asset('assets/image/banner-phiphuthu.png') }}" alt="Phụ thu có thể phát sinh" class="h-auto w-full object-cover">
@@ -1287,8 +1444,13 @@
           </div>
         </div>
       </section>
+      <!-- END MOBILE SECTION 6: PHỤ THU -->
 
-      <section id="chung-toi" class="border-app-line bg-white px-4 py-3 pb-20">
+      <!-- ============================================================
+           MOBILE - SECTION 7: TẠI SAO CHỌN CHÚNG TÔI? (12 ưu điểm)
+           ID: #chung-toi (mobile)
+           ============================================================ -->
+      <section id="chung-toi" class="border-b border-app-line bg-white px-4 py-3 pb-4">
         <div class="text-center">
        
           <div class="overflow-hidden rounded-[12px] border border-app-line bg-[#f5f5f4] shadow-sm">
@@ -1413,7 +1575,31 @@
         </div>
 
       </section>
+      <!-- END MOBILE SECTION 7: TẠI SAO CHỌN CHÚNG TÔI -->
+
+      <!-- ============================================================
+           MOBILE - SECTION 8: BẢN ĐỒ VỊ TRÍ CỬA HÀNG
+           ID: #ban-do (mobile)
+           ============================================================ -->
+      <section id="ban-do" class="border-b border-app-line bg-white px-4 py-5 pb-20">
+        <div class="mb-3 text-center">
+          <h2 class="text-lg font-extrabold text-app-ink">Vị trí cửa hàng</h2>
+          <p class="mt-1 text-xs font-semibold text-app-muted">07 Chu Văn An, Buôn Hồ, Đắk Lắk</p>
+        </div>
+        <div class="overflow-hidden rounded-[10px] border border-app-line shadow-sm">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243.05795650418517!2d108.26486600298888!3d12.91239379451464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x316e1d45da2bce3f%3A0x392028fcc9b8fca!2zVGh1w6ogWGUgQnXDtG4gSOG7kw!5e0!3m2!1svi!2s!4v1783877732052!5m2!1svi!2s"
+            width="100%" height="250" style="border:0;"
+            allowfullscreen loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title="Vị trí cửa hàng Thuê Xe Buôn Hồ">
+          </iframe>
+        </div>
+      </section>
+      <!-- END MOBILE SECTION 8: BẢN ĐỒ -->
+
     </main>
+    <!-- END MOBILE CONTENT -->
 
     
 @endsection

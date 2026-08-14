@@ -14,8 +14,9 @@
             <div class="form-group">
                 <label>Loại <span class="text-danger">*</span></label>
                 <select name="type" class="form-control @error('type') is-invalid @enderror" required>
-                    <option value="usage" {{ old('type', $globalGuide->type) == 'usage' ? 'selected' : '' }}>Hướng dẫn sử dụng xe</option>
+                    <option value="usage" {{ old('type', $globalGuide->type) == 'usage' ? 'selected' : '' }}>Quá trình sử dụng xe</option>
                     <option value="accident" {{ old('type', $globalGuide->type) == 'accident' ? 'selected' : '' }}>Xử lý tai nạn</option>
+                    <option value="insurance_rules" {{ old('type', $globalGuide->type) == 'insurance_rules' ? 'selected' : '' }}>Quy tắc bảo hiểm</option>
                     <option value="insurance" {{ old('type', $globalGuide->type) == 'insurance' ? 'selected' : '' }}>Xử lý bảo hiểm</option>
                     <option value="pickup" {{ old('type', $globalGuide->type) == 'pickup' ? 'selected' : '' }}>Hướng dẫn đến nhận xe</option>
                 </select>

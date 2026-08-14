@@ -1,20 +1,20 @@
 @extends('adminlte::page')
 
-@section('title', 'Lich thue xe')
+@section('title', 'Lịch thuê xe')
 @section('plugins.Datatables', true)
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center flex-wrap">
         <div>
-            <h1 class="mb-1">Lich thue xe</h1>
-            <p class="text-muted mb-0">Quan ly lich dat xe theo thang bang FullCalendar.</p>
+            <h1 class="mb-1">Lịch thuê xe</h1>
+            <p class="text-muted mb-0">Quản lý lịch đặt xe theo tháng bằng FullCalendar.</p>
         </div>
         <div class="d-flex mt-2 mt-md-0">
             <a href="{{ route('admin.bookings.create') }}" class="btn btn-success mr-2">
-                <i class="fas fa-plus mr-1"></i> Them don
+                <i class="fas fa-plus mr-1"></i> Thêm đơn
             </a>
             <a href="{{ route('admin.bookings.index') }}" class="btn btn-outline-secondary">
-                <i class="fas fa-list mr-1"></i> Danh sach don
+                <i class="fas fa-list mr-1"></i> Danh sách đơn
             </a>
         </div>
     </div>
@@ -26,7 +26,7 @@
         <div class="small-box bg-gradient-info">
             <div class="inner">
                 <h3>{{ $stats['total_bookings'] }}</h3>
-                <p>Don trong thang</p>
+                <p>Đơn trong tháng</p>
             </div>
             <div class="icon"><i class="fas fa-calendar-check"></i></div>
         </div>
@@ -35,7 +35,7 @@
         <div class="small-box bg-gradient-success">
             <div class="inner">
                 <h3>{{ $stats['total_cars'] }}</h3>
-                <p>{{ $selectedCar ? 'Xe dang loc' : 'Tong so xe' }}</p>
+                <p>{{ $selectedCar ? 'Xe đang lọc' : 'Tổng số xe' }}</p>
             </div>
             <div class="icon"><i class="fas fa-car-side"></i></div>
         </div>
@@ -44,7 +44,7 @@
         <div class="small-box bg-gradient-warning">
             <div class="inner">
                 <h3>{{ $stats['occupied_days'] }}</h3>
-                <p>Ngay co lich thue</p>
+                <p>Ngày có lịch thuê</p>
             </div>
             <div class="icon"><i class="fas fa-clock"></i></div>
         </div>
@@ -53,7 +53,7 @@
         <div class="small-box bg-gradient-secondary">
             <div class="inner">
                 <h3>{{ $stats['pending_bookings'] }}</h3>
-                <p>Don cho xu ly</p>
+                <p>Đơn chờ xử lý</p>
             </div>
             <div class="icon"><i class="fas fa-hourglass-half"></i></div>
         </div>
@@ -63,18 +63,18 @@
 @if($overlapWarnings->isNotEmpty())
 <div class="card card-danger card-outline">
     <div class="card-header">
-        <h3 class="card-title font-weight-bold">Canh bao trung lich cung xe</h3>
+        <h3 class="card-title font-weight-bold">Cảnh báo trùng lịch cùng xe</h3>
     </div>
     <div class="card-body">
         <div class="alert alert-danger mb-3">
-            Co <strong>{{ $overlapWarnings->count() }}</strong> don dang trung lich. He thong khong chan luu, nhung ban nen goi tu van khach doi xe hoac doi ngay.
+            Có <strong>{{ $overlapWarnings->count() }}</strong> đơn đang trùng lịch. Hệ thống không chặn lưu, nhưng bạn nên gọi tư vấn khách đổi xe hoặc đổi ngày.
         </div>
         <div class="row">
             @foreach($overlapWarnings as $booking)
                 <div class="col-lg-4 col-md-6 mb-3">
                     <a href="{{ route('admin.bookings.edit', $booking) }}" class="d-block border rounded p-3 text-dark bg-light">
                         <div class="font-weight-bold">{{ $booking->car?->name ?? '-' }}</div>
-                        <div class="small text-muted">{{ $booking->customer_name ?: 'Khach ' . substr($booking->customer_phone, -4) }}</div>
+                        <div class="small text-muted">{{ $booking->customer_name ?: 'Khách ' . substr($booking->customer_phone, -4) }}</div>
                         <div class="small text-danger">
                             {{ optional($booking->start_date)->format('d/m/Y') ?: '-' }}
                             -
@@ -132,8 +132,8 @@
                 @forelse($startingSoonBookings as $booking)
                     <a href="{{ route('admin.bookings.edit', $booking) }}" class="d-block border rounded px-3 py-2 mb-2 bg-light text-dark">
                         <div class="font-weight-bold">{{ $booking->car?->name ?? '-' }}</div>
-                        <div class="small text-muted">{{ $booking->customer_name ?: 'Khach' }}</div>
-                        <div class="small text-primary">Bat dau: {{ optional($booking->start_date)->format('d/m/Y') ?: '-' }}</div>
+                        <div class="small text-muted">{{ $booking->customer_name ?: 'Khách' }}</div>
+                        <div class="small text-primary">Bắt đầu: {{ optional($booking->start_date)->format('d/m/Y') ?: '-' }}</div>
                     </a>
                 @empty
                     <div class="text-muted small">Không có xe nào sắp cho thuê trong 2 ngày tới.</div>
@@ -153,8 +153,8 @@
                 @forelse($dueSoonBookings as $booking)
                     <a href="{{ route('admin.bookings.edit', $booking) }}" class="d-block border rounded px-3 py-2 mb-2 bg-light text-dark">
                         <div class="font-weight-bold">{{ $booking->car?->name ?? '-' }}</div>
-                        <div class="small text-muted">{{ $booking->customer_name ?: 'Khach' }}</div>
-                        <div class="small text-warning">Tra xe: {{ optional($booking->end_date)->format('d/m/Y') ?: '-' }}</div>
+                        <div class="small text-muted">{{ $booking->customer_name ?: 'Khách' }}</div>
+                        <div class="small text-warning">Trả xe: {{ optional($booking->end_date)->format('d/m/Y') ?: '-' }}</div>
                     </a>
                 @empty
                     <div class="text-muted small">Không có xe nào sắp trả trong 1 ngày tới.</div>
@@ -188,7 +188,7 @@
 @if(!$selectedCar)
     <div class="card card-outline card-info">
         <div class="card-header">
-            <h3 class="card-title font-weight-bold">Tra cuu tinh trang tat ca xe theo khoang ngay</h3>
+            <h3 class="card-title font-weight-bold">Tra cứu tình trạng tất cả xe theo khoảng ngày</h3>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('admin.bookings.calendar') }}" class="row">
@@ -201,33 +201,33 @@
                 <input type="hidden" name="availability_end_date" value="{{ $availabilityEndDateInput ?: $availabilityDateInput }}" id="availability-date-end">
 
                 <div class="col-md-8 form-group">
-                    <label class="font-weight-bold">Chon khoang ngay</label>
+                    <label class="font-weight-bold">Chọn khoảng ngày</label>
                     <div class="input-group date-input-shell">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                         </div>
                         <input
                             type="text"
-                            value="{{ $availabilityDateInput ? ($availabilityDateInput . ($availabilityEndDateInput && $availabilityEndDateInput !== $availabilityDateInput ? ' to ' . $availabilityEndDateInput : '')) : '' }}"
+                            value="{{ $availabilityDateInput ? (\Carbon\Carbon::createFromFormat('Y-m-d', $availabilityDateInput)->format('d/m/Y') . ($availabilityEndDateInput && $availabilityEndDateInput !== $availabilityDateInput ? ' den ' . \Carbon\Carbon::createFromFormat('Y-m-d', $availabilityEndDateInput)->format('d/m/Y') : '')) : '' }}"
                             class="form-control js-date-range-picker"
                             data-start-target="#availability-date-start"
                             data-end-target="#availability-date-end"
-                            placeholder="Chon tu ngay den ngay"
+                                    placeholder="Chọn từ ngày đến ngày"
                             autocomplete="off"
                         >
                     </div>
                 </div>
                 <div class="col-md-2 form-group d-flex align-items-end">
                     <button type="submit" class="btn btn-info btn-block">
-                        <i class="fas fa-search mr-1"></i> Xem khoang
+                        <i class="fas fa-search mr-1"></i> Xem khoảng
                     </button>
                 </div>
             </form>
 
             @if($allCarsAvailability)
                 <div class="alert alert-info mb-3">
-                    Dang xem tinh trang tat ca xe tu {{ $allCarsAvailability['start_date']->format('d/m/Y') }}
-                    den {{ $allCarsAvailability['end_date']->format('d/m/Y') }}.
+                    Đang xem tình trạng tất cả xe từ {{ $allCarsAvailability['start_date']->format('d/m/Y') }}
+                    đến {{ $allCarsAvailability['end_date']->format('d/m/Y') }}.
                 </div>
 
                 <div class="row mb-3">
@@ -235,7 +235,7 @@
                         <div class="small-box bg-gradient-success mb-0">
                             <div class="inner">
                                 <h3>{{ $allCarsAvailability['free']->count() }}</h3>
-                                <p>Xe ranh hoan toan trong khoang da chon</p>
+                                <p>Xe rảnh hoàn toàn trong khoảng đã chọn</p>
                             </div>
                             <div class="icon"><i class="fas fa-check-circle"></i></div>
                         </div>
@@ -244,7 +244,7 @@
                         <div class="small-box bg-gradient-danger mb-0">
                             <div class="inner">
                                 <h3>{{ $allCarsAvailability['busy']->count() }}</h3>
-                                <p>Xe dang ban hoac trung lich trong khoang da chon</p>
+                                <p>Xe đang bận hoặc trùng lịch trong khoảng đã chọn</p>
                             </div>
                             <div class="icon"><i class="fas fa-car-crash"></i></div>
                         </div>
@@ -253,26 +253,26 @@
 
                 <div class="card card-success card-outline mb-3">
                     <div class="card-header">
-                        <h3 class="card-title font-weight-bold">Danh sach xe ranh trong khoang da chon</h3>
+                        <h3 class="card-title font-weight-bold">Danh sách xe rảnh trong khoảng đã chọn</h3>
                     </div>
                     <div class="card-body">
                         @if($allCarsAvailability['free']->isNotEmpty())
                             <div class="mb-2 text-success font-weight-bold">
-                                Trong khoang {{ $allCarsAvailability['start_date']->format('d/m/Y') }} - {{ $allCarsAvailability['end_date']->format('d/m/Y') }},
-                                cac xe sau dang ranh hoan toan:
+                                Trong khoảng {{ $allCarsAvailability['start_date']->format('d/m/Y') }} - {{ $allCarsAvailability['end_date']->format('d/m/Y') }},
+                                các xe sau đang rảnh hoàn toàn:
                             </div>
                             <div class="row">
                                 @foreach($allCarsAvailability['free'] as $item)
                                     <div class="col-lg-4 col-md-6 mb-2">
                                         <div class="border rounded px-3 py-2 bg-white h-100">
                                             <div class="font-weight-bold">{{ $item['car']->name }}</div>
-                                            <div class="small text-muted">Ranh tron khoang da chon</div>
+                                            <div class="small text-muted">Rảnh trọn khoảng đã chọn</div>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
                         @else
-                            <div class="text-muted">Khong co xe nao ranh hoan toan trong khoang nay.</div>
+                            <div class="text-muted">Không có xe nào rảnh hoàn toàn trong khoảng này.</div>
                         @endif
                     </div>
                 </div>
@@ -281,7 +281,7 @@
                     <div class="col-lg-6">
                         <div class="border rounded p-3 h-100">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h4 class="h6 font-weight-bold mb-0 text-danger">Xe dang ban</h4>
+                                <h4 class="h6 font-weight-bold mb-0 text-danger">Xe đang bận</h4>
                                 <span class="badge badge-danger">{{ $allCarsAvailability['busy']->count() }}</span>
                             </div>
                             <div style="max-height: 320px; overflow:auto;">
@@ -293,12 +293,12 @@
                                                 {{ optional($conflict->start_date)->format('d/m/Y') }}
                                                 -
                                                 {{ optional($conflict->end_date)->format('d/m/Y') ?: optional($conflict->start_date)->format('d/m/Y') }}
-                                                | {{ $conflict->customer_name ?: 'Khach ' . substr($conflict->customer_phone, -4) }}
+                                                | {{ $conflict->customer_name ?: 'Khách ' . substr($conflict->customer_phone, -4) }}
                                             </div>
                                         @endforeach
                                     </div>
                                 @empty
-                                    <div class="text-muted small">Khong co xe nao dang ban trong khoang ngay nay.</div>
+                                    <div class="text-muted small">Không có xe nào đang bận trong khoảng ngày này.</div>
                                 @endforelse
                             </div>
                         </div>
@@ -306,17 +306,17 @@
                     <div class="col-lg-6 mt-3 mt-lg-0">
                         <div class="border rounded p-3 h-100">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h4 class="h6 font-weight-bold mb-0 text-success">Xe dang ranh</h4>
+                                <h4 class="h6 font-weight-bold mb-0 text-success">Xe đang rảnh</h4>
                                 <span class="badge badge-success">{{ $allCarsAvailability['free']->count() }}</span>
                             </div>
                             <div style="max-height: 320px; overflow:auto;">
                                 @forelse($allCarsAvailability['free'] as $item)
                                     <div class="border rounded px-3 py-2 mb-2 bg-white">
                                         <div class="font-weight-bold">{{ $item['car']->name }}</div>
-                                        <div class="small text-muted">Co the nhan khach trong toan bo khoang ngay nay.</div>
+                                        <div class="small text-muted">Có thể nhận khách trong toàn bộ khoảng ngày này.</div>
                                     </div>
                                 @empty
-                                    <div class="text-muted small">Khong con xe ranh trong khoang ngay nay.</div>
+                                    <div class="text-muted small">Không còn xe rảnh trong khoảng ngày này.</div>
                                 @endforelse
                             </div>
                         </div>
@@ -329,7 +329,7 @@
     <div class="card card-outline card-primary">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center flex-wrap w-100">
-                <h3 class="card-title font-weight-bold mb-2 mb-md-0">Tinh trang tat ca xe trong thang {{ $month->format('m/Y') }}</h3>
+                <h3 class="card-title font-weight-bold mb-2 mb-md-0">Tình trạng tất cả xe trong tháng {{ $month->format('m/Y') }}</h3>
                 <form method="GET" action="{{ route('admin.bookings.calendar') }}" class="d-flex align-items-end">
                     <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
                     @if($selectedStatus)
@@ -342,10 +342,10 @@
                         <input type="hidden" name="availability_end_date" value="{{ $availabilityEndDateInput }}">
                     @endif
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold small mb-1 d-block">Sap xep</label>
+                        <label class="font-weight-bold small mb-1 d-block">Sắp xếp</label>
                         <div class="input-group input-group-sm">
                             <select name="monthly_sort" class="form-control" onchange="this.form.submit()">
-                                <option value="time" {{ $monthlySort === 'time' ? 'selected' : '' }}>Theo thoi gian</option>
+                                <option value="time" {{ $monthlySort === 'time' ? 'selected' : '' }}>Theo thời gian</option>
                                 <option value="car" {{ $monthlySort === 'car' ? 'selected' : '' }}>Theo xe</option>
                             </select>
                         </div>
@@ -358,7 +358,7 @@
                 <div class="col-lg-6">
                     <div class="border rounded p-3 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h4 class="h6 font-weight-bold mb-0 text-danger">Khoang dang ban trong thang</h4>
+                            <h4 class="h6 font-weight-bold mb-0 text-danger">Khoảng đang bận trong tháng</h4>
                             <span class="badge badge-danger">{{ $allCarsBusySlots->count() }}</span>
                         </div>
                         <div style="max-height: 340px; overflow:auto;">
@@ -367,12 +367,12 @@
                                     <div class="font-weight-bold">{{ $slot['car']->name }}</div>
                                     <div class="small text-danger">{{ $slot['start']->format('d/m/Y') }} - {{ $slot['end']->format('d/m/Y') }}</div>
                                     <div class="small text-muted">
-                                        {{ $slot['booking']->customer_name ?: 'Khach ' . substr($slot['booking']->customer_phone, -4) }}
+                                        {{ $slot['booking']->customer_name ?: 'Khách ' . substr($slot['booking']->customer_phone, -4) }}
                                         | {{ $statusLabels[$slot['booking']->status] ?? $slot['booking']->status }}
                                     </div>
                                 </a>
                             @empty
-                                <div class="text-muted small">Khong co khoang ban nao trong thang nay.</div>
+                                <div class="text-muted small">Không có khoảng bận nào trong tháng này.</div>
                             @endforelse
                         </div>
                     </div>
@@ -380,7 +380,7 @@
                 <div class="col-lg-6 mt-3 mt-lg-0">
                     <div class="border rounded p-3 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h4 class="h6 font-weight-bold mb-0 text-success">Khoang dang ranh trong thang</h4>
+                            <h4 class="h6 font-weight-bold mb-0 text-success">Khoảng đang rảnh trong tháng</h4>
                             <span class="badge badge-success">{{ $allCarsFreeSlots->count() }}</span>
                         </div>
                         <div style="max-height: 340px; overflow:auto;">
@@ -388,10 +388,10 @@
                                 <div class="border rounded px-3 py-2 mb-2 bg-white">
                                     <div class="font-weight-bold">{{ $slot['car']->name }}</div>
                                     <div class="small text-success">{{ $slot['start']->format('d/m/Y') }} - {{ $slot['end']->format('d/m/Y') }}</div>
-                                    <div class="small text-muted">Co the nhan khach trong khoang nay.</div>
+                                    <div class="small text-muted">Có thể nhận khách trong khoảng này.</div>
                                 </div>
                             @empty
-                                <div class="text-muted small">Khong co khoang ranh nao trong thang nay.</div>
+                                <div class="text-muted small">Không có khoảng rảnh nào trong tháng này.</div>
                             @endforelse
                         </div>
                     </div>
@@ -403,23 +403,23 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title font-weight-bold">Bo loc lich thue xe</h3>
+        <h3 class="card-title font-weight-bold">Bộ lọc lịch thuê xe</h3>
     </div>
     <div class="card-body">
         <form method="GET" action="{{ route('admin.bookings.calendar') }}" class="row">
             <div class="col-md-3 form-group">
-                <label class="font-weight-bold">Chon thang</label>
+                <label class="font-weight-bold">Chọn tháng</label>
                 <div class="input-group date-input-shell">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="far fa-calendar"></i></span>
                     </div>
-                    <input type="text" name="month" value="{{ $month->format('Y-m') }}" class="form-control js-month-picker" placeholder="Chon thang" autocomplete="off">
+                    <input type="text" name="month" value="{{ $month->format('Y-m') }}" class="form-control js-month-picker" placeholder="Chọn tháng" autocomplete="off">
                 </div>
             </div>
             <div class="col-md-4 form-group">
-                <label class="font-weight-bold">Loc theo xe</label>
+                <label class="font-weight-bold">Lọc theo xe</label>
                 <select name="car_id" class="form-control">
-                    <option value="">Tat ca xe</option>
+                    <option value="">Tất cả xe</option>
                     @foreach($cars as $car)
                         <option value="{{ $car->id }}" {{ (string) $selectedCarId === (string) $car->id ? 'selected' : '' }}>
                             {{ $car->name }}
@@ -428,24 +428,24 @@
                 </select>
             </div>
             <div class="col-md-3 form-group">
-                <label class="font-weight-bold">Trang thai</label>
+                <label class="font-weight-bold">Trạng thái</label>
                 <select name="status" class="form-control">
-                    <option value="">Tat ca trang thai</option>
+                    <option value="">Tất cả trạng thái</option>
                     @foreach($statusLabels as $value => $label)
                         <option value="{{ $value }}" {{ $selectedStatus === $value ? 'selected' : '' }}>{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-md-2 form-group">
-                <label class="font-weight-bold">Sap xep thang</label>
+                <label class="font-weight-bold">Sắp xếp tháng</label>
                 <select name="monthly_sort" class="form-control">
-                    <option value="time" {{ $monthlySort === 'time' ? 'selected' : '' }}>Theo thoi gian</option>
+                    <option value="time" {{ $monthlySort === 'time' ? 'selected' : '' }}>Theo thời gian</option>
                     <option value="car" {{ $monthlySort === 'car' ? 'selected' : '' }}>Theo xe</option>
                 </select>
             </div>
             <div class="col-md-1 form-group d-flex align-items-end">
                 <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-filter mr-1"></i> Loc
+                    <i class="fas fa-filter mr-1"></i> Lọc
                 </button>
             </div>
         </form>
@@ -456,13 +456,13 @@
     <div class="col-lg-3">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title font-weight-bold">Danh sach xe</h3>
+                <h3 class="card-title font-weight-bold">Danh sách xe</h3>
             </div>
             <div class="card-body p-2" style="max-height: 760px; overflow:auto;">
                 <a href="{{ route('admin.bookings.calendar', array_filter(['month' => $month->format('Y-m'), 'status' => $selectedStatus, 'monthly_sort' => $monthlySort])) }}"
                    class="d-block rounded px-3 py-2 mb-2 {{ !$selectedCarId ? 'bg-primary text-white' : 'bg-light text-dark' }}">
-                    <div class="font-weight-bold">Tat ca xe</div>
-                    <div class="small {{ !$selectedCarId ? 'text-white-50' : 'text-muted' }}">Hien thi toan bo lich thue</div>
+                    <div class="font-weight-bold">Tất cả xe</div>
+                    <div class="small {{ !$selectedCarId ? 'text-white-50' : 'text-muted' }}">Hiển thị toàn bộ lịch thuê</div>
                 </a>
                 @foreach($cars as $car)
                     @php
@@ -476,7 +476,7 @@
                             <span class="badge badge-{{ $carBookingsCount ? 'success' : 'secondary' }}">{{ $carBookingsCount }}</span>
                         </div>
                         <div class="small {{ $isActive ? 'text-white-50' : 'text-muted' }}">
-                            {{ $car->status === 'maintenance' ? 'Bao tri' : ($car->status === 'rented' ? 'Dang thue' : 'San sang') }}
+                            {{ $car->status === 'maintenance' ? 'Bảo trì' : ($car->status === 'rented' ? 'Đang thuê' : 'Sẵn sàng') }}
                         </div>
                     </a>
                 @endforeach
@@ -489,7 +489,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center flex-wrap w-100">
-                        <h3 class="card-title font-weight-bold mb-2 mb-md-0">Tinh trang xe: {{ $selectedCar->name }}</h3>
+                        <h3 class="card-title font-weight-bold mb-2 mb-md-0">Tình trạng xe: {{ $selectedCar->name }}</h3>
                         <div class="btn-group btn-group-sm">
                             <a href="{{ route('admin.bookings.calendar', array_filter([
                                 'month' => $month->copy()->subMonth()->format('Y-m'),
@@ -497,7 +497,7 @@
                                 'status' => $selectedStatus,
                                 'monthly_sort' => $monthlySort,
                             ])) }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-chevron-left mr-1"></i> Thang truoc
+                                <i class="fas fa-chevron-left mr-1"></i> Tháng trước
                             </a>
                             <a href="{{ route('admin.bookings.calendar', array_filter([
                                 'month' => now()->format('Y-m'),
@@ -505,7 +505,7 @@
                                 'status' => $selectedStatus,
                                 'monthly_sort' => $monthlySort,
                             ])) }}" class="btn btn-outline-primary">
-                                Thang nay
+                                Tháng này
                             </a>
                             <a href="{{ route('admin.bookings.calendar', array_filter([
                                 'month' => $month->copy()->addMonth()->format('Y-m'),
@@ -513,7 +513,7 @@
                                 'status' => $selectedStatus,
                                 'monthly_sort' => $monthlySort,
                             ])) }}" class="btn btn-outline-secondary">
-                                Thang sau <i class="fas fa-chevron-right ml-1"></i>
+                                Tháng sau <i class="fas fa-chevron-right ml-1"></i>
                             </a>
                         </div>
                     </div>
@@ -530,25 +530,25 @@
                         <input type="hidden" name="availability_end_date" value="{{ $availabilityEndDateInput ?: $availabilityDateInput }}" id="car-availability-date-end">
 
                         <div class="col-md-8 form-group">
-                            <label class="font-weight-bold">Tra cuu theo khoang ngay</label>
+                            <label class="font-weight-bold">Tra cứu theo khoảng ngày</label>
                             <div class="input-group date-input-shell">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                 </div>
                                 <input
                                     type="text"
-                                    value="{{ $availabilityDateInput ? ($availabilityDateInput . ($availabilityEndDateInput && $availabilityEndDateInput !== $availabilityDateInput ? ' to ' . $availabilityEndDateInput : '')) : '' }}"
+                                    value="{{ $availabilityDateInput ? (\Carbon\Carbon::createFromFormat('Y-m-d', $availabilityDateInput)->format('d/m/Y') . ($availabilityEndDateInput && $availabilityEndDateInput !== $availabilityDateInput ? ' den ' . \Carbon\Carbon::createFromFormat('Y-m-d', $availabilityEndDateInput)->format('d/m/Y') : '')) : '' }}"
                                     class="form-control js-date-range-picker"
                                     data-start-target="#car-availability-date-start"
                                     data-end-target="#car-availability-date-end"
-                                    placeholder="Chon tu ngay den ngay"
+                            placeholder="Chọn từ ngày đến ngày"
                                     autocomplete="off"
                                 >
                             </div>
                         </div>
                         <div class="col-md-2 form-group d-flex align-items-end">
                             <button type="submit" class="btn btn-outline-primary btn-block">
-                                <i class="fas fa-search mr-1"></i> Kiem tra
+                                <i class="fas fa-search mr-1"></i> Kiểm tra
                             </button>
                         </div>
                     </form>
@@ -557,18 +557,18 @@
                         <div class="alert {{ $availabilityCheck['is_free'] ? 'alert-success' : 'alert-danger' }}">
                             <div class="font-weight-bold">
                                 {{ $selectedCar->name }}
-                                {{ $availabilityCheck['is_free'] ? 'dang ranh' : 'dang ban' }}
-                                tu {{ $availabilityCheck['checked_at']->format('d/m/Y') }}
-                                den {{ $availabilityCheck['checked_end_at']->format('d/m/Y') }}.
+                                {{ $availabilityCheck['is_free'] ? 'đang rảnh' : 'đang bận' }}
+                                từ {{ $availabilityCheck['checked_at']->format('d/m/Y') }}
+                                đến {{ $availabilityCheck['checked_end_at']->format('d/m/Y') }}.
                             </div>
                             @if(!$availabilityCheck['is_free'])
-                                <div class="small mb-2">Dang co {{ $availabilityCheck['conflicts']->count() }} don trung trong khoang nay.</div>
+                                <div class="small mb-2">Đang có {{ $availabilityCheck['conflicts']->count() }} đơn trùng trong khoảng này.</div>
                                 @foreach($availabilityCheck['conflicts'] as $conflict)
                                     <div class="small">
                                         - {{ optional($conflict->start_date)->format('d/m/Y') }}
-                                        den
+                                        đến
                                         {{ optional($conflict->end_date)->format('d/m/Y') ?: optional($conflict->start_date)->format('d/m/Y') }}
-                                        | {{ $conflict->customer_name ?: 'Khach ' . substr($conflict->customer_phone, -4) }}
+                                        | {{ $conflict->customer_name ?: 'Khách ' . substr($conflict->customer_phone, -4) }}
                                     </div>
                                 @endforeach
                             @endif
@@ -579,7 +579,7 @@
                         <div class="col-lg-6">
                             <div class="border rounded p-3 h-100">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h4 class="h6 font-weight-bold mb-0 text-danger">Khoang dang ban trong thang</h4>
+                                    <h4 class="h6 font-weight-bold mb-0 text-danger">Khoảng đang bận trong tháng</h4>
                                     <span class="badge badge-danger">{{ $carBusySlots->count() }}</span>
                                 </div>
                                 <div style="max-height: 320px; overflow:auto;">
@@ -589,12 +589,12 @@
                                                 {{ $slot['start']->format('d/m/Y') }} - {{ $slot['end']->format('d/m/Y') }}
                                             </div>
                                             <div class="small text-muted">
-                                                {{ $slot['booking']->customer_name ?: 'Khach ' . substr($slot['booking']->customer_phone, -4) }}
+                                        {{ $slot['booking']->customer_name ?: 'Khách ' . substr($slot['booking']->customer_phone, -4) }}
                                                 | {{ $statusLabels[$slot['booking']->status] ?? $slot['booking']->status }}
                                             </div>
                                         </a>
                                     @empty
-                                        <div class="text-muted small">Khong co lich ban nao trong thang nay.</div>
+                                        <div class="text-muted small">Không có lịch bận nào trong tháng này.</div>
                                     @endforelse
                                 </div>
                             </div>
@@ -602,7 +602,7 @@
                         <div class="col-lg-6 mt-3 mt-lg-0">
                             <div class="border rounded p-3 h-100">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h4 class="h6 font-weight-bold mb-0 text-success">Khoang dang ranh trong thang</h4>
+                            <h4 class="h6 font-weight-bold mb-0 text-success">Khoảng đang rảnh trong tháng</h4>
                                     <span class="badge badge-success">{{ $carFreeSlots->count() }}</span>
                                 </div>
                                 <div style="max-height: 320px; overflow:auto;">
@@ -611,10 +611,10 @@
                                             <div class="font-weight-bold">
                                                 {{ $slot['start']->format('d/m/Y') }} - {{ $slot['end']->format('d/m/Y') }}
                                             </div>
-                                            <div class="small text-muted">Co the nhan khach trong khoang nay.</div>
+                                            <div class="small text-muted">Có thể nhận khách trong khoảng này.</div>
                                         </div>
                                     @empty
-                                        <div class="text-muted small">Khong co khoang ranh nao trong thang nay.</div>
+                                        <div class="text-muted small">Không có khoảng rảnh nào trong tháng này.</div>
                                     @endforelse
                                 </div>
                             </div>
@@ -627,17 +627,17 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                 <div>
-                    <h3 class="card-title font-weight-bold mb-1">Lich thang {{ $month->format('m/Y') }}</h3>
+                    <h3 class="card-title font-weight-bold mb-1">Lịch tháng {{ $month->format('m/Y') }}</h3>
                     <div class="small text-muted">
-                        {{ $selectedCar ? 'Dang xem lich cua xe: ' . $selectedCar->name : 'Dang xem lich cua tat ca xe' }}
+                        {{ $selectedCar ? 'Đang xem lịch của xe: ' . $selectedCar->name : 'Đang xem lịch của tất cả xe' }}
                     </div>
                 </div>
                 <div class="mt-2 mt-md-0">
-                    <span class="badge badge-warning mr-1">Cho xu ly</span>
-                    <span class="badge badge-primary mr-1">Da xac nhan</span>
-                    <span class="badge badge-info mr-1">Da giao</span>
-                    <span class="badge badge-success mr-1">Hoan thanh</span>
-                    <span class="badge badge-secondary">Da huy</span>
+                    <span class="badge badge-warning mr-1">Chờ xử lý</span>
+                    <span class="badge badge-primary mr-1">Đã xác nhận</span>
+                    <span class="badge badge-info mr-1">Đã giao</span>
+                    <span class="badge badge-success mr-1">Hoàn thành</span>
+                    <span class="badge badge-secondary">Đã hủy</span>
                 </div>
             </div>
             <div class="card-body">
@@ -647,7 +647,7 @@
 
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title font-weight-bold">Danh sach don trong thang</h3>
+                <h3 class="card-title font-weight-bold">Danh sách đơn trong tháng</h3>
             </div>
             <div class="card-body table-responsive">
                 <table id="monthly-bookings-table" class="table table-bordered table-hover text-nowrap mb-0">
@@ -655,12 +655,12 @@
                         <tr>
                             <th>#</th>
                             <th>Xe</th>
-                            <th>Khach</th>
-                            <th>Loai thue</th>
-                            <th>Tu ngay</th>
-                            <th>Den ngay</th>
-                            <th>Trang thai</th>
-                            <th>Tong tien</th>
+                            <th>Khách</th>
+                            <th>Loại thuê</th>
+                            <th>Từ ngày</th>
+                            <th>Đến ngày</th>
+                            <th>Trạng thái</th>
+                            <th>Tổng tiền</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -670,18 +670,18 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $booking->car?->name ?? '-' }}</td>
                                 <td>
-                                    <div class="font-weight-bold">{{ $booking->customer_name ?: 'Khach ' . substr($booking->customer_phone, -4) }}</div>
+                                    <div class="font-weight-bold">{{ $booking->customer_name ?: 'Khách ' . substr($booking->customer_phone, -4) }}</div>
                                     <div class="small text-muted">{{ $booking->customer_phone }}</div>
                                 </td>
                                 <td>
                                     @if($booking->rental_type === 'hourly')
-                                        Theo buoi
+                                        Theo buổi
                                         <div class="small text-muted">{{ $booking->session_label }}</div>
                                     @elseif($booking->rental_type === 'multi-day')
-                                        Nhieu ngay
-                                        <div class="small text-muted">{{ $booking->days }} ngay</div>
+                                        Nhiều ngày
+                                        <div class="small text-muted">{{ $booking->days }} ngày</div>
                                     @else
-                                        1 ngay
+                                        1 ngày
                                     @endif
                                     @if($booking->trip_plan_label)
                                         <div class="small text-muted">{{ $booking->trip_plan_label }}</div>
@@ -712,7 +712,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center text-muted py-4">Khong co lich thue trong thang nay.</td>
+                                <td colspan="9" class="text-center text-muted py-4">Không có lịch thuê trong tháng này.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -726,7 +726,7 @@
 @section('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.css">
     <link rel="stylesheet" href="{{ asset('assets/vendor/flatpickr/flatpickr.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/flatpickr/plugins/monthSelect/style.css') }}">
     <style>
         #booking-calendar {
             min-height: 760px;
@@ -791,7 +791,7 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
     <script src="{{ asset('assets/vendor/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/flatpickr/l10n/vn.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+    <script src="{{ asset('assets/vendor/flatpickr/plugins/monthSelect/index.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             $('#monthly-bookings-table').DataTable({
@@ -801,16 +801,16 @@
                     { orderable: false, targets: [8] }
                 ],
                 language: {
-                    search: 'Tim kiem:',
-                    lengthMenu: 'Hien _MENU_ dong',
-                    info: 'Hien thi _START_ den _END_ / _TOTAL_ don trong thang',
-                    infoEmpty: 'Khong co du lieu',
-                    zeroRecords: 'Khong tim thay don phu hop',
+                    search: 'Tìm kiếm:',
+                    lengthMenu: 'Hiện _MENU_ dòng',
+                    info: 'Hiển thị _START_ đến _END_ / _TOTAL_ đơn trong tháng',
+                    infoEmpty: 'Không có dữ liệu',
+                    zeroRecords: 'Không tìm thấy đơn phù hợp',
                     paginate: {
-                        first: 'Dau',
-                        last: 'Cuoi',
+                        first: 'Đầu',
+                        last: 'Cuối',
                         next: 'Sau',
-                        previous: 'Truoc'
+                        previous: 'Trước'
                     }
                 }
             });
@@ -818,29 +818,32 @@
             if (typeof flatpickr !== 'undefined') {
                 flatpickr.localize(flatpickr.l10ns.vn || flatpickr.l10ns.default);
 
-                document.querySelectorAll('.js-month-picker').forEach(function (input) {
-                    flatpickr(input, {
-                        dateFormat: 'Y-m',
-                        altInput: true,
-                        altFormat: 'm/Y',
-                        allowInput: false,
-                        disableMobile: true,
-                        locale: 'vn',
-                        plugins: [
-                            new monthSelectPlugin({
-                                shorthand: true,
-                                dateFormat: 'Y-m',
-                                altFormat: 'm/Y'
-                            })
-                        ]
+                try {
+                    document.querySelectorAll('.js-month-picker').forEach(function (input) {
+                        if (typeof monthSelectPlugin === 'undefined') return;
+                        flatpickr(input, {
+                            dateFormat: 'Y-m',
+                            altInput: true,
+                            altFormat: 'm/Y',
+                            allowInput: false,
+                            disableMobile: true,
+                            locale: 'vn',
+                            plugins: [
+                                new monthSelectPlugin({
+                                    shorthand: true,
+                                    dateFormat: 'Y-m',
+                                    altFormat: 'm/Y'
+                                })
+                            ]
+                        });
                     });
-                });
+                } catch (e) {
+                    console.warn('monthSelectPlugin failed:', e);
+                }
 
                 document.querySelectorAll('.js-date-picker').forEach(function (input) {
                     flatpickr(input, {
-                        dateFormat: 'Y-m-d',
-                        altInput: true,
-                        altFormat: 'd/m/Y',
+                        dateFormat: 'd/m/Y',
                         allowInput: false,
                         disableMobile: true,
                         locale: 'vn'
@@ -850,16 +853,18 @@
                 document.querySelectorAll('.js-date-range-picker').forEach(function (input) {
                     flatpickr(input, {
                         mode: 'range',
-                        dateFormat: 'Y-m-d',
-                        altInput: true,
-                        altFormat: 'd/m/Y',
+                        dateFormat: 'd/m/Y',
                         conjunction: ' den ',
                         allowInput: false,
                         disableMobile: true,
                         locale: 'vn',
                         defaultDate: [
-                            @json($availabilityDateInput ?: null),
-                            @json(($availabilityEndDateInput && $availabilityEndDateInput !== $availabilityDateInput) ? $availabilityEndDateInput : null)
+                            @if($availabilityDateInput)
+                                '{{ \Carbon\Carbon::createFromFormat('Y-m-d', $availabilityDateInput)->format('d/m/Y') }}',
+                            @endif
+                            @if($availabilityEndDateInput && $availabilityEndDateInput !== $availabilityDateInput)
+                                '{{ \Carbon\Carbon::createFromFormat('Y-m-d', $availabilityEndDateInput)->format('d/m/Y') }}',
+                            @endif
                         ].filter(Boolean),
                         onChange: function (selectedDates) {
                             var startSelector = input.dataset.startTarget;
@@ -902,11 +907,11 @@
                     right: 'multiMonthYear,dayGridMonth,timeGridWeek,listWeek'
                 },
                 buttonText: {
-                    today: 'Hom nay',
-                    multiMonthYear: 'Nam',
-                    month: 'Thang',
-                    week: 'Tuan',
-                    list: 'Danh sach'
+                    today: 'Hôm nay',
+                    multiMonthYear: 'Năm',
+                    month: 'Tháng',
+                    week: 'Tuần',
+                    list: 'Danh sách'
                 },
                 views: {
                     multiMonthYear: {
@@ -932,10 +937,10 @@
                     }
                     var tip = [
                         info.event.title,
-                        props.statusLabel ? 'Trang thai: ' + props.statusLabel : null,
-                        props.hasOverlap ? 'Canh bao: Trung lich cung xe' : null,
+                        props.statusLabel ? 'Trạng thái: ' + props.statusLabel : null,
+                        props.hasOverlap ? 'Cảnh báo: Trùng lịch cùng xe' : null,
                         props.customerPhone ? 'SDT: ' + props.customerPhone : null,
-                        props.totalPrice ? 'Tong tien: ' + props.totalPrice : null
+                        props.totalPrice ? 'Tổng tiền: ' + props.totalPrice : null
                     ].filter(Boolean).join('\n');
                     info.el.setAttribute('title', tip);
                 }

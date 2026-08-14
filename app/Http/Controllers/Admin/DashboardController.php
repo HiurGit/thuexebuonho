@@ -6,32 +6,33 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
-    private const DEFAULT_TELEGRAM_QUICK_TEMPLATE = "DON DAT XE NHANH\n"
-        . "Ma don: {ma_don}\n"
-        . "Nguon: {nguon_form}\n"
-        . "So dien thoai: {so_dien_thoai}\n"
-        . "Loai thue: {loai_thue}\n"
-        . "Ngay thue: {ngay_thue}\n"
-        . "Khung gio: {khung_gio}";
+    private const DEFAULT_TELEGRAM_QUICK_TEMPLATE = "ĐƠN ĐẶT XE NHANH\n"
+        . "Mã đơn: {ma_don}\n"
+        . "Nguồn: {nguon_form}\n"
+        . "Số điện thoại: {so_dien_thoai}\n"
+        . "Loại thuê: {loai_thue}\n"
+        . "Ngày thuê: {ngay_thue}\n"
+        . "Khung giờ: {khung_gio}";
 
-    private const DEFAULT_TELEGRAM_CAR_DETAIL_TEMPLATE = "DON DAT XE CHI TIET\n"
-        . "Ma don: {ma_don}\n"
-        . "Nguon: {nguon_form}\n"
+    private const DEFAULT_TELEGRAM_CAR_DETAIL_TEMPLATE = "ĐƠN ĐẶT XE CHI TIẾT\n"
+        . "Mã đơn: {ma_don}\n"
+        . "Nguồn: {nguon_form}\n"
         . "Xe: {ten_xe}\n"
-        . "Khach: {ten_khach}\n"
-        . "So dien thoai: {so_dien_thoai}\n"
-        . "Loai thue: {loai_thue}\n"
-        . "Ngay thue: {ngay_thue}\n"
-        . "Khung gio: {khung_gio}\n"
-        . "Ke hoach: {ke_hoach_chuyen_di}\n"
-        . "Nhan xe: {hinh_thuc_nhan_xe}\n"
-        . "So ngay: {so_ngay}\n"
-        . "Tong tien: {tong_tien}\n"
-        . "Ghi chu: {ghi_chu}";
+        . "Khách: {ten_khach}\n"
+        . "Số điện thoại: {so_dien_thoai}\n"
+        . "Loại thuê: {loai_thue}\n"
+        . "Ngày thuê: {ngay_thue}\n"
+        . "Khung giờ: {khung_gio}\n"
+        . "Kế hoạch: {ke_hoach_chuyen_di}\n"
+        . "Nhận xe: {hinh_thuc_nhan_xe}\n"
+        . "Số ngày: {so_ngay}\n"
+        . "Tổng tiền: {tong_tien}\n"
+        . "Ghi chú: {ghi_chu}";
 
     public function index()
     {
@@ -86,6 +87,15 @@ class DashboardController extends Controller
             'site_address' => Setting::get('site_address', '07 Chu Van An, Buon Ho, Dak Lak'),
             'site_map_url' => Setting::get('site_map_url', 'https://maps.app.goo.gl/Qr6kWexgKnYdRdpq7'),
             'google_tag_id' => Setting::get('google_tag_id', ''),
+            'site_owner_name' => Setting::get('site_owner_name', 'Thuê Xe Tự Lái Buôn Hồ'),
+            'site_owner_avatar' => Setting::get('site_owner_avatar', ''),
+            'site_facebook' => Setting::get('site_facebook', 'https://www.facebook.com/9999NDT/'),
+            'site_keywords' => Setting::get('site_keywords', ''),
+            'site_description' => Setting::get('site_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'),
+            'home_meta_description' => Setting::get('home_meta_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'),
+            'home_og_title' => Setting::get('home_og_title', 'Thuê Xe Buôn Hồ - Cho thuê xe tự lái'),
+            'home_og_description' => Setting::get('home_og_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'),
+            'home_og_image' => Setting::get('home_og_image', ''),
         ];
 
         return view('admin.web-info', compact('settings'));
@@ -98,21 +108,66 @@ class DashboardController extends Controller
             'site_address' => 'nullable|string|max:255',
             'site_map_url' => 'nullable|url|max:1000',
             'google_tag_id' => ['nullable', 'string', 'max:50', 'regex:/^(G|AW)-[A-Z0-9]+$/i'],
+            'site_owner_name' => 'nullable|string|max:255',
+            'site_owner_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'site_facebook' => 'nullable|url|max:500',
+            'site_keywords' => 'nullable|string|max:1000',
+            'site_description' => 'nullable|string|max:500',
+            'home_meta_description' => 'nullable|string|max:500',
+            'home_og_title' => 'nullable|string|max:200',
+            'home_og_description' => 'nullable|string|max:500',
+            'home_og_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
-            'site_phone.max' => 'So dien thoai khong duoc vuot qua 30 ky tu.',
-            'site_address.max' => 'Dia chi khong duoc vuot qua 255 ky tu.',
-            'site_map_url.url' => 'Link dinh vi phai la URL hop le.',
-            'site_map_url.max' => 'Link dinh vi khong duoc vuot qua 1000 ky tu.',
-            'google_tag_id.max' => 'Ma Google tag khong duoc vuot qua 50 ky tu.',
-            'google_tag_id.regex' => 'Ma Google tag phai co dang G-XXXXXXX hoac AW-XXXXXXX.',
+            'site_phone.max' => 'Số điện thoại không được vượt quá 30 ký tự.',
+            'site_address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
+            'site_url.url' => 'Link định vị phải là URL hợp lệ.',
+            'site_url.max' => 'Link định vị không được vượt quá 1000 ký tự.',
+            'google_tag_id.max' => 'Mã Google tag không được vượt quá 50 ký tự.',
+            'google_tag_id.regex' => 'Mã Google tag phải có dạng G-XXXXXXX hoặc AW-XXXXXXX.',
+            'site_owner_name.max' => 'Tên chủ cửa hàng không được vượt quá 255 ký tự.',
+            'site_owner_avatar.image' => 'Avatar phải là file ảnh.',
+            'site_owner_avatar.max' => 'Dung lượng avatar không được vượt quá 2MB.',
+            'site_facebook.url' => 'Link Facebook phải là URL hợp lệ.',
+            'site_facebook.max' => 'Link Facebook không được vượt quá 500 ký tự.',
+            'site_description.max' => 'Meta description không được vượt quá 500 ký tự.',
+            'home_meta_description.max' => 'Meta description trang chủ không được vượt quá 500 ký tự.',
+            'home_og_title.max' => 'OG Title không được vượt quá 200 ký tự.',
+            'home_og_description.max' => 'OG Description không được vượt quá 500 ký tự.',
+            'home_og_image.image' => 'OG Image phải là file ảnh.',
+            'home_og_image.max' => 'Dung lượng OG Image không được vượt quá 2MB.',
         ]);
 
         Setting::set('site_phone', trim((string) ($validated['site_phone'] ?? '')));
         Setting::set('site_address', trim((string) ($validated['site_address'] ?? '')));
         Setting::set('site_map_url', trim((string) ($validated['site_map_url'] ?? '')));
         Setting::set('google_tag_id', strtoupper(trim((string) ($validated['google_tag_id'] ?? ''))));
+        Setting::set('site_owner_name', trim((string) ($validated['site_owner_name'] ?? '')));
+        Setting::set('site_facebook', trim((string) ($validated['site_facebook'] ?? '')));
+        Setting::set('site_keywords', trim((string) ($validated['site_keywords'] ?? '')));
+        Setting::set('site_description', trim((string) ($validated['site_description'] ?? '')));
+        Setting::set('home_meta_description', trim((string) ($validated['home_meta_description'] ?? '')));
+        Setting::set('home_og_title', trim((string) ($validated['home_og_title'] ?? '')));
+        Setting::set('home_og_description', trim((string) ($validated['home_og_description'] ?? '')));
 
-        return back()->with('success', 'Da cap nhat thong tin web.');
+        if ($request->hasFile('home_og_image')) {
+            $oldOgImage = Setting::get('home_og_image', '');
+            if ($oldOgImage && Storage::disk('public')->exists(str_replace('storage/', '', $oldOgImage))) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $oldOgImage));
+            }
+            $path = $request->file('home_og_image')->store('seo', 'public');
+            Setting::set('home_og_image', 'storage/' . $path);
+        }
+
+        if ($request->hasFile('site_owner_avatar')) {
+            $oldAvatar = Setting::get('site_owner_avatar', '');
+            if ($oldAvatar && Storage::disk('public')->exists(str_replace('storage/', '', $oldAvatar))) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $oldAvatar));
+            }
+            $path = $request->file('site_owner_avatar')->store('owner', 'public');
+            Setting::set('site_owner_avatar', 'storage/' . $path);
+        }
+
+        return back()->with('success', 'Đã cập nhật thông tin web.');
     }
 
     public function updateSettings(Request $request)
@@ -124,8 +179,8 @@ class DashboardController extends Controller
             'telegram_quick_message_template' => 'nullable|string',
             'telegram_car_detail_message_template' => 'nullable|string',
         ], [
-            'telegram_bot_token.max' => 'Bot token khong duoc vuot qua 255 ky tu.',
-            'telegram_chat_id.max' => 'Chat ID khong duoc vuot qua 255 ky tu.',
+            'telegram_bot_token.max' => 'Bot token không được vượt quá 255 ký tự.',
+            'telegram_chat_id.max' => 'Chat ID không được vượt quá 255 ký tự.',
         ]);
 
         $isEnabled = $request->boolean('telegram_bot_enabled');
@@ -137,7 +192,7 @@ class DashboardController extends Controller
         if ($isEnabled && ($botToken === '' || $chatId === '')) {
             return back()
                 ->withErrors([
-                    'telegram_bot_token' => 'Khi bat Telegram bot, ban can nhap day du bot token va chat ID.',
+                    'telegram_bot_token' => 'Khi bật Telegram bot, bạn cần nhập đầy đủ bot token và chat ID.',
                 ])
                 ->withInput();
         }
@@ -156,7 +211,7 @@ class DashboardController extends Controller
         Setting::set('telegram_quick_message_template', $quickMessageTemplate);
         Setting::set('telegram_car_detail_message_template', $carDetailMessageTemplate);
 
-        return back()->with('success', 'Da cap nhat cau hinh Telegram.');
+        return back()->with('success', 'Đã cập nhật cấu hình Telegram.');
     }
 
     public function users()

@@ -4,6 +4,7 @@
   @include('partials.head')
 </head>
 <body class="bg-app-bg font-sans text-app-ink antialiased">
+<div id="htx-loading-bar"></div>
 @php
   $sitePhone = \App\Models\Setting::get('site_phone', '0964918047');
   $sitePhoneDisplay = preg_replace('/(\d{4})(\d{3})(\d{3,})/', '$1.$2.$3', $sitePhone) ?: $sitePhone;
@@ -26,12 +27,13 @@
       </a>
       <nav class="hidden items-center gap-1 lg:flex">
         <a href="{{ route('index') }}#trang-chu" class="rounded-xl px-4 py-2 text-sm font-bold text-app-accent transition-colors hover:bg-app-accentSoft">Trang chủ</a>
-        <a href="{{ route('index') }}#danh-sach-xe" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Danh sách xe</a>
+        <a href="{{ route('cars.index') }}" class="rounded-xl px-4 py-2 text-sm font-bold @if(request()->routeIs('cars.index')) text-app-accent bg-app-accentSoft @else text-app-muted @endif transition-colors hover:bg-app-accentSoft hover:text-app-accent">Danh sách xe</a>
         <a href="{{ route('index') }}#dich-vu" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Dịch vụ</a>
         <a href="{{ route('index') }}#bang-gia" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Bảng giá</a>
         <a href="{{ route('index') }}#chung-toi" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Về chúng tôi</a>
         <a href="{{ route('services') }}" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Dịch vụ khác</a>
         <a href="{{ route('terms') }}" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Điều khoản</a>
+        <!-- <a href="{{ route('lien-he') }}" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Liên hệ</a> -->
       </nav>
       <div class="flex items-center gap-3">
         <a href="tel:{{ $sitePhone }}" class="hidden items-center gap-2 rounded-xl bg-app-accent px-4 py-2.5 text-sm font-extrabold text-white transition-all hover:bg-app-green sm:flex">
@@ -72,10 +74,11 @@
         <div>
           <h3 class="text-sm font-extrabold uppercase tracking-wider text-white/80">Liên kết nhanh</h3>
           <ul class="mt-4 space-y-2">
-            <li><a href="#danh-sach-xe" class="text-sm text-white/60 transition-colors hover:text-white">Danh sách xe</a></li>
+            <li><a href="{{ route('cars.index') }}" class="text-sm text-white/60 transition-colors hover:text-white">Danh sách xe</a></li>
             <li><a href="#dich-vu" class="text-sm text-white/60 transition-colors hover:text-white">Dịch vụ</a></li>
             <li><a href="#bang-gia" class="text-sm text-white/60 transition-colors hover:text-white">Bảng giá</a></li>
             <li><a href="{{ route('services') }}" class="text-sm text-white/60 transition-colors hover:text-white">Dịch vụ khác</a></li>
+            <li><a href="{{ route('lien-he') }}" class="text-sm text-white/60 transition-colors hover:text-white">Liên hệ</a></li>
           </ul>
         </div>
 
@@ -86,6 +89,7 @@
             <li><a href="{{ route('privacy') }}" class="text-sm text-white/60 transition-colors hover:text-white">Chính sách bảo mật</a></li>
             <li><a href="{{ route('huongdan') }}" class="text-sm text-white/60 transition-colors hover:text-white">Hướng dẫn</a></li>
             <li><a href="{{ route('da-giao') }}" class="text-sm text-white/60 transition-colors hover:text-white">Đã giao</a></li>
+            <li><a href="{{ route('lien-he') }}" class="text-sm text-white/60 transition-colors hover:text-white">Liên hệ</a></li>
           </ul>
         </div>
 
@@ -121,7 +125,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                 </svg>
               </a>
-              <a href="https://www.facebook.com/9999NDT/" target="_blank" rel="noopener" class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-blue-600">
+              <a href="{{ \App\Models\Setting::get('site_facebook', 'https://www.facebook.com/9999NDT/') }}" target="_blank" rel="noopener" class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-blue-600">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4">
                   <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
                 </svg>
@@ -178,7 +182,7 @@
                 <a href="#trang-chu" class="whitespace-nowrap rounded-[10px] bg-app-accentSoft px-3 py-2.5 text-[12px] font-extrabold text-app-accent">Trang chủ</a>
               </div>
               <div class="swiper-slide w-auto">
-                <a href="#danh-sach-xe" class="whitespace-nowrap rounded-[10px] px-2 py-2.5 text-[12px] font-extrabold text-app-muted">Danh sách xe</a>
+                <a href="{{ route('cars.index') }}" class="whitespace-nowrap rounded-[10px] px-2 py-2.5 text-[12px] font-extrabold text-app-muted">Danh sách xe</a>
               </div>
               <div class="swiper-slide w-auto">
                 <a href="#dich-vu" class="whitespace-nowrap rounded-[10px] px-2 py-2.5 text-[12px] font-extrabold text-app-muted">Dịch vụ khác</a>
@@ -218,11 +222,11 @@
           <span class="text-[10px] font-extrabold">Trang chủ</span>
         </a>
 
-        <a href="{{ route('da-giao') }}" class="nav-item flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors @if(request()->routeIs('da-giao')) text-app-accent @else text-app-muted @endif" data-nav="orders">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0" />
+        <a href="{{ route('cars.index') }}" class="nav-item flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors @if(request()->routeIs('cars.index')) text-app-accent @else text-app-muted @endif" data-nav="cars">
+          <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor">
+            <path d="M7 6 A 1.0001 1.0001 0 0 0 6.2929688 6.2929688L3.2929688 9.2929688 A 1.0001 1.0001 0 0 0 3.0292969 10.242188L4.0292969 14.242188 A 1.0001 1.0001 0 0 0 5 15L10 15L10 17L8.5976562 17C6.7095541 17 4.9786821 18.068954 4.1308594 19.755859L4.1621094 19.697266L0.73828125 25.515625C0.25551192 26.302311 0 27.206624 0 28.128906L0 37.308594C0 38.783636 1.2163641 40 2.6914062 40L4.0917969 40C4.5721157 42.828207 7.039829 45 10 45C12.960171 45 15.427884 42.828207 15.908203 40L34.091797 40C34.572116 42.828207 37.039829 45 40 45C42.960171 45 45.427884 42.828207 45.908203 40L47 40C48.645455 40 50 38.645455 50 37L50 32.388672C50 29.951489 48.225687 27.858433 45.822266 27.457031L37.494141 26.068359L30.533203 18.777344C29.583575 17.650285 28.183972 17 26.710938 17L26 17L26 15L31 15 A 1.0001 1.0001 0 0 0 31.894531 14.447266L33.894531 10.447266 A 1.0001 1.0001 0 0 0 33.263672 9.0351562L22.263672 6.0351562 A 1.0001 1.0001 0 0 0 22 6L7 6 z M 7.4140625 8L21.865234 8L31.560547 10.644531L30.382812 13L5.78125 13L5.1074219 10.306641L7.4140625 8 z M 12 15L24 15L24 17L12 17L12 15 z M 8.5976562 19L17 19L17 26L2.7734375 26L5.9023438 20.683594L5.9179688 20.652344C6.4281453 19.637236 7.4617586 19 8.5976562 19 z M 19 19L26.710938 19C27.595903 19 28.433534 19.389465 29.003906 20.066406L29.023438 20.089844L34.662109 26L19 26L19 19 z M 2.0078125 28L36.916016 28L45.494141 29.429688C46.946721 29.672283 48 30.915854 48 32.388672L48 37C48 37.554545 47.554545 38 47 38L45.908203 38C45.427884 35.171793 42.960171 33 40 33C37.039829 33 34.572116 35.171793 34.091797 38L15.908203 38C15.427884 35.171793 12.960171 33 10 33C7.039829 33 4.5721157 35.171793 4.0917969 38L2.6914062 38C2.2984484 38 2 37.701552 2 37.308594L2 28.128906C2 28.085622 2.00596 28.043127 2.0078125 28 z M 10 35C12.220375 35 14 36.779625 14 39C14 41.220375 12.220375 43 10 43C7.7796254 43 6 41.220375 6 39C6 36.779625 7.7796254 35 10 35 z M 40 35C42.220375 35 44 36.779625 44 39C44 41.220375 42.220375 43 40 43C37.779625 43 36 41.220375 36 39C36 36.779625 37.779625 35 40 35 z"/>
           </svg>
-          <span class="text-[10px] font-extrabold">Đã giao</span>
+          <span class="text-[10px] font-extrabold">DS Xe</span>
         </a>
 
         <a href="{{ route('services') }}" class="nav-item flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors @if(request()->routeIs('services')) text-app-accent @else text-app-muted @endif" data-nav="services">
@@ -232,7 +236,7 @@
           <span class="text-[10px] font-extrabold">Dịch vụ</span>
         </a>
 
-        <a id="nav-contact" href="#" class="nav-item flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 text-app-muted transition-colors" data-nav="contact">
+        <a id="nav-contact" href="{{ route('lien-he') }}" class="nav-item flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors @if(request()->routeIs('lien-he')) text-app-accent @else text-app-muted @endif" data-nav="contact">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
           </svg>
@@ -269,7 +273,7 @@
   <div class="flex-1 overflow-y-auto px-5">
     <!-- Card 1: Đăng nhập/Đăng ký - Liên hệ Zalo - Vào nhóm Zalo -->
     <div class="bg-white rounded-[20px] shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-      <a href="#" class="flex items-center h-[52px] px-5">
+      <!-- <a href="#" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
         </svg>
@@ -277,7 +281,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
-      </a>
+      </a> -->
       <div class="h-px bg-[#EEEEEE] mx-5"></div>
       <a href="{{ $siteZaloUrl }}" target="_blank" rel="noopener" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
@@ -340,6 +344,16 @@
         </svg>
       </a>
       <div class="h-px bg-[#EEEEEE] mx-5"></div>
+      <a href="{{ route('da-giao') }}" class="flex items-center h-[52px] px-5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0" />
+        </svg>
+        <span class="flex-1 text-base font-medium text-app-ink ml-3">Bàn giao xe</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+      </a>
+      <div class="h-px bg-[#EEEEEE] mx-5"></div>
       <a href="{{ route('terms') }}" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
@@ -355,6 +369,16 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
         </svg>
         <span class="flex-1 text-base font-medium text-app-ink ml-3">Chính sách bảo mật</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+      </a>
+      <div class="h-px bg-[#EEEEEE] mx-5"></div>
+      <a href="{{ route('lien-he') }}" class="flex items-center h-[52px] px-5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/>
+        </svg>
+        <span class="flex-1 text-base font-medium text-app-ink ml-3">Liên hệ</span>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>

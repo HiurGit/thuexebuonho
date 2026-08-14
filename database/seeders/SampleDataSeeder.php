@@ -117,14 +117,14 @@ class SampleDataSeeder extends Seeder
             CarAmenity::create(['car_id' => $veloz->id, 'name' => $name, 'sort_order' => $i + 1]);
         }
 
-        // === GLOBAL GUIDES (Usage - Hướng dẫn sử dụng xe) ===
+        // === GLOBAL GUIDES (Usage - Quá trình sử dụng xe) ===
         $usageGuides = [
-            ['Trước khi khởi hành', '<ul><li>Kiểm tra xung quanh xe.</li><li>Điều chỉnh ghế ngồi, vô lăng và gương.</li><li>Thắt dây an toàn.</li><li>Kiểm tra mức nhiên liệu.</li><li>Đảm bảo tất cả cửa đã đóng kín.</li></ul>'],
-            ['Khởi động xe', '<ul><li>Đạp phanh.</li><li>Khởi động bằng nút bấm hoặc chìa khóa.</li><li>Chờ các đèn cảnh báo trên bảng đồng hồ tắt trước khi di chuyển.</li></ul>'],
-            ['Chuyển số', '<ul><li><b>P</b>: Đỗ xe.</li><li><b>R</b>: Lùi xe.</li><li><b>N</b>: Mo.</li><li><b>D</b>: Tiến.</li><li>Chỉ chuyển số khi xe đã dừng hẳn.</li></ul>'],
-            ['Sử dụng các chức năng', '<ul><li>Điều hòa.</li><li>Đèn chiếu sáng.</li><li>Gạt mưa.</li><li>Màn hình giải trí.</li><li>Camera lùi/cảm biến (nếu có).</li><li>Cruise Control (nếu có).</li><li>Auto Hold/Phanh tay điện tử (nếu có).</li></ul>'],
-            ['Trong quá trình sử dụng', '<ul><li>Tuân thủ luật giao thông.</li><li>Không giao xe cho người không đăng ký thuê.</li><li>Không hút thuốc trong xe.</li><li>Không tự ý sửa chữa xe.</li><li>Không sử dụng sai loại nhiên liệu.</li></ul>'],
-            ['Khi kết thúc hành trình', '<ul><li>Đưa cần số về P.</li><li>Kéo phanh tay (nếu cần).</li><li>Tắt động cơ.</li><li>Kiểm tra đồ dùng cá nhân trước khi rời xe.</li></ul>'],
+            ['Sử dụng xe đúng lộ trình đã đăng ký', '<ul><li>Người thuê chỉ được sử dụng xe theo khu vực và lộ trình đã thông báo với bên cho thuê.</li><li>Nếu có thay đổi về địa điểm hoặc lộ trình di chuyển, vui lòng thông báo trước để được xác nhận.</li></ul>'],
+            ['Chỉ người đăng ký mới được phép điều khiển xe', '<ul><li>Chỉ người có tên trong hợp đồng thuê xe được phép điều khiển phương tiện.</li><li>Không giao xe cho người khác điều khiển hoặc cho mượn xe khi chưa có sự đồng ý của bên cho thuê.</li></ul>'],
+            ['Kiểm tra xe trước khi khởi hành', '<ul><li>Kiểm tra ngoại thất, nội thất, mức nhiên liệu và các trang thiết bị trên xe.</li><li>Kiểm tra áp suất lốp, đèn chiếu sáng và các đèn cảnh báo.</li><li>Nếu phát hiện bất thường, vui lòng liên hệ ngay với bên cho thuê trước khi vận hành xe.</li></ul>'],
+            ['Điều khiển xe an toàn', '<ul><li>Tuân thủ Luật Giao thông đường bộ.</li><li>Không lái xe khi đã sử dụng rượu bia, ma túy hoặc các chất kích thích.</li><li>Thắt dây an toàn cho tất cả người ngồi trên xe.</li><li>Không sử dụng điện thoại khi lái xe nếu không có thiết bị rảnh tay.</li></ul>'],
+            ['Sử dụng xe đúng mục đích', '<ul><li>Không sử dụng xe để đua xe, chạy thử, tập lái, kéo xe khác hoặc thực hiện các hành vi vi phạm pháp luật.</li><li>Không chở quá số người hoặc quá tải trọng cho phép.</li><li>Không sử dụng xe để vận chuyển hàng cấm, hàng nguy hiểm hoặc phục vụ mục đích trái pháp luật.</li></ul>'],
+            ['Bảo quản xe', '<ul><li>Giữ gìn vệ sinh nội thất và ngoại thất xe.</li><li>Không hút thuốc trong xe.</li><li>Không để vật sắc nhọn, hóa chất hoặc chất dễ cháy nổ trên xe.</li><li>Khi rời xe phải tắt máy, khóa cửa và bảo quản chìa khóa cẩn thận.</li></ul>'],
         ];
         foreach ($usageGuides as $i => $g) {
             GlobalGuide::create(['type' => 'usage', 'section_title' => $g[0], 'content' => $g[1], 'sort_order' => $i + 1]);
@@ -132,11 +132,11 @@ class SampleDataSeeder extends Seeder
 
         // === GLOBAL GUIDES (Accident) ===
         $accidentGuides = [
-            ['Đảm bảo an toàn', '<ul><li>Bình tĩnh.</li><li>Bật đèn cảnh báo khẩn cấp.</li><li>Đặt biển cảnh báo nếu cần.</li><li>Kiểm tra tình trạng người trên xe.</li></ul>'],
-            ['Giữ nguyên hiện trường', '<ul><li>Không tự ý di chuyển xe nếu không cần thiết.</li><li>Chỉ di chuyển khi gây nguy hiểm cho giao thông.</li></ul>'],
-            ['Ghi nhận hiện trường', '<p>Chụp rõ:</p><ul><li>Toàn cảnh hiện trường.</li><li>Vị trí các xe.</li><li>Biển số các xe.</li><li>Các vị trí hư hỏng.</li><li>Dấu vết phanh, biển báo, đèn tín hiệu.</li></ul>'],
-            ['Liên hệ', '<p>Ưu tiên gọi theo thứ tự:</p><ul><li>Chủ xe/đơn vị cho thuê.</li><li>Bảo hiểm.</li><li>Cơ quan chức năng nếu có thương tích, tranh chấp hoặc thiệt hại lớn.</li></ul>'],
-            ['Chờ hướng dẫn', '<ul><li>Không tự ý thỏa thuận bồi thường.</li><li>Không ký bất kỳ giấy tờ nào khi chưa trao đổi với chủ xe.</li></ul>'],
+            ['Đảm bảo an toàn', "• Bình tĩnh.\n• Bật đèn cảnh báo khẩn cấp.\n• Đặt biển cảnh báo nếu cần.\n• Kiểm tra tình trạng người trên xe."],
+            ['Giữ nguyên hiện trường', "• Không tự ý di chuyển xe nếu không cần thiết.\n• Chỉ di chuyển khi gây nguy hiểm cho giao thông."],
+            ['Ghi nhận hiện trường', "Chụp rõ:\n• Toàn cảnh hiện trường.\n• Vị trí các xe.\n• Biển số các xe.\n• Các vị trí hư hỏng.\n• Dấu vết phanh, biển báo, đèn tín hiệu.\n• Giấy tờ của các bên (nếu được phép)."],
+            ['Liên hệ', "Ưu tiên gọi theo thứ tự:\n1. Chủ xe/đơn vị cho thuê.\n2. Bảo hiểm.\n3. Cơ quan chức năng nếu có thương tích, tranh chấp hoặc thiệt hại lớn."],
+            ['Chờ hướng dẫn', "• Không tự ý thỏa thuận bồi thường.\n• Không ký bất kỳ giấy tờ nào khi chưa trao đổi với chủ xe (trừ khi cơ quan chức năng yêu cầu)."],
         ];
         foreach ($accidentGuides as $i => $g) {
             GlobalGuide::create(['type' => 'accident', 'section_title' => $g[0], 'content' => $g[1], 'sort_order' => $i + 1]);
@@ -144,14 +144,35 @@ class SampleDataSeeder extends Seeder
 
         // === GLOBAL GUIDES (Insurance) ===
         $insuranceGuides = [
-            ['Khi nào cần gọi bảo hiểm?', '<ul><li>Va chạm giao thông.</li><li>Hư hỏng xe.</li><li>Thiệt hại tài sản.</li><li>Có bên thứ ba liên quan.</li></ul>'],
-            ['Chuẩn bị thông tin', '<ul><li>Biển số xe.</li><li>Thời gian xảy ra sự việc.</li><li>Địa điểm.</li><li>Mô tả ngắn gọn diễn biến.</li></ul>'],
-            ['Hình ảnh cần cung cấp', '<ul><li>Toàn cảnh hiện trường.</li><li>Hư hỏng của xe.</li><li>Hư hỏng của các xe khác (nếu có).</li><li>Biển số các xe.</li></ul>'],
-            ['Trong thời gian chờ giám định', '<ul><li>Không tự ý sửa chữa xe.</li><li>Không tháo rời các bộ phận bị hư hỏng.</li><li>Giữ nguyên hiện trạng theo hướng dẫn của bảo hiểm.</li></ul>'],
-            ['Sau khi hoàn tất', '<ul><li>Làm theo hướng dẫn của đơn vị bảo hiểm và đơn vị cho thuê xe.</li><li>Phối hợp cung cấp thông tin khi được yêu cầu.</li><li>Lưu lại toàn bộ hình ảnh và giấy tờ liên quan.</li></ul>'],
+            ['Khi nào cần gọi bảo hiểm?', "• Va chạm giao thông.\n• Hư hỏng xe.\n• Thiệt hại tài sản.\n• Có bên thứ ba liên quan."],
+            ['Chuẩn bị thông tin', "• Biển số xe.\n• Thời gian xảy ra sự việc.\n• Địa điểm.\n• Mô tả ngắn gọn diễn biến."],
+            ['Hình ảnh cần cung cấp', "• Toàn cảnh hiện trường.\n• Hư hỏng của xe.\n• Hư hỏng của các xe khác (nếu có).\n• Biển số các xe.\n• Hình ảnh khu vực xảy ra tai nạn."],
+            ['Trong thời gian chờ giám định', "• Không tự ý sửa chữa xe.\n• Không tháo rời các bộ phận bị hư hỏng.\n• Giữ nguyên hiện trạng theo hướng dẫn của bảo hiểm."],
+            ['Sau khi hoàn tất', "• Làm theo hướng dẫn của đơn vị bảo hiểm và đơn vị cho thuê xe.\n• Phối hợp cung cấp thông tin khi được yêu cầu.\n• Lưu lại toàn bộ hình ảnh và giấy tờ liên quan."],
         ];
         foreach ($insuranceGuides as $i => $g) {
             GlobalGuide::create(['type' => 'insurance', 'section_title' => $g[0], 'content' => $g[1], 'sort_order' => $i + 1]);
+        }
+
+        // === GLOBAL GUIDES (Pickup) ===
+        $pickupGuides = [
+            ['Giấy tờ phải có', "• CCCD bản gốc còn hiệu lực.\n• Tài khoản VNeID mức 2 để đối chiếu thông tin.\n• Giấy phép lái xe còn hiệu lực, còn điểm theo quy định, chấp nhận bản cứng hoặc bản điện tử."],
+            ['Hình thức đặt cọc', "• Đặt cọc bằng tiền mặt hoặc chuyển khoản.\n• Số tiền đặt cọc tùy loại xe (thông báo trước khi nhận xe)."],
+            ['Hoàn trả tiền cọc hoặc tài sản cọc', "• Kiểm tra xe tại chỗ khi trả.\n• Hoàn cọc ngay khi xe đạt điều kiện."],
+            ['Các trường hợp phát sinh', "• Xe có hư hỏng mới phát sinh sẽ được báo giá sửa chữa trước.\n• Phí phát sinh (vệ sinh, nhiên liệu, giờ phụ trội) sẽ được thông báo rõ ràng."],
+        ];
+        foreach ($pickupGuides as $i => $g) {
+            GlobalGuide::create(['type' => 'pickup', 'section_title' => $g[0], 'content' => $g[1], 'sort_order' => $i + 1]);
+        }
+
+        // === GLOBAL GUIDES (Insurance rules - Quy tắc bảo hiểm) ===
+        $insuranceRulesGuides = [
+            ['Phạm vi bảo hiểm', "PVI chịu trách nhiệm bồi thường thiệt hại vật chất cho xe trong các trường hợp bất ngờ, không lường trước được sau đây:\n• Tai nạn: Đâm va, lật, đổ, chìm, rơi toàn bộ xe, bị vật thể khác rơi vào.\n• Cháy nổ: Hỏa hoạn, cháy, nổ.\n• Thiên tai: Những tai họa bất khả kháng do thiên tai gây ra.\n• Mất cắp: Mất toàn bộ xe do trộm, cướp.\n• Hành vi ác ý: Do người khác cố tình phá hoại (trừ người nhà, lái xe, hành khách trên xe).\n• Chi phí khác: Chi phí cứu hộ, kéo xe về nơi sửa chữa gần nhất.\n• Chi phí ngăn ngừa tổn thất thêm (có giới hạn)."],
+            ['Điểm loại trừ', "Bảo hiểm không chi trả nếu rơi vào các trường hợp sau (trừ khi có mua điều khoản bổ sung):\nĐiểm loại trừ về người lái:\n• Không có Giấy phép lái xe hợp lệ (hoặc đang bị tước bằng).\n• Có nồng độ cồn, ma túy hoặc chất cấm.\nĐiểm loại trừ về xe:\n• Xe hết hạn đăng kiểm.\n• Xe chở hàng trái phép, chất cháy nổ không có giấy phép.\n• Hư hỏng do hao mòn tự nhiên, hỏng hóc kỹ thuật/cơ khí/điện (không do tai nạn).\n• Mất cắp bộ phận (ví dụ: bị bẻ gương, mất logo).\n• Xe bị ngập nước làm hỏng động cơ (thủy kích) – trừ khi xe bị tai nạn rơi xuống nước.\nĐiểm loại trừ về vận hành:\n• Xe đi vào đường cấm, đường ngược chiều, vượt đèn đỏ.\n• Xe chở quá tải trọng hoặc quá số người quy định từ 50% trở lên.\n• Xe chạy quá tốc độ quy định trên 35 km/h."],
+            ['Giảm trừ bồi thường', "Trong một số trường hợp dưới đây, PVI vẫn bồi thường nhưng sẽ giảm trừ từ 10% đến 100%, tùy mức độ vi phạm:\n• Không báo sự cố kịp thời, chậm làm hồ sơ.\n• Tự ý sửa xe hoặc thay đổi hiện trường trước khi giám định.\n• Chạy quá tốc độ, chở quá tải.\n• Không hợp tác, khai báo không trung thực."],
+        ];
+        foreach ($insuranceRulesGuides as $i => $g) {
+            GlobalGuide::create(['type' => 'insurance_rules', 'section_title' => $g[0], 'content' => $g[1], 'sort_order' => $i + 1]);
         }
     }
 }
