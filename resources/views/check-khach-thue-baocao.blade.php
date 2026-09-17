@@ -27,6 +27,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/favicon-16.png') }}">
 @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/check-khach-qr.js'])
 <script>window.__CHECK_KHACH_GEMINI_OCR_URL = @json(route('check.ocr-gemini'));</script>
+<script>window.__CHECK_KHACH_OPENAI_OCR_URL = @json(route('check.ocr-openai'));</script>
 <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
 <link rel="preload" href="{{ asset('assets/fonts/nunito/nunito-vietnamese.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ asset('assets/fonts/nunito/nunito-latin.woff2') }}" as="font" type="font/woff2" crossorigin>

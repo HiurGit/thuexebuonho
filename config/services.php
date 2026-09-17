@@ -43,4 +43,12 @@ return [
         'max_retries' => (int) env('GEMINI_MAX_RETRIES', 2),
     ],
 
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_MODEL', 'gpt-4.1-mini'),
+        'timeout' => (int) env('OPENAI_TIMEOUT', 60),
+        'retry_delay' => (int) env('OPENAI_RETRY_DELAY', 2500),
+        'max_retries' => (int) env('OPENAI_MAX_RETRIES', 2),
+    ],
+
 ];

@@ -60,6 +60,8 @@ Route::get('/check', [App\Http\Controllers\CheckKhachThueController::class, 'ind
 
 Route::get('/check/gui-bao-cao', [App\Http\Controllers\CheckKhachThueController::class, 'report'])->name('check.report');
 Route::post('/check/ocr-gemini', [App\Http\Controllers\CheckKhachThueController::class, 'ocrGemini'])->middleware('throttle:60,1')->name('check.ocr-gemini');
+
+Route::post('/check/ocr-openai', [App\Http\Controllers\CheckKhachThueController::class, 'ocrOpenAI'])->middleware('throttle:60,1')->name('check.ocr-openai');
 Route::post('/check/gui-bao-cao', [App\Http\Controllers\CheckKhachThueController::class, 'storeReport'])->middleware('throttle:10,1')->middleware('throttle:60,60')->name('check.report.store');
 Route::get('/check/chi-tiet/{customer}', [App\Http\Controllers\CheckKhachThueController::class, 'showCustomer'])->name('check.detail');
 

@@ -567,9 +567,11 @@ import {
             throw new Error(data.message || 'gemini-failed');
         }
 
-        var fields = data.fields || {};
-        if (!fields.name && !fields.cccd) return null;
+        return mapOcrFields(data.fields || {});
+    }
 
+    function mapOcrFields(fields) {
+        if (!fields.name && !fields.cccd) return null;
         return {
             name: fields.name || '',
             cccd: fields.cccd || '',
@@ -579,6 +581,45 @@ import {
             address: fields.address || '',
             issueDate: fields.issue_date || '',
         };
+    }
+
+    async function recognizeInfoOpenAI(file) {
+        setStatus('Đang đọc thông tin bằng ChatGPT...');
+        var fd = new FormData();
+        fd.append('image', file);
+
+        var openaiUrl = window.__CHECK_KHACH_OPENAI_OCR_URL || '/check/ocr-openai';
+        var res = await fetch(openaiUrl, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            },
+            body: fd
+        });
+
+        var data = await res.json().catch(function() { return {}; });
+        if (res.status === 429) {
+            throw new Error('Bạn đã thử quá nhiều lần trong thời gian ngắn, vui lòng đợi vài phút rồi thử lại.');
+        }
+        if (!res.ok || !data.success) {
+            throw new Error(data.message || 'openai-failed');
+        }
+
+        return mapOcrFields(data.fields || {});
+    }
+
+    async function recognizeInfo(file) {
+        var openaiEnabled = !!(window.__CHECK_KHACH_OPENAI_OCR_URL);
+        if (openaiEnabled) {
+            try {
+                var info = await recognizeInfoOpenAI(file);
+                if (info) return info;
+            } catch (e) {
+                if (e && e.message === 'Bạn đã thử quá nhiều lần trong thời gian ngắn, vui lòng đợi vài phút rồi thử lại.') throw e;
+            }
+        }
+        return recognizeInfoGemini(file);
     }
 
     async function processCapturedFile(file) {
@@ -596,7 +637,7 @@ import {
             }
 
             setStatus('Đang đọc thông tin...');
-            var info = await recognizeInfoGemini(file);
+            var info = await recognizeInfo(file);
             URL.revokeObjectURL(loaded.url);
             if (info) {
                 fillForm(info);

@@ -337,6 +337,206 @@ class CheckKhachThueController extends Controller
         return '';
     }
 
+    public function ocrOpenAI(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        $apiKey = trim((string) config('services.openai.api_key', ''));
+        if ($apiKey === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Chua duoc cau hinh OpenAI API key, vui long nhap tay.',
+            ], 503);
+        }
+
+        try {
+            $file = $request->file('image');
+            $mime = $file->getMimeType() ?: 'image/jpeg';
+            $base64 = base64_encode((string) file_get_contents($file->getRealPath()));
+
+            $maxRetries = (int) config('services.openai.max_retries', 2);
+            $retryDelay = (int) config('services.openai.retry_delay', 2500);
+            $last = null;
+
+            foreach ($this->openaiModelCandidates() as $model) {
+                for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
+                    $result = $this->callOpenAI($apiKey, $model, $mime, $base64);
+                    $last = $result;
+
+                    if (! empty($result['ok'])) {
+                        return response()->json([
+                            'success' => true,
+                            'fields' => $result['fields'],
+                        ]);
+                    }
+
+                    if (! empty($result['retryable']) && $attempt < $maxRetries) {
+                        usleep($retryDelay * 1000);
+                        continue;
+                    }
+
+                    break;
+                }
+            }
+
+            Log::warning('OpenAI OCR failed.', [
+                'message' => $last['error'] ?? 'no details',
+                'status' => $last['status'] ?? null,
+                'model' => $last['model'] ?? null,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => $this->openaiErrorMessage($last),
+            ], 502);
+        } catch (\Throwable $e) {
+            Log::warning('OpenAI OCR failed.', ['message' => $e->getMessage()]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Khong ket noi duoc voi OpenAI, vui long thu lai sau.',
+            ], 502);
+        }
+    }
+
+    private function openaiModelCandidates(): array
+    {
+        $primary = trim((string) config('services.openai.model', 'gpt-4o-mini'));
+
+        $candidates = [$primary];
+        foreach (['gpt-4.1-mini', 'gpt-4.1-nano'] as $fallback) {
+            if (! in_array($fallback, $candidates, true)) {
+                $candidates[] = $fallback;
+            }
+        }
+
+        return $candidates;
+    }
+
+    private function callOpenAI(string $apiKey, string $model, string $mime, string $base64): array
+    {
+        try {
+            $response = Http::timeout((int) config('services.openai.timeout', 60))
+                ->withToken($apiKey)
+                ->post('https://api.openai.com/v1/chat/completions', [
+                    'model' => $model,
+                    'messages' => [
+                        [
+                            'role' => 'user',
+                            'content' => [
+                                [
+                                    'type' => 'text',
+                                    'text' => $this->openaiPrompt(),
+                                ],
+                                [
+                                    'type' => 'image_url',
+                                    'image_url' => [
+                                        'url' => "data:{$mime};base64,{$base64}",
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'response_format' => ['type' => 'json_object'],
+                ]);
+
+            $status = $response->status();
+
+            if ($status !== 200) {
+                $body = $response->json();
+
+                return [
+                    'ok' => false,
+                    'status' => $status,
+                    'retryable' => in_array($status, [429, 500, 502, 503], true),
+                    'error' => $body['error']['message'] ?? 'HTTP ' . $status,
+                    'model' => $model,
+                ];
+            }
+
+            $text = trim((string) ($response->json()['choices'][0]['message']['content'] ?? ''));
+
+            if ($text === '') {
+                return [
+                    'ok' => false,
+                    'status' => 502,
+                    'retryable' => false,
+                    'error' => 'OpenAI khong tra ve ket qua.',
+                    'model' => $model,
+                ];
+            }
+
+            $fields = json_decode($text, true);
+            if (! is_array($fields)) {
+                $fields = $this->extractJsonFromText($text);
+            }
+
+            $fields = $this->normalizeOpenAIFields($fields);
+
+            if (empty($fields['name']) && empty($fields['cccd'])) {
+                return [
+                    'ok' => false,
+                    'status' => 422,
+                    'retryable' => false,
+                    'error' => 'Khong doc duoc thong tin tren anh.',
+                    'model' => $model,
+                ];
+            }
+
+            return ['ok' => true, 'fields' => $fields, 'model' => $model];
+        } catch (\Throwable $e) {
+            return [
+                'ok' => false,
+                'status' => 0,
+                'retryable' => true,
+                'error' => $e->getMessage(),
+                'model' => $model,
+            ];
+        }
+    }
+
+    private function openaiErrorMessage(array $last): string
+    {
+        $status = (int) ($last['status'] ?? 0);
+
+        if ($status === 404 || $status === 400) {
+            return 'Model OpenAI đang không khả dụng, vui lòng thử lại sau.';
+        }
+
+        if (in_array($status, [401, 403], true)) {
+            return 'OpenAI API key không hợp lệ hoặc hết hạn mức.';
+        }
+
+        if (in_array($status, [429, 500, 502, 503], true)) {
+            return 'OpenAI đang quá tải, vui lòng thử lại sau 1 phút.';
+        }
+
+        return 'Khong ket noi duoc voi OpenAI, vui long thu lai sau.';
+    }
+
+    private function openaiPrompt(): string
+    {
+        return $this->geminiPrompt();
+    }
+
+    private function normalizeOpenAIFields(array $fields): array
+    {
+        $cccd = preg_replace('/\D/', '', (string) ($fields['id_number'] ?? ''));
+        $cccdLen = strlen($cccd);
+
+        return [
+            'name' => trim((string) ($fields['full_name'] ?? '')),
+            'cccd' => $cccdLen >= 9 && $cccdLen <= 12 ? $cccd : '',
+            'license' => trim((string) ($fields['license_number'] ?? '')),
+            'dob' => $this->normalizeDate($fields['date_of_birth'] ?? null),
+            'gender' => $this->normalizeGender($fields['gender'] ?? null),
+            'address' => trim((string) ($fields['permanent_address'] ?? '')),
+            'issue_date' => $this->normalizeDate($fields['date_of_issue'] ?? null),
+        ];
+    }
+
     public function storeReport(Request $request)
     {
         if ($request->filled('website') || $request->filled('email')) {
