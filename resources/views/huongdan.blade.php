@@ -181,8 +181,16 @@ $typeInfo = [
           <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-app-accentSoft text-xs font-extrabold text-app-accent">{{ $loop->iteration }}</span>
           {{ $guide->title }}
         </h4>
+        @if($guide->image_path)
+        <div class="mt-2 text-right">
+          <button type="button" onclick="openImageViewer('{{ asset($guide->image_path) }}')" class="inline-flex items-center gap-2 rounded-xl bg-app-accentSoft px-4 py-2 text-sm font-extrabold text-app-accent transition-all hover:bg-app-accent hover:text-white">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M8.25 6.75h.008v.008H8.25V6.75zM12.75 19.5h8.25v-8.25m-15.75 8.25h.008v.008H5.25v-.008z"/></svg>
+            Xem hướng dẫn
+          </button>
+        </div>
+        @endif
         @if($guide->video_path)
-        <div class="text-right">
+        <div class="mt-2 text-right">
           <button type="button" onclick="openVideoViewer('{{ asset($guide->video_path) }}')" class="inline-flex items-center gap-2 rounded-xl bg-app-accentSoft px-4 py-2 text-sm font-extrabold text-app-accent transition-all hover:bg-app-accent hover:text-white">
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             Xem video
@@ -235,6 +243,24 @@ function closeVideoViewer() {
   viewer.classList.remove('flex');
   document.body.style.overflow = '';
 }
+
+function openImageViewer(src) {
+  var viewer = document.getElementById('image-viewer');
+  var img = document.getElementById('viewer-image');
+  img.src = src;
+  viewer.classList.remove('hidden');
+  viewer.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImageViewer() {
+  var viewer = document.getElementById('image-viewer');
+  var img = document.getElementById('viewer-image');
+  img.src = '';
+  viewer.classList.add('hidden');
+  viewer.classList.remove('flex');
+  document.body.style.overflow = '';
+}
 </script>
 
 <div id="video-viewer" class="fixed inset-0 z-[80] hidden flex-col items-center justify-center bg-black/80" onclick="if(event.target===this) closeVideoViewer()">
@@ -243,6 +269,15 @@ function closeVideoViewer() {
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
     </button>
     <video id="viewer-video" class="w-full rounded-xl" controls playsinline></video>
+  </div>
+</div>
+
+<div id="image-viewer" class="fixed inset-0 z-[80] hidden flex-col items-center justify-center bg-black/80" onclick="if(event.target===this) closeImageViewer()">
+  <div class="relative mx-auto w-full max-w-3xl px-4">
+    <button type="button" onclick="closeImageViewer()" class="absolute -top-10 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition-all hover:bg-white/40">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+    </button>
+    <img id="viewer-image" class="max-h-[85vh] w-full rounded-xl bg-white object-contain" alt="Hướng dẫn">
   </div>
 </div>
 @endpush

@@ -203,25 +203,34 @@
 
     <div class="col-12 mt-3">
         <h5 class="font-weight-bold mb-3">Hướng dẫn xe</h5>
-        <p class="text-muted small">Thêm các video hướng dẫn sử dụng cho xe này (vd: Hướng dẫn khởi động, Hướng dẫn đổ xăng...)</p>
+        <p class="text-muted small">Thêm video hoặc ảnh hướng dẫn sử dụng cho xe này (vd: Hướng dẫn khởi động, Hướng dẫn đổ xăng...)</p>
         <div id="guides-wrapper">
             @php $guideIndex = 0; @endphp
             @if(isset($car) && $car->guides->count() > 0)
                 @foreach($car->guides as $guide)
                 <div class="guide-item row align-items-end mb-2 p-2 border rounded bg-light">
                     <input type="hidden" name="guides[{{ $guideIndex }}][id]" value="{{ $guide->id }}">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="form-group mb-0">
                             <label class="small">Tiêu đề</label>
                             <input type="text" name="guides[{{ $guideIndex }}][title]" class="form-control form-control-sm" value="{{ $guide->title }}">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="form-group mb-0">
                             <label class="small">Video</label>
-                            <input type="file" name="guides[{{ $guideIndex }}][video]" class="form-control-file form-control-sm" accept="video/mp4,video/webm,video/ogg">
+                            <input type="file" name="guides[{{ $guideIndex }}][video]" class="form-control-file form-control-sm guide-video-input" accept="video/mp4,video/webm,video/ogg" {{ $guide->image_path ? 'style=display:none' : '' }}>
                             @if($guide->video_path)
                             <small class="form-text text-muted">Đã có: <a href="{{ asset($guide->video_path) }}" target="_blank">{{ basename($guide->video_path) }}</a>. Chọn file mới để thay thế.</small>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group mb-0">
+                            <label class="small">Ảnh</label>
+                            <input type="file" name="guides[{{ $guideIndex }}][image]" class="form-control-file form-control-sm guide-image-input" accept="image/*" {{ $guide->video_path ? 'style=display:none' : '' }}>
+                            @if($guide->image_path)
+                            <small class="form-text text-muted">Đã có: <a href="{{ asset($guide->image_path) }}" target="_blank">{{ basename($guide->image_path) }}</a>. Chọn file mới để thay thế.</small>
                             @endif
                         </div>
                     </div>
@@ -235,16 +244,22 @@
         </div>
         <div id="guide-template" class="d-none">
             <div class="guide-item row align-items-end mb-2 p-2 border rounded bg-light">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="form-group mb-0">
                         <label class="small">Tiêu đề</label>
                         <input type="text" name="guides[__INDEX__][title]" class="form-control form-control-sm">
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <div class="form-group mb-0">
                         <label class="small">Video</label>
-                        <input type="file" name="guides[__INDEX__][video]" class="form-control-file form-control-sm" accept="video/mp4,video/webm,video/ogg">
+                        <input type="file" name="guides[__INDEX__][video]" class="form-control-file form-control-sm guide-video-input" accept="video/mp4,video/webm,video/ogg">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group mb-0">
+                        <label class="small">Ảnh</label>
+                        <input type="file" name="guides[__INDEX__][image]" class="form-control-file form-control-sm guide-image-input" accept="image/*">
                     </div>
                 </div>
                 <div class="col-md-2 text-right">
@@ -266,6 +281,20 @@ $(function() {
     });
     $(document).on('click', '.btn-remove-guide', function() {
         $(this).closest('.guide-item').remove();
+    });
+    $(document).on('change', '.guide-video-input', function() {
+        if (this.files && this.files.length > 0) {
+            $(this).closest('.guide-item').find('.guide-image-input').val('').hide();
+        } else {
+            $(this).closest('.guide-item').find('.guide-image-input').show();
+        }
+    });
+    $(document).on('change', '.guide-image-input', function() {
+        if (this.files && this.files.length > 0) {
+            $(this).closest('.guide-item').find('.guide-video-input').val('').hide();
+        } else {
+            $(this).closest('.guide-item').find('.guide-video-input').show();
+        }
     });
 });
 </script>

@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Log;
 
 class CheckKhachThueController extends Controller
 {
+    private const VN_DIACRITIC_MAP = [
+        'a' => ['à', 'á', 'ả', 'ã', 'ạ', 'ă', 'ằ', 'ắ', 'ẳ', 'ẵ', 'ặ', 'â', 'ầ', 'ấ', 'ẩ', 'ẫ', 'ậ'],
+        'e' => ['è', 'é', 'ẻ', 'ẽ', 'ẹ', 'ê', 'ề', 'ế', 'ể', 'ễ', 'ệ'],
+        'i' => ['ì', 'í', 'ỉ', 'ĩ', 'ị'],
+        'o' => ['ò', 'ó', 'ỏ', 'õ', 'ọ', 'ô', 'ồ', 'ố', 'ổ', 'ỗ', 'ộ', 'ơ', 'ờ', 'ớ', 'ở', 'ỡ', 'ợ'],
+        'u' => ['ù', 'ú', 'ủ', 'ũ', 'ụ', 'ư', 'ừ', 'ứ', 'ử', 'ữ', 'ự'],
+        'y' => ['ỳ', 'ý', 'ỷ', 'ỹ', 'ỵ'],
+    ];
+
     public function index()
     {
         $reports = Report::with(['customer', 'images'])
@@ -31,6 +40,27 @@ class CheckKhachThueController extends Controller
             'verified' => $r->status === 'approved',
             'images' => $r->images->pluck('path')->map(fn ($p) => asset($p))->all(),
         ])->values()->all();
+
+        $customerIdsWithReport = $reports->pluck('customer_id')->unique();
+        $customersNoReport = Customer::whereNull('deleted_at')
+            ->whereNotIn('id', $customerIdsWithReport)
+            ->get();
+
+        $noReportItems = $customersNoReport->map(fn (Customer $c) => [
+            'id' => null,
+            'customer_id' => $c->id,
+            'name' => $c->name ?? '',
+            'phone' => $c->phone,
+            'cccd' => $c->cccd,
+            'license' => $c->license,
+            'reason' => '',
+            'date' => '',
+            'views' => 0,
+            'verified' => false,
+            'images' => [],
+        ])->values()->all();
+
+        $items = array_merge($items, $noReportItems);
 
         $stats = [
             'total' => $reports->count(),
@@ -357,7 +387,7 @@ class CheckKhachThueController extends Controller
         $hasIdentifier = $cccd !== '' || $phoneDigits !== '' || $licenseDigits !== '';
 
         if ($hasIdentifier) {
-            $duplicate = Customer::withTrashed()
+            $existingCustomer = Customer::withTrashed()
                 ->where(function ($q) use ($cccd, $phoneDigits, $licenseDigits) {
                     if ($cccd !== '') {
                         $q->where('cccd', $cccd);
@@ -371,11 +401,17 @@ class CheckKhachThueController extends Controller
                 })
                 ->first();
 
-            if ($duplicate) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'CCCD / bằng lái / SĐT này đã tồn tại trong hệ thống. Vui lòng kiểm tra lại.',
-                ], 422);
+            if ($existingCustomer) {
+                $hasApprovedReport = Report::where('customer_id', $existingCustomer->id)
+                    ->where('status', 'approved')
+                    ->exists();
+
+                if ($hasApprovedReport) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Khách hàng này đã có báo cáo xác minh trong hệ thống.',
+                    ], 422);
+                }
             }
         }
 
@@ -517,7 +553,7 @@ class CheckKhachThueController extends Controller
 
     public function showCustomer(Request $request, Customer $customer)
     {
-        $customer->load(['reports' => fn ($q) => $q->where('status', 'approved')->with('images')]);
+        $customer->load(['reports' => fn ($q) => $q->where('status', 'approved')]);
 
         $latest = $customer->reports->first();
         if ($latest && ! $this->isBot($request)) {
@@ -525,14 +561,18 @@ class CheckKhachThueController extends Controller
             $latest->refresh();
         }
 
-        $q = preg_replace('/\D/', '', (string) $request->query('q', ''));
-        $reveal = $q !== '' && (
-            $q === preg_replace('/\D/', '', (string) $customer->cccd)
-            || $q === preg_replace('/\D/', '', (string) $customer->phone)
-            || $q === preg_replace('/\D/', '', (string) $customer->license)
-        );
+        $qRaw = trim((string) $request->query('q', ''));
+        $qDigits = preg_replace('/\D/', '', $qRaw);
+        $qText = $this->normalizeSearchText($qRaw);
+
+        $reveal = ($qDigits !== '' && (
+            $qDigits === preg_replace('/\D/', '', (string) $customer->cccd)
+            || $qDigits === preg_replace('/\D/', '', (string) $customer->phone)
+            || $qDigits === preg_replace('/\D/', '', (string) $customer->license)
+        )) || ($qText !== '' && $qText === $this->normalizeSearchText((string) $customer->name));
 
         $masked = [
+            'name' => $this->maskName($customer->name),
             'cccd' => $this->maskNumber($customer->cccd),
             'phone' => $this->maskNumber($customer->phone),
             'license' => $this->maskNumber($customer->license),
@@ -540,6 +580,46 @@ class CheckKhachThueController extends Controller
         ];
 
         return view('check-khach-thue-chitiet', compact('customer', 'reveal', 'masked'));
+    }
+
+    private function maskName($value): string
+    {
+        $words = preg_split('/\s+/u', trim((string) $value), -1, PREG_SPLIT_NO_EMPTY);
+        if (! $words) {
+            return '';
+        }
+
+        if (count($words) === 1) {
+            return mb_substr($words[0], 0, 1, 'UTF-8');
+        }
+
+        foreach ($words as $i => $word) {
+            if ($i === 0) {
+                continue;
+            }
+
+            $words[$i] = mb_substr($word, 0, 1, 'UTF-8');
+        }
+
+        return implode(' ', $words);
+    }
+
+    private function normalizeSearchText(string $value): string
+    {
+        $value = mb_strtolower(trim($value), 'UTF-8');
+        $value = str_replace('đ', 'd', $value);
+
+        if (function_exists('normalizer_normalize')) {
+            $value = normalizer_normalize($value, \Normalizer::FORM_D);
+        }
+
+        $value = preg_replace('/[\x{0300}-\x{036f}]/u', '', $value) ?? $value;
+
+        foreach (self::VN_DIACRITIC_MAP as $base => $chars) {
+            $value = str_replace($chars, $base, $value);
+        }
+
+        return preg_replace('/\s+/', ' ', trim($value)) ?? '';
     }
 
     private function maskNumber($value): string

@@ -7,6 +7,7 @@ use App\Services\Ds2CsvImportService;
 use App\Services\KhachCamCleanupService;
 use App\Services\KhachCamImportService;
 use App\Services\DataFileImportService;
+use App\Services\KhachCamJsonImportService;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -74,3 +75,13 @@ Artisan::command('khachcam:import-data {files?*}', function () {
     $this->info("Reports created: {$stats['reports']}");
     $this->info("Skipped groups: {$stats['skipped']}");
 })->purpose('Import danh sách đen từ file dữ liệu (bảng markdown + hồ sơ căn cước)');
+
+Artisan::command('khachcam:import-json', function () {
+    $importer = app(KhachCamJsonImportService::class);
+    $stats = $importer->import();
+
+    $this->info("Customers imported: {$stats['imported']}");
+    $this->info("Skipped: {$stats['skipped']}");
+    $this->info("Reports created: {$stats['reports']}");
+    $this->info("Images copied: {$stats['images']}");
+})->purpose('Import khach cam data from summary.json + images');

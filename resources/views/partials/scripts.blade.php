@@ -52,6 +52,21 @@
   });
 })();
 
+// ===== PRELOADER =====
+(function() {
+  var pre = document.getElementById('htx-preloader');
+  if (!pre) return;
+  var hidden = false;
+  function hide() {
+    if (hidden) return;
+    hidden = true;
+    pre.classList.add('htx-hidden');
+    setTimeout(function() { pre.remove(); }, 500);
+  }
+  window.addEventListener('load', hide);
+  setTimeout(hide, 5000);
+})();
+
 // ===== TOAST NOTIFICATION =====
 var toastTimer;
 window.showToast = function(msg, icon) {

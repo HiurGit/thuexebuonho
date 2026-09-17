@@ -91,11 +91,15 @@ class DashboardController extends Controller
             'site_owner_avatar' => Setting::get('site_owner_avatar', ''),
             'site_facebook' => Setting::get('site_facebook', 'https://www.facebook.com/9999NDT/'),
             'site_keywords' => Setting::get('site_keywords', ''),
+            'site_title' => Setting::get('site_title', 'Thuê Xe Buôn Hồ - Đưa Đón Khách'),
             'site_description' => Setting::get('site_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'),
             'home_meta_description' => Setting::get('home_meta_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'),
+            'home_title' => Setting::get('home_title', 'Thuê Xe Buôn Hồ - Cho thuê xe tự lái'),
             'home_og_title' => Setting::get('home_og_title', 'Thuê Xe Buôn Hồ - Cho thuê xe tự lái'),
             'home_og_description' => Setting::get('home_og_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'),
             'home_og_image' => Setting::get('home_og_image', ''),
+            'marquee_enabled' => Setting::get('marquee_enabled', '1'),
+            'marquee_text' => Setting::get('marquee_text', 'QUÝ KHÁCH THUÊ XE CÀNG LÂU - GIÁ CÀNG TỐT!'),
         ];
 
         return view('admin.web-info', compact('settings'));
@@ -112,11 +116,15 @@ class DashboardController extends Controller
             'site_owner_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'site_facebook' => 'nullable|url|max:500',
             'site_keywords' => 'nullable|string|max:1000',
+            'site_title' => 'nullable|string|max:200',
             'site_description' => 'nullable|string|max:500',
             'home_meta_description' => 'nullable|string|max:500',
+            'home_title' => 'nullable|string|max:200',
             'home_og_title' => 'nullable|string|max:200',
             'home_og_description' => 'nullable|string|max:500',
             'home_og_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'marquee_enabled' => 'nullable|boolean',
+            'marquee_text' => 'nullable|string|max:500',
         ], [
             'site_phone.max' => 'Số điện thoại không được vượt quá 30 ký tự.',
             'site_address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
@@ -130,11 +138,14 @@ class DashboardController extends Controller
             'site_facebook.url' => 'Link Facebook phải là URL hợp lệ.',
             'site_facebook.max' => 'Link Facebook không được vượt quá 500 ký tự.',
             'site_description.max' => 'Meta description không được vượt quá 500 ký tự.',
+            'site_title.max' => 'Title website không được vượt quá 200 ký tự.',
+            'home_title.max' => 'Title trang chủ không được vượt quá 200 ký tự.',
             'home_meta_description.max' => 'Meta description trang chủ không được vượt quá 500 ký tự.',
             'home_og_title.max' => 'OG Title không được vượt quá 200 ký tự.',
             'home_og_description.max' => 'OG Description không được vượt quá 500 ký tự.',
             'home_og_image.image' => 'OG Image phải là file ảnh.',
             'home_og_image.max' => 'Dung lượng OG Image không được vượt quá 2MB.',
+            'marquee_text.max' => 'Nội dung thông báo không được vượt quá 500 ký tự.',
         ]);
 
         Setting::set('site_phone', trim((string) ($validated['site_phone'] ?? '')));
@@ -144,10 +155,14 @@ class DashboardController extends Controller
         Setting::set('site_owner_name', trim((string) ($validated['site_owner_name'] ?? '')));
         Setting::set('site_facebook', trim((string) ($validated['site_facebook'] ?? '')));
         Setting::set('site_keywords', trim((string) ($validated['site_keywords'] ?? '')));
+        Setting::set('site_title', trim((string) ($validated['site_title'] ?? '')));
         Setting::set('site_description', trim((string) ($validated['site_description'] ?? '')));
         Setting::set('home_meta_description', trim((string) ($validated['home_meta_description'] ?? '')));
+        Setting::set('home_title', trim((string) ($validated['home_title'] ?? '')));
         Setting::set('home_og_title', trim((string) ($validated['home_og_title'] ?? '')));
         Setting::set('home_og_description', trim((string) ($validated['home_og_description'] ?? '')));
+        Setting::set('marquee_enabled', $request->boolean('marquee_enabled') ? '1' : '0');
+        Setting::set('marquee_text', trim((string) ($validated['marquee_text'] ?? '')));
 
         if ($request->hasFile('home_og_image')) {
             $oldOgImage = Setting::get('home_og_image', '');

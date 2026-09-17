@@ -5,6 +5,12 @@
 </head>
 <body class="bg-app-bg font-sans text-app-ink antialiased">
 <div id="htx-loading-bar"></div>
+<div id="htx-preloader" aria-hidden="true">
+  <div class="htx-preloader-box">
+    <img src="{{ asset('assets/image/logo.png') }}" alt="Đang tải" class="htx-preloader-logo">
+    <p class="htx-preloader-text">Thuê Xe Buôn Hồ xin chào !...</p>
+  </div>
+</div>
 @php
   $sitePhone = \App\Models\Setting::get('site_phone', '0964918047');
   $sitePhoneDisplay = preg_replace('/(\d{4})(\d{3})(\d{3,})/', '$1.$2.$3', $sitePhone) ?: $sitePhone;

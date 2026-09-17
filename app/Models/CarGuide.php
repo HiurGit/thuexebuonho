@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CarGuide extends Model
 {
-    protected $fillable = ['car_id', 'title', 'content', 'video_path', 'sort_order'];
+    protected $fillable = ['car_id', 'title', 'content', 'video_path', 'image_path', 'sort_order'];
 
     public function car()
     {

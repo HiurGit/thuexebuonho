@@ -5,7 +5,7 @@
 @php
 $mainImage = $car->seo_image_path;
 $allImages = $car->images;
-$carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' . number_format($car->price_per_session) . 'đ/buổi. Giá rẻ, uy tín, thủ tục nhanh gọn.';
+$carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' . number_format($car->price_per_session) . 'đ/buổi. Giá rẻ, uy tín, thủ tục nhanh gọn. Thuê càng lâu Giá càng tốt!';
 @endphp
 
 @section('meta')
@@ -53,6 +53,7 @@ $carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' 
 @endpush
 
 @section('content-desktop')
+@include('partials.marquee')
 <main>
   <div class="w-full border-b border-app-line bg-app-accent">
     <a href="{{ route('index') }}#danh-sach-xe" class="mx-auto flex max-w-7xl items-center gap-2 px-6 py-3.5 text-base font-extrabold text-white transition-all hover:bg-app-green">
@@ -354,7 +355,6 @@ $carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' 
           <div data-description-content data-collapsed-height="160" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 160px;">
             <p class="text-sm leading-7 text-app-muted">{!! nl2br(e($car->description)) !!}</p>
           </div>
-           <div data-description-fade class="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-stone-50/70 via-stone-50/60 to-transparent"></div>
         </div>
         <button
           type="button"
@@ -499,6 +499,7 @@ $carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' 
 @endsection
 
 @section('content-mobile')
+@include('partials.marquee')
 <div class="border-b border-app-line bg-white px-4 py-1 shadow-sm">
   <div class="relative flex items-center">
     <a href="{{ route('index') }}" class="flex h-9 w-9 items-center justify-center rounded-xl bg-app-accentSoft text-app-accent transition-all hover:bg-app-accent hover:text-white">
@@ -793,7 +794,6 @@ $carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' 
           <div data-description-content data-collapsed-height="128" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 128px;">
           <p class="text-sm leading-6 text-app-muted">{!! nl2br(e($car->description)) !!}</p>
         </div>
-        <div data-description-fade class="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-stone-50/70 via-stone-50/60 to-transparent"></div>
       </div>
       <button
         type="button"

@@ -549,7 +549,7 @@ import {
         var fd = new FormData();
         fd.append('image', file);
 
-        var geminiUrl = window.__CHECK_KHACH_GEMINI_OCR_URL || '/check-khach-thue/ocr-gemini';
+        var geminiUrl = window.__CHECK_KHACH_GEMINI_OCR_URL || '/check/ocr-gemini';
         var res = await fetch(geminiUrl, {
             method: 'POST',
             headers: {
@@ -636,4 +636,22 @@ import {
     if (uploadFile) uploadFile.addEventListener('change', onScanFileSelected);
     if (stopBtn) stopBtn.addEventListener('click', stopScan);
     if (flashBtn) flashBtn.addEventListener('click', toggleFlash);
+
+    document.addEventListener('paste', async function(e) {
+        var items = e.clipboardData && e.clipboardData.items;
+        if (!items) return;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.kind === 'file' && item.type.indexOf('image/') === 0) {
+                var blob = item.getAsFile();
+                if (!blob) continue;
+                var ext = (blob.type.split('/')[1] || 'png').replace('jpeg', 'jpg');
+                var file = new File([blob], 'cccd-paste-' + Date.now() + '.' + ext, { type: blob.type });
+                e.preventDefault();
+                if (scanning) stopScan();
+                await processCapturedFile(file);
+                break;
+            }
+        }
+    });
 })();

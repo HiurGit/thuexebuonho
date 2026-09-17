@@ -109,7 +109,7 @@
       <i class="ri-search-line text-base"></i>
       Tra cứu
     </button>
-    <a href="{{ route('check-khach-thue.report') }}" class="flex items-center justify-center gap-2 py-2.5 sm:py-3 rounded-md text-white font-extrabold text-[clamp(0.8125rem,3.6vw,0.875rem)] whitespace-nowrap bg-[#e02923] shadow-[0_10px_20px_-10px_rgba(224,41,35,0.55)] hover:bg-[#c7241e] active:scale-[0.97] transition">
+    <a href="{{ route('check.report') }}" class="flex items-center justify-center gap-2 py-2.5 sm:py-3 rounded-md text-white font-extrabold text-[clamp(0.8125rem,3.6vw,0.875rem)] whitespace-nowrap bg-[#e02923] shadow-[0_10px_20px_-10px_rgba(224,41,35,0.55)] hover:bg-[#c7241e] active:scale-[0.97] transition">
       <i class="ri-add-line text-base"></i>
       Gửi báo cáo
     </a>
@@ -176,13 +176,24 @@
     return digits.slice(0, digits.length - 4) + 'xxxx';
   }
 
+  function maskName(str) {
+    var words = String(str || '').trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return '';
+    if (words.length === 1) return words[0].charAt(0);
+    for (var i = 1; i < words.length; i++) {
+      words[i] = words[i].charAt(0);
+    }
+    return words.join(' ');
+  }
+
   function isExactMatch(item) {
-    var q = getQuery().replace(/\D/g, '');
-    if (!q) return false;
+    var raw = getQuery();
+    if (!raw) return false;
+    var q = raw.replace(/\D/g, '');
     var cccd = String(item.cccd || '').replace(/\D/g, '');
     var phone = String(item.phone || '').replace(/\D/g, '');
     var license = String(item.license || '').replace(/\D/g, '');
-    return q === cccd || q === phone || q === license;
+    return (q && (q === cccd || q === phone || q === license)) || raw === item._search.name;
   }
 
   function getQuery() {
@@ -203,15 +214,31 @@
   }
 
   function cardHTML(item) {
+    var hasReport = !!item.reason;
+
     var badge = item.verified
       ? '<span class="flex-none text-[clamp(0.625rem,2.8vw,0.6875rem)] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wide bg-app-accentSoft text-[#0b296c]">Đã xác minh</span>'
-      : '<span class="flex-none text-[clamp(0.625rem,2.8vw,0.6875rem)] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wide bg-[#FDF1DE] text-[#0b296c]">Chờ xác minh</span>';
+      : hasReport
+        ? '<span class="flex-none text-[clamp(0.625rem,2.8vw,0.6875rem)] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wide bg-[#FDF1DE] text-[#0b296c]">Chờ xác minh</span>'
+        : '<span class="flex-none text-[clamp(0.625rem,2.8vw,0.6875rem)] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wide bg-gray-100 text-gray-500">Chưa có BC</span>';
 
     var q = getQuery();
     var reveal = isExactMatch(item);
     var phoneShown = item.phone ? (reveal ? item.phone : maskNumber(item.phone)) : '';
     var cccdShown = item.cccd ? (reveal ? item.cccd : maskNumber(item.cccd)) : '';
     var licenseShown = item.license ? (reveal ? item.license : maskNumber(item.license)) : '';
+
+    var reasonLine = hasReport
+      ? '<p class="text-[clamp(0.82rem,3.7vw,0.875rem)] font-bold text-[#e02923]">' + esc(truncateWords(item.reason, 4)) + '</p>'
+      : '<p class="text-[clamp(0.82rem,3.7vw,0.875rem)] font-bold text-app-muted italic">Chưa có báo cáo</p>';
+
+    var metaRow = '';
+    if (item.date || item.views) {
+      metaRow = '<div class="flex items-center gap-4 text-[clamp(0.75rem,3.3vw,0.78125rem)] font-bold text-[#0b296c]">' +
+        (item.date ? '<span class="flex items-center gap-1.5 whitespace-nowrap"><i class="ri-calendar-line"></i> ' + esc(item.date) + '</span>' : '') +
+        (item.views ? '<span class="flex items-center gap-1.5 whitespace-nowrap"><i class="ri-eye-line"></i> ' + item.views + ' check</span>' : '') +
+        '</div>';
+    }
 
     return '' +
       '<div class="border border-app-line rounded-md px-3 py-3.5 sm:px-4 sm:py-4 mb-3.5 bg-white hover:shadow-card hover:-translate-y-px transition">' +
@@ -221,25 +248,16 @@
               '<img src="{{ asset('assets/icon-checkkhach/icon-avt.png') }}" alt="Khách hàng" class="w-full h-full object-contain">' +
             '</div>' +
             '<div class="min-w-0">' +
-              '<p class="text-[clamp(0.9375rem,4.4vw,1rem)] font-extrabold text-black mb-0.5">' + esc(item.name) + '</p>' +
+              '<p class="text-[clamp(0.9375rem,4.4vw,1rem)] font-extrabold text-black mb-0.5">' + esc(reveal ? item.name : maskName(item.name)) + '</p>' +
               (phoneShown ? '<p class="text-[clamp(0.8rem,3.6vw,0.8125rem)] font-bold text-black mb-0.5"><span class="text-[#0b296c]">SĐT:</span> ' + esc(phoneShown) + '</p>' : '') +
               (cccdShown ? '<p class="text-[clamp(0.8rem,3.6vw,0.8125rem)] font-bold text-black mb-0.5"><span class="text-[#0b296c]">CCCD:</span> ' + esc(cccdShown) + '</p>' : '') +
               (licenseShown ? '<p class="text-[clamp(0.8rem,3.6vw,0.8125rem)] font-bold text-black mb-1"><span class="text-[#0b296c]">Bằng lái:</span> ' + esc(licenseShown) + '</p>' : '') +
-              '<p class="text-[clamp(0.82rem,3.7vw,0.875rem)] font-bold text-[#e02923]">' + esc(truncateWords(item.reason, 4)) + '</p>' +
+              reasonLine +
             '</div>' +
           '</div>' +
           badge +
         '</div>' +
-        '<hr class="border-t border-app-line my-3.5">' +
-        '<div class="flex items-center justify-between flex-wrap gap-2.5">' +
-          '<div class="flex items-center gap-4 text-[clamp(0.75rem,3.3vw,0.78125rem)] font-bold text-[#0b296c]">' +
-            '<span class="flex items-center gap-1.5 whitespace-nowrap"><i class="ri-calendar-line"></i> ' + esc(item.date) + '</span>' +
-            '<span class="flex items-center gap-1.5 whitespace-nowrap"><i class="ri-eye-line"></i> ' + item.views + ' check</span>' +
-          '</div>' +
-          '<a href="' + '{{ route('check-khach-thue.detail', '__CID__') }}'.replace('__CID__', item.customer_id) + '?q=' + encodeURIComponent(q) + '" class="flex items-center gap-1 border-[1.5px] border-[#0b296c] text-[#0b296c] bg-white font-extrabold text-[clamp(0.75rem,3.3vw,0.8125rem)] px-4 py-2 rounded-md hover:bg-[#0b296c] hover:text-white transition">' +
-            '<i class="ri-eye-line text-sm"></i> Xem chi tiết' +
-          '</a>' +
-        '</div>' +
+        (metaRow ? '<hr class="border-t border-app-line my-3.5">' + '<div class="flex items-center justify-between flex-wrap gap-2.5">' + metaRow + '<a href="' + '{{ route('check.detail', '__CID__') }}'.replace('__CID__', item.customer_id) + '?q=' + encodeURIComponent(q) + '" class="flex items-center gap-1 border-[1.5px] border-[#0b296c] text-[#0b296c] bg-white font-extrabold text-[clamp(0.75rem,3.3vw,0.8125rem)] px-4 py-2 rounded-md hover:bg-[#0b296c] hover:text-white transition"><i class="ri-eye-line text-sm"></i> Xem chi tiết</a></div>' : '<hr class="border-t border-app-line my-3.5">' + '<div class="flex justify-end"><a href="' + '{{ route('check.detail', '__CID__') }}'.replace('__CID__', item.customer_id) + '?q=' + encodeURIComponent(q) + '" class="flex items-center gap-1 border-[1.5px] border-[#0b296c] text-[#0b296c] bg-white font-extrabold text-[clamp(0.75rem,3.3vw,0.8125rem)] px-4 py-2 rounded-md hover:bg-[#0b296c] hover:text-white transition"><i class="ri-eye-line text-sm"></i> Xem chi tiết</a></div>') +
       '</div>';
   }
 

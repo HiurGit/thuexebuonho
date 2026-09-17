@@ -25,6 +25,7 @@
 @endsection
 
 @section('content-desktop')
+@include('partials.marquee')
 <section class="border-b border-app-line bg-white px-4 py-2 shadow-sm">
     <div class="mx-auto max-w-7xl">
         <h1 class="text-2xl font-extrabold text-app-ink">Danh sách xe</h1>
@@ -106,6 +107,7 @@
 @endsection
 
 @section('content-mobile')
+@include('partials.marquee')
 <div class="border-b border-app-line bg-white px-4 py-2 shadow-sm">
     <div class="flex items-center gap-3">
         <a href="javascript:history.back()" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-app-accentSoft text-app-accent transition-all hover:bg-app-accent hover:text-white">

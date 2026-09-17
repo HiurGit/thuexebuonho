@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Thuê Xe Buôn Hồ - Cho thuê xe tự lái')
+@section('title', trim((string) \App\Models\Setting::get('home_title', 'Thuê Xe Buôn Hồ - Cho thuê xe tự lái')))
 
 {{--
 ================================================================
@@ -33,7 +33,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="{{ url()->current() }}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Thuê Xe Buôn Hồ">
+<meta property="og:site_name" content="{{ \App\Models\Setting::get('site_title', 'Thuê Xe Buôn Hồ - Đưa Đón Khách') }}">
 <meta property="og:locale" content="vi_VN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $homeOgTitle }}">
@@ -103,6 +103,8 @@
 @endpush
 
 @section('content-desktop')
+
+  @include('partials.marquee')
 
   <!-- ============================================================
        DESKTOP - SECTION 1: HERO SECTION (Banner + Booking Card)
@@ -236,16 +238,16 @@
         <h2 class="inline-block rounded-b-xl bg-[#5fcf86] px-8 py-3 text-3xl font-extrabold text-white">Danh sách xe nổi bật</h2>
         <p class="mt-3 text-sm font-semibold text-app-muted"></p>
       </div>
-      <div class="mt-6 overflow-hidden rounded-2xl">
+      <div class="mt-6 hidden overflow-hidden rounded-2xl">
         <div class="swiper banner-price-swiper">
           <div class="swiper-wrapper">
             @forelse($priceBanners as $pb)
             <div class="swiper-slide">
-              <img src="{{ asset($pb->image) }}" alt="{{ $pb->title }}" loading="eager" fetchpriority="high" class="h-auto w-full object-cover">
+              <img src="{{ asset($pb->image) }}" alt="{{ $pb->title }}" loading="eager" fetchpriority="high" class="h-auto w-full max-h-[420px] object-contain">
             </div>
             @empty
             <div class="swiper-slide">
-              <img src="{{ asset('assets/banner-price/banner-gia1.png') }}" alt="Banner giá" class="h-auto w-full object-cover">
+              <img src="{{ asset('assets/banner-price/banner-gia1.png') }}" alt="Banner giá" class="h-auto w-full max-h-[420px] object-contain">
             </div>
             @endforelse
           </div>
@@ -796,6 +798,8 @@
   @endsection
 
 @section('content-mobile')
+
+  @include('partials.marquee')
 
   <!-- ============================================================
        MOBILE - SECTION 1: HERO SECTION (Banner + Booking Card)

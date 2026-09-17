@@ -22,6 +22,7 @@
 @endsection
 
 @section('content-desktop')
+@include('partials.marquee')
 <section class="bg-white">
   <div class="mx-auto max-w-7xl px-6 py-8">
     <div class="overflow-hidden rounded-2xl bg-[#f5f5f4] shadow-sm">
@@ -263,6 +264,7 @@
 @endsection
 
 @section('content-mobile')
+@include('partials.marquee')
 <section class="px-4 pt-4">
   <div class="overflow-hidden rounded-[12px] border border-app-line bg-[#f5f5f4] shadow-sm">
     <img src="{{ asset('assets/image/banner-thuexe.png') }}" alt="Dịch vụ thuê xe" class="h-auto w-full object-cover">

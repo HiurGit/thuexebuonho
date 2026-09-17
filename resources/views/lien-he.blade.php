@@ -34,6 +34,7 @@
 @endphp
 
 @section('content-desktop')
+@include('partials.marquee')
 <div class="border-b border-app-line bg-white shadow-sm">
   <div class="mx-auto flex max-w-4xl items-center gap-4 px-6 py-3">
     <a href="javascript:history.back()" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-app-accentSoft text-app-accent transition-all hover:bg-app-accent hover:text-white">
@@ -144,6 +145,7 @@
 @endsection
 
 @section('content-mobile')
+@include('partials.marquee')
 <div class="bg-white px-4 py-1 shadow-sm">
   <div class="flex items-center gap-3">
     <a href="javascript:history.back()" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-app-accentSoft text-app-accent transition-all hover:bg-app-accent hover:text-white">

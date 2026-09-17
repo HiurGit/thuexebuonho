@@ -67,9 +67,14 @@ class CarsController extends Controller
                     if (!empty($g['video']) && $g['video'] instanceof UploadedFile) {
                         $videoPath = 'storage/' . $g['video']->store('videos/car-guides', 'public');
                     }
+                    $imagePath = null;
+                    if (!empty($g['image']) && $g['image'] instanceof UploadedFile) {
+                        $imagePath = 'storage/' . $g['image']->store('car-guides-images', 'public');
+                    }
                     $car->guides()->create([
                         'title' => $g['title'],
                         'video_path' => $videoPath,
+                        'image_path' => $imagePath,
                         'sort_order' => $i,
                     ]);
                 }
@@ -146,6 +151,12 @@ class CarsController extends Controller
                             }
                             $data['video_path'] = 'storage/' . $g['video']->store('videos/car-guides', 'public');
                         }
+                        if (!empty($g['image']) && $g['image'] instanceof UploadedFile) {
+                            if ($guide->image_path) {
+                                Storage::disk('public')->delete(str_replace('storage/', '', $guide->image_path));
+                            }
+                            $data['image_path'] = 'storage/' . $g['image']->store('car-guides-images', 'public');
+                        }
                         $guide->update($data);
                         $submittedIds[] = $g['id'];
                     }
@@ -154,9 +165,14 @@ class CarsController extends Controller
                     if (!empty($g['video']) && $g['video'] instanceof UploadedFile) {
                         $videoPath = 'storage/' . $g['video']->store('videos/car-guides', 'public');
                     }
+                    $imagePath = null;
+                    if (!empty($g['image']) && $g['image'] instanceof UploadedFile) {
+                        $imagePath = 'storage/' . $g['image']->store('car-guides-images', 'public');
+                    }
                     $guide = $car->guides()->create([
                         'title' => $g['title'],
                         'video_path' => $videoPath,
+                        'image_path' => $imagePath,
                         'sort_order' => $i,
                     ]);
                     $submittedIds[] = $guide->id;
@@ -168,12 +184,18 @@ class CarsController extends Controller
                 if ($rg->video_path) {
                     Storage::disk('public')->delete(str_replace('storage/', '', $rg->video_path));
                 }
+                if ($rg->image_path) {
+                    Storage::disk('public')->delete(str_replace('storage/', '', $rg->image_path));
+                }
                 $rg->delete();
             }
         } else {
             foreach ($car->guides as $rg) {
                 if ($rg->video_path) {
                     Storage::disk('public')->delete(str_replace('storage/', '', $rg->video_path));
+                }
+                if ($rg->image_path) {
+                    Storage::disk('public')->delete(str_replace('storage/', '', $rg->image_path));
                 }
             }
             $car->guides()->delete();
@@ -230,6 +252,9 @@ class CarsController extends Controller
         foreach ($car->guides as $g) {
             if ($g->video_path) {
                 Storage::disk('public')->delete(str_replace('storage/', '', $g->video_path));
+            }
+            if ($g->image_path) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $g->image_path));
             }
         }
 

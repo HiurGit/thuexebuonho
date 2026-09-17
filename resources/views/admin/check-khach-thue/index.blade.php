@@ -67,7 +67,7 @@
                             @endif
                         </td>
                         <td class="text-center" style="white-space:nowrap">
-                            <a href="{{ route('check-khach-thue.detail', $c->id) }}" class="btn btn-sm btn-info" target="_blank" title="Xem trang công khai"><i class="fas fa-eye"></i></a>
+                            <a href="{{ route('check.detail', $c->id) }}" class="btn btn-sm btn-info" target="_blank" title="Xem trang công khai"><i class="fas fa-eye"></i></a>
                             <a href="{{ route('admin.check-khach-thue.edit', $c) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
                             <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $c->id }}" data-url="{{ route('admin.check-khach-thue.destroy', $c) }}"><i class="fas fa-trash"></i></button>
                         </td>

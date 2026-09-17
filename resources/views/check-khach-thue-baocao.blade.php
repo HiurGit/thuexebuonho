@@ -26,7 +26,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/favicon-32.png') }}">
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/favicon-16.png') }}">
 @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/check-khach-qr.js'])
-<script>window.__CHECK_KHACH_GEMINI_OCR_URL = @json(route('check-khach-thue.ocr-gemini'));</script>
+<script>window.__CHECK_KHACH_GEMINI_OCR_URL = @json(route('check.ocr-gemini'));</script>
 <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
 <link rel="preload" href="{{ asset('assets/fonts/nunito/nunito-vietnamese.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ asset('assets/fonts/nunito/nunito-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
@@ -67,7 +67,7 @@
     </div>
     {{-- Header --}}
     <div class="mb-6">
-      <a href="{{ route('check-khach-thue') }}" class="inline-flex items-center gap-1.5 text-[#0b296c] font-extrabold text-sm hover:underline">
+      <a href="{{ route('check') }}" class="inline-flex items-center gap-1.5 text-[#0b296c] font-extrabold text-sm hover:underline">
         <i class="ri-arrow-left-line"></i>
         Quay lại tra cứu
       </a>
@@ -99,6 +99,7 @@
           Upload CCCD
         </button>
       </div>
+      <p class="mt-2 text-center text-[11.5px] font-semibold text-app-muted">hoặc copy ảnh CCCD trên mạng rồi dán vào đây (Ctrl + V)</p>
       <input type="file" id="qr-upload-file" accept="image/*" class="hidden">
       <div id="qr-reader" class="hidden mt-3 relative overflow-hidden rounded-xl bg-black" style="aspect-ratio: 16 / 10;">
         <video id="qr-video" class="h-full w-full object-cover" playsinline muted></video>
@@ -170,7 +171,7 @@
       <div id="report-error" class="hidden mb-4 rounded-md border border-[#e02923] bg-red-50 text-[#e02923] text-[13px] font-bold px-3.5 py-2.5"></div>
       <hr class="border-t border-app-line mb-4">
       <div class="flex gap-2.5">
-        <a href="{{ route('check-khach-thue') }}" class="flex-1 py-3 rounded-md font-bold text-[15px] text-center bg-[#F1F2F8] text-app-muted hover:bg-[#E7E9F2] transition">Huỷ</a>
+        <a href="{{ route('check') }}" class="flex-1 py-3 rounded-md font-bold text-[15px] text-center bg-[#F1F2F8] text-app-muted hover:bg-[#E7E9F2] transition">Huỷ</a>
         <button type="button" onclick="submitReport()" class="flex-1 py-3 rounded-md font-bold text-[15px] text-white bg-red-500 hover:bg-red-600 active:scale-[0.97] transition">Gửi đi</button>
       </div>
     </div>
@@ -183,7 +184,7 @@
     </div>
     <h2 class="text-[clamp(1.25rem,5vw,1.5rem)] font-extrabold text-[#052c61] mb-2">Đã gửi báo cáo thành công</h2>
     <p class="text-[clamp(0.875rem,3.8vw,0.9375rem)] font-bold text-app-muted mb-6">Báo cáo của bạn đang chờ kiểm duyệt trước khi hiển thị công khai.</p>
-    <a href="{{ route('check-khach-thue') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md text-white font-extrabold text-[15px] bg-[#195cc2] hover:bg-[#164fa6] active:scale-[0.97] transition">
+    <a href="{{ route('check') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md text-white font-extrabold text-[15px] bg-[#195cc2] hover:bg-[#164fa6] active:scale-[0.97] transition">
       <i class="ri-search-line text-base"></i>
       Quay về tra cứu
     </a>
@@ -299,7 +300,7 @@
     var btn = document.querySelector('button[onclick="submitReport()"]');
     if (btn) btn.disabled = true;
 
-    fetch('{{ route('check-khach-thue.report.store') }}', {
+    fetch('{{ route('check.report.store') }}', {
       method: 'POST',
       headers: headers,
       body: fd

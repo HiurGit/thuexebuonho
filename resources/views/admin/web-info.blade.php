@@ -145,6 +145,68 @@
 
                         <hr>
 
+                        <h5 class="mb-3"><i class="fas fa-bullhorn mr-1"></i> Băng thông báo chạy chữ</h5>
+
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input
+                                    type="checkbox"
+                                    class="custom-control-input @error('marquee_enabled') is-invalid @enderror"
+                                    id="marquee_enabled"
+                                    name="marquee_enabled"
+                                    value="1"
+                                    {{ old('marquee_enabled', $settings['marquee_enabled']) === '1' ? 'checked' : '' }}
+                                >
+                                <label class="custom-control-label" for="marquee_enabled">Bật hiển thị dòng chữ chạy</label>
+                            </div>
+                            <small class="form-text text-muted">
+                                Tắt để ẩn dòng chữ chạy trên tất cả các trang.
+                            </small>
+                            @error('marquee_enabled')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="marquee_text">Nội dung dòng chữ chạy</label>
+                            <input
+                                type="text"
+                                class="form-control @error('marquee_text') is-invalid @enderror"
+                                id="marquee_text"
+                                name="marquee_text"
+                                maxlength="500"
+                                value="{{ old('marquee_text', $settings['marquee_text']) }}"
+                                placeholder="QUÝ KHÁCH THUÊ XE CÀNG LÂU - GIÁ CÀNG TỐT!"
+                            >
+                            @error('marquee_text')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">
+                                Hiển thị chạy ngang đầu trang (Trang chủ, Danh sách xe, Chi tiết xe, Dịch vụ, Liên hệ).
+                            </small>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group">
+                            <label for="site_title">Title website (SEO)</label>
+                            <input
+                                type="text"
+                                class="form-control @error('site_title') is-invalid @enderror"
+                                id="site_title"
+                                name="site_title"
+                                maxlength="200"
+                                value="{{ old('site_title', $settings['site_title']) }}"
+                                placeholder="Thuê Xe Buôn Hồ - Đưa Đón Khách"
+                            >
+                            @error('site_title')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">
+                                Tiêu đề hiển thị trong thẻ &lt;title&gt; (tab trình duyệt, kết quả Google) cho toàn website. Các trang có title riêng sẽ được ưu tiên.
+                            </small>
+                        </div>
+
                         <div class="form-group">
                             <label for="site_description">Meta Description (SEO)</label>
                             <textarea
@@ -182,6 +244,25 @@
                         <hr>
 
                         <h5 class="mb-3"><i class="fas fa-search mr-1"></i> SEO Trang Chủ</h5>
+
+                        <div class="form-group">
+                            <label for="home_title">Title trang chủ (SEO)</label>
+                            <input
+                                type="text"
+                                class="form-control @error('home_title') is-invalid @enderror"
+                                id="home_title"
+                                name="home_title"
+                                maxlength="200"
+                                value="{{ old('home_title', $settings['home_title']) }}"
+                                placeholder="Thuê Xe Buôn Hồ - Cho thuê xe tự lái"
+                            >
+                            @error('home_title')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">
+                                Title riêng cho trang chủ. Nếu để trống, website sẽ dùng Title website ở trên.
+                            </small>
+                        </div>
 
                         <div class="form-group">
                             <label for="home_meta_description">Meta Description trang chủ</label>

@@ -11,6 +11,7 @@ $siteAddress = trim((string) \App\Models\Setting::get('site_address', '07 Chu Va
 $siteMapUrl = trim((string) \App\Models\Setting::get('site_map_url', 'https://maps.app.goo.gl/Qr6kWexgKnYdRdpq7'));
 $siteFacebook = trim((string) \App\Models\Setting::get('site_facebook', 'https://www.facebook.com/9999NDT/'));
 $siteKeywords = trim((string) \App\Models\Setting::get('site_keywords', ''));
+$siteTitle = trim((string) \App\Models\Setting::get('site_title', 'Thuê Xe Buôn Hồ - Đưa Đón Khách'));
 $siteDescription = trim((string) \App\Models\Setting::get('site_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'));
 $canonicalUrl = url()->current();
 @endphp
@@ -23,19 +24,19 @@ $canonicalUrl = url()->current();
   @yield('meta')
 @else
   <meta name="description" content="{{ $siteDescription }}">
-  <meta property="og:title" content="Thuê Xe Buôn Hồ - Đưa Đón Khách">
+  <meta property="og:title" content="{{ $siteTitle }}">
   <meta property="og:description" content="{{ $siteDescription }}">
   <meta property="og:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="{{ url()->current() }}">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Thuê Xe Buôn Hồ">
+  <meta property="og:site_name" content="{{ $siteTitle }}">
   <meta property="og:locale" content="vi_VN">
   <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:alt" content="Thuê Xe Buôn Hồ - Dịch vụ cho thuê xe">
+  <meta property="og:image:alt" content="{{ $siteTitle }}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Thuê Xe Buôn Hồ - Đưa Đón Khách">
+  <meta name="twitter:title" content="{{ $siteTitle }}">
   <meta name="twitter:description" content="{{ $siteDescription }}">
   <meta name="twitter:image" content="{{ asset('assets/image/bannerMXH.jpg') }}">
 @endif
@@ -43,7 +44,7 @@ $canonicalUrl = url()->current();
 <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/favicon-32.png') }}">
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/favicon-16.png') }}">
 <link rel="apple-touch-icon" href="{{ asset('assets/icon-192.png') }}">
-<title>@yield('title', 'Thuê Xe Buôn Hồ - Đưa Đón Khách')</title>
+<title>@yield('title', $siteTitle)</title>
 
 <link rel="canonical" href="{{ $canonicalUrl }}">
 
@@ -51,7 +52,7 @@ $canonicalUrl = url()->current();
 {!! json_encode([
     '@context' => 'https://schema.org',
     '@type' => 'WebSite',
-    'name' => 'Thuê Xe Buôn Hồ',
+    'name' => $siteTitle,
     'url' => url('/'),
     'inLanguage' => 'vi-VN',
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
@@ -60,7 +61,7 @@ $canonicalUrl = url()->current();
 {!! json_encode([
     '@context' => 'https://schema.org',
     '@type' => 'LocalBusiness',
-    'name' => 'Thuê Xe Buôn Hồ',
+    'name' => $siteTitle,
     'url' => url('/'),
     'telephone' => $sitePhone,
     'address' => [
@@ -283,4 +284,74 @@ foreach ($breadcrumbItems as $i => $item) {
     opacity: 0;
   }
   #htx-loading-bar.htx-active { opacity: 1; }
+  #htx-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.45s ease;
+  }
+  #htx-preloader.htx-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .htx-preloader-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .htx-preloader-logo {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 3px #5fcf86;
+    animation: htx-preloader-spin 5s linear infinite;
+  }
+  .htx-preloader-text {
+    font-size: 14px;
+    font-weight: 800;
+    color: #78716c;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: htx-preloader-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes htx-preloader-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes htx-preloader-pulse {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 1; }
+  }
+  .htx-marquee {
+    overflow: hidden;
+    background: #5fcf86;
+    color: #ffffff;
+    white-space: nowrap;
+  }
+  .htx-marquee-track {
+    display: inline-flex;
+    width: max-content;
+    animation: htx-marquee-scroll 7s linear infinite;
+  }
+  .htx-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.5rem;
+    padding: 0.55rem 1.25rem;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .htx-marquee-sep {
+    opacity: 0.85;
+  }
+  @keyframes htx-marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
 </style>

@@ -56,12 +56,12 @@ Route::get('/lien-he', function () {
     return view('lien-he');
 })->name('lien-he');
 
-Route::get('/check-khach-thue', [App\Http\Controllers\CheckKhachThueController::class, 'index'])->name('check-khach-thue');
+Route::get('/check', [App\Http\Controllers\CheckKhachThueController::class, 'index'])->name('check');
 
-Route::get('/check-khach-thue/gui-bao-cao', [App\Http\Controllers\CheckKhachThueController::class, 'report'])->name('check-khach-thue.report');
-Route::post('/check-khach-thue/ocr-gemini', [App\Http\Controllers\CheckKhachThueController::class, 'ocrGemini'])->middleware('throttle:60,1')->name('check-khach-thue.ocr-gemini');
-Route::post('/check-khach-thue/gui-bao-cao', [App\Http\Controllers\CheckKhachThueController::class, 'storeReport'])->middleware('throttle:10,1')->middleware('throttle:60,60')->name('check-khach-thue.report.store');
-Route::get('/check-khach-thue/chi-tiet/{customer}', [App\Http\Controllers\CheckKhachThueController::class, 'showCustomer'])->name('check-khach-thue.detail');
+Route::get('/check/gui-bao-cao', [App\Http\Controllers\CheckKhachThueController::class, 'report'])->name('check.report');
+Route::post('/check/ocr-gemini', [App\Http\Controllers\CheckKhachThueController::class, 'ocrGemini'])->middleware('throttle:60,1')->name('check.ocr-gemini');
+Route::post('/check/gui-bao-cao', [App\Http\Controllers\CheckKhachThueController::class, 'storeReport'])->middleware('throttle:10,1')->middleware('throttle:60,60')->name('check.report.store');
+Route::get('/check/chi-tiet/{customer}', [App\Http\Controllers\CheckKhachThueController::class, 'showCustomer'])->name('check.detail');
 
 Route::get('/sitemap.xml', function () {
     $assetUrl = fn (string $path) => asset($path);

@@ -67,12 +67,11 @@
   @php
     $reports = $customer->reports;
     $report = $reports->first();
-    $images = $reports->flatMap->images->values();
   @endphp
 
   {{-- Back --}}
   <div class="mb-6">
-    <a href="{{ route('check-khach-thue') }}" class="inline-flex items-center gap-1.5 text-[#0b296c] font-extrabold text-sm hover:underline">
+    <a href="{{ route('check') }}" class="inline-flex items-center gap-1.5 text-[#0b296c] font-extrabold text-sm hover:underline">
       <i class="ri-arrow-left-line"></i>
       Quay lại tra cứu
     </a>
@@ -101,7 +100,7 @@
     <div class="divide-y divide-app-line">
       <div class="flex items-center justify-between gap-3 py-2.5">
         <span class="text-[12.5px] font-bold text-app-muted">Họ tên</span>
-        <span class="text-[clamp(0.8125rem,3.6vw,0.875rem)] font-extrabold text-black text-right">{{ $customer->name }}</span>
+        <span class="text-[clamp(0.8125rem,3.6vw,0.875rem)] font-extrabold text-black text-right">{{ $customer->name ? ($reveal ? $customer->name : $masked['name']) : 'Không rõ' }}</span>
       </div>
       <div class="flex items-center justify-between gap-3 py-2.5">
         <span class="text-[12.5px] font-bold text-app-muted">Ngày sinh</span>
@@ -219,47 +218,19 @@
       <i class="ri-image-line text-[#0b296c] text-xl"></i>
       <h2 class="text-[clamp(0.9375rem,4vw,1.0625rem)] font-extrabold text-[#0b296c]">HÌNH ẢNH / BẰNG CHỨNG</h2>
     </div>
-    @if (! $reveal)
     <div class="flex flex-col items-center justify-center gap-2 rounded-md border border-dashed border-app-line bg-[#FAFBFF] py-8 text-center px-4">
-      <i class="ri-lock-line text-2xl text-app-muted"></i>
-      <p class="text-[clamp(0.8125rem,3.6vw,0.875rem)] font-bold text-app-muted">Nhập đúng CCCD / SĐT / Bằng lái trên trang tra cứu để xem hình ảnh bằng chứng.</p>
-    </div>
-    @elseif ($images->isNotEmpty())
-    <div id="evidence-swiper" class="swiper !pb-7">
-      <div class="swiper-wrapper">
-        @foreach ($images as $img)
-        <div class="swiper-slide">
-          <img src="{{ asset($img->path) }}" alt="Bằng chứng {{ $loop->iteration }}" class="aspect-square w-full object-contain rounded-md border border-app-line bg-[#FAFBFF] cursor-pointer">
-        </div>
-        @endforeach
-      </div>
-      <div id="evidence-pagination" class="swiper-pagination"></div>
-    </div>
-    @else
-    <p class="text-sm text-app-muted">Chưa có hình ảnh / bằng chứng.</p>
-    @endif
-  </div>
-
-  {{-- Lightbox --}}
-  @if ($reveal)
-  <div id="evidence-lightbox" class="hidden fixed inset-0 z-50 bg-black/95">
-    <button type="button" id="lightbox-close" class="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 transition" aria-label="Đóng">
-      <i class="ri-close-line text-2xl"></i>
-    </button>
-    <div id="lightbox-swiper" class="swiper h-full w-full">
-      <div class="swiper-wrapper items-center"></div>
-      <div id="lightbox-pagination" class="swiper-pagination"></div>
+      <i class="ri-shield-check-line text-2xl text-app-muted"></i>
+      <p class="text-[clamp(0.8125rem,3.6vw,0.875rem)] font-bold text-app-muted">Vì lý do bảo mật thông tin cá nhân, phần hình ảnh / bằng chứng không được hiển thị công khai.</p>
     </div>
   </div>
-  @endif
 
   {{-- Actions --}}
   <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
-    <a href="{{ route('check-khach-thue') }}" class="flex items-center justify-center gap-2 py-3 rounded-md font-extrabold text-[clamp(0.8125rem,3.6vw,0.875rem)] text-center bg-[#F1F2F8] text-app-muted hover:bg-[#E7E9F2] active:scale-[0.97] transition">
+    <a href="{{ route('check') }}" class="flex items-center justify-center gap-2 py-3 rounded-md font-extrabold text-[clamp(0.8125rem,3.6vw,0.875rem)] text-center bg-[#F1F2F8] text-app-muted hover:bg-[#E7E9F2] active:scale-[0.97] transition">
       <i class="ri-arrow-left-line text-base"></i>
       Quay lại
     </a>
-    <a href="{{ route('check-khach-thue.report') }}" class="flex items-center justify-center gap-2 py-3 rounded-md font-extrabold text-[clamp(0.8125rem,3.6vw,0.875rem)] text-center text-white bg-[#e02923] shadow-[0_10px_20px_-10px_rgba(224,41,35,0.55)] hover:bg-[#c7241e] active:scale-[0.97] transition">
+    <a href="{{ route('check.report') }}" class="flex items-center justify-center gap-2 py-3 rounded-md font-extrabold text-[clamp(0.8125rem,3.6vw,0.875rem)] text-center text-white bg-[#e02923] shadow-[0_10px_20px_-10px_rgba(224,41,35,0.55)] hover:bg-[#c7241e] active:scale-[0.97] transition">
       <i class="ri-add-line text-base"></i>
       Báo cáo mới
     </a>
