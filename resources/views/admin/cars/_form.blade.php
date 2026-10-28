@@ -7,6 +7,59 @@
         </div>
 
         <div class="form-group">
+            <label>Biển số</label>
+            <input type="text" name="plate" class="form-control @error('plate') is-invalid @enderror" value="{{ old('plate', $car->plate ?? '') }}" placeholder="VD: 47A-123.45">
+            @error('plate') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Nhãn hiệu</label>
+                    <input type="text" name="brand" class="form-control @error('brand') is-invalid @enderror" value="{{ old('brand', $car->brand ?? '') }}" placeholder="VD: Toyota">
+                    @error('brand') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Model / Phiên bản</label>
+                    <input type="text" name="model" class="form-control @error('model') is-invalid @enderror" value="{{ old('model', $car->model ?? '') }}" placeholder="VD: Vios G">
+                    @error('model') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Màu sơn</label>
+                    <input type="text" name="color" class="form-control @error('color') is-invalid @enderror" value="{{ old('color', $car->color ?? '') }}" placeholder="VD: Trắng">
+                    @error('color') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Số khung</label>
+                    <input type="text" name="chassis_no" class="form-control @error('chassis_no') is-invalid @enderror" value="{{ old('chassis_no', $car->chassis_no ?? '') }}">
+                    @error('chassis_no') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Số máy</label>
+                    <input type="text" name="engine_no" class="form-control @error('engine_no') is-invalid @enderror" value="{{ old('engine_no', $car->engine_no ?? '') }}">
+                    @error('engine_no') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Chủ xe</label>
+            <input type="text" name="owner" class="form-control @error('owner') is-invalid @enderror" value="{{ old('owner', $car->owner ?? '') }}" placeholder="VD: Hộ kinh doanh Thuê Xe Buôn Hồ">
+            @error('owner') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
+
+        <div class="form-group">
             <label>Mô tả</label>
             <textarea name="description" class="form-control" rows="3">{{ old('description', $car->description ?? '') }}</textarea>
         </div>
@@ -152,13 +205,13 @@
 
         <div id="image-preview-new" class="row"></div>
 
-        @if(isset($car) && $car->images->count() > 0)
+        @if(isset($car))
         <div class="mt-3">
-            <label class="d-block font-weight-bold">Ảnh hiện tại (kéo thả để sắp xếp)</label>
-            <small class="text-muted d-block mb-2">Kéo thanh màu xám để di chuyển. Ảnh đầu tiên là ảnh chính.</small>
+            <label class="d-block font-weight-bold">Ảnh xe (kéo thả để sắp xếp)</label>
+            <small class="text-muted d-block mb-2">Kéo thanh màu xám để di chuyển. Ảnh đầu tiên là ảnh chính. Có thể kéo cả ảnh mới thêm lên đầu.</small>
             <div class="row" id="sortable-images">
                 @foreach($car->images as $img)
-                <div class="col-md-3 col-4 mb-3" id="existing-img-{{ $img->id }}" data-id="{{ $img->id }}">
+                <div class="col-md-3 col-4 mb-3" id="existing-img-{{ $img->id }}" data-id="{{ $img->id }}" data-key="existing:{{ $img->id }}">
                     <div class="card">
                         <div class="bg-secondary text-white text-center img-handle py-1" style="cursor:move;font-size:12px;user-select:none"><i class="fas fa-grip-vertical"></i></div>
                         <div style="position:relative">
@@ -168,7 +221,7 @@
                             @endif
                             <button type="button" class="btn btn-sm btn-danger btn-del-img" style="position:absolute;top:4px;right:4px;padding:0 6px;font-size:14px;line-height:1" data-id="{{ $img->id }}" data-url="{{ route('admin.cars.image.destroy', $img) }}" title="Xóa">&times;</button>
                         </div>
-                        <input type="hidden" name="sort_images[]" value="{{ $img->id }}" class="img-sort-input">
+                        <input type="hidden" name="image_order[]" value="existing:{{ $img->id }}" class="img-sort-input">
                     </div>
                 </div>
                 @endforeach

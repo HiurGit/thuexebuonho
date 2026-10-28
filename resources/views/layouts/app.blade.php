@@ -28,17 +28,17 @@
         </div>
         <div>
           <p class="text-lg font-extrabold leading-none text-app-ink">THUÊ XE TỰ LÁI BUÔN HỒ</p>
-          <p class="mt-0.5 text-xs font-bold uppercase text-app-muted">Cho thuê xe tự lái & có tài xế</p>
+          <p class="mt-0.5 hidden text-xs font-bold uppercase text-app-muted xl:block">Cho thuê xe tự lái & có tài xế</p>
         </div>
       </a>
       <nav class="hidden items-center gap-1 lg:flex">
-        <a href="{{ route('index') }}#trang-chu" class="rounded-xl px-4 py-2 text-sm font-bold text-app-accent transition-colors hover:bg-app-accentSoft">Trang chủ</a>
-        <a href="{{ route('cars.index') }}" class="rounded-xl px-4 py-2 text-sm font-bold @if(request()->routeIs('cars.index')) text-app-accent bg-app-accentSoft @else text-app-muted @endif transition-colors hover:bg-app-accentSoft hover:text-app-accent">Danh sách xe</a>
-        <a href="{{ route('index') }}#dich-vu" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Dịch vụ</a>
-        <a href="{{ route('index') }}#bang-gia" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Bảng giá</a>
-        <a href="{{ route('index') }}#chung-toi" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Về chúng tôi</a>
-        <a href="{{ route('services') }}" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Dịch vụ khác</a>
-        <a href="{{ route('terms') }}" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Điều khoản</a>
+        <a href="{{ route('index') }}#trang-chu" class="rounded-xl px-2 py-2 text-sm font-bold text-app-accent transition-colors hover:bg-app-accentSoft xl:px-4">Trang chủ</a>
+        <a href="{{ route('cars.index') }}" class="rounded-xl px-2 py-2 text-sm font-bold @if(request()->routeIs('cars.index')) text-app-accent bg-app-accentSoft @else text-app-muted @endif transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:px-4">Danh sách xe</a>
+        <a href="{{ route('index') }}#dich-vu" class="hidden rounded-xl px-2 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:block xl:px-4">Dịch vụ</a>
+        <a href="{{ route('index') }}#bang-gia" class="rounded-xl px-2 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:px-4">Bảng giá</a>
+        <a href="{{ route('privacy') }}" class="hidden rounded-xl px-2 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent lg:block xl:hidden">Chính sách</a>
+        <a href="{{ route('services') }}" class="hidden rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:block">Dịch vụ khác</a>
+        <a href="{{ route('terms') }}" class="hidden rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:block">Điều khoản</a>
         <!-- <a href="{{ route('lien-he') }}" class="rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent">Liên hệ</a> -->
       </nav>
       <div class="flex items-center gap-3">
@@ -48,7 +48,7 @@
           </svg>
           {{ $sitePhoneDisplay }}
         </a>
-        <button id="menu-toggle" class="flex h-11 w-11 items-center justify-center rounded-xl border border-app-line bg-white text-lg text-app-ink lg:hidden">
+        <button id="menu-toggle" class="flex h-11 w-11 items-center justify-center rounded-xl border border-app-line bg-white text-lg text-app-ink">
           <i class="ri-menu-3-line"></i>
         </button>
       </div>
@@ -84,6 +84,7 @@
             <li><a href="#dich-vu" class="text-sm text-white/60 transition-colors hover:text-white">Dịch vụ</a></li>
             <li><a href="#bang-gia" class="text-sm text-white/60 transition-colors hover:text-white">Bảng giá</a></li>
             <li><a href="{{ route('services') }}" class="text-sm text-white/60 transition-colors hover:text-white">Dịch vụ khác</a></li>
+            <li><a href="{{ route('checklist.giaoxe') }}" class="text-sm text-white/60 transition-colors hover:text-white">Checklist giao xe</a></li>
             <li><a href="{{ route('lien-he') }}" class="text-sm text-white/60 transition-colors hover:text-white">Liên hệ</a></li>
           </ul>
         </div>
@@ -329,6 +330,28 @@
 
     <!-- Card 3: Chính sách -->
     <div class="mt-3 mb-6 bg-white rounded-[20px] shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+      <a href="{{ route('checklist.giaoxe') }}" class="flex items-center h-[52px] px-5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"/>
+        </svg>
+        <span class="flex-1 text-base font-medium text-app-ink ml-3">Checklist giao xe</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+      </a>
+      <div class="h-px bg-[#EEEEEE] mx-5"></div>
+      <a href="{{ route('lai-xe-an-toan') }}" class="flex items-center h-[52px] px-5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3.75a8.25 8.25 0 1 0 0 16.5 8.25 8.25 0 0 0 0-16.5Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h5.25m6 0h5.25M12 15v5.25" />
+        </svg>
+        <span class="flex-1 text-base font-medium text-app-ink ml-3">Lái xe an toàn</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+      </a>
+      <div class="h-px bg-[#EEEEEE] mx-5"></div>
       <a href="{{ route('services') }}" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 6 20.25h-2.25A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
@@ -389,8 +412,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
-      <a href="{{ route('index') }}?desktop" class="flex items-center h-[52px] px-5">
+      <div class="h-px bg-[#EEEEEE] mx-5 lg:hidden"></div>
+      <a href="{{ route('index') }}?desktop" class="flex items-center h-[52px] px-5 lg:hidden">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25"/>
         </svg>

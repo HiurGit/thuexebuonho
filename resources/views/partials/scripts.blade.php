@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 // ===== DRAWER =====
-var menuBtn = document.getElementById('menu-btn') || document.getElementById('menu-toggle');
+var menuBtns = document.querySelectorAll('#menu-btn, #menu-toggle');
 var drawerOverlay = document.getElementById('drawer-overlay');
 var drawerPanel = document.getElementById('drawer-panel');
 var drawerClose = document.getElementById('drawer-close');
@@ -125,8 +125,10 @@ function closeDrawer() {
   document.body.style.overflow = '';
 }
 
-if (menuBtn && drawerOverlay && drawerPanel) {
-  menuBtn.addEventListener('click', openDrawer);
+if (menuBtns.length && drawerOverlay && drawerPanel) {
+  menuBtns.forEach(function(btn) {
+    btn.addEventListener('click', openDrawer);
+  });
   if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
   drawerOverlay.addEventListener('click', closeDrawer);
 }
@@ -426,6 +428,7 @@ updateCarDetailPrice = function(tabMode, days) {
 
   var totalText;
   var durationText;
+  var unitText = '';
   var surcharge = 0;
   var activePanel = getActiveBookingPanel();
   var selectedTripPlan = activePanel && activePanel.querySelector('.trip-plan-option.trip-plan-out.border-app-accent')
@@ -441,6 +444,10 @@ updateCarDetailPrice = function(tabMode, days) {
     surcharge = selectedTripPlan === 'out-province' ? priceOutProvince * days : 0;
     totalText = ((days * dailyRate) + surcharge).toLocaleString('vi-VN') + 'đ';
     durationText = days + ' ngày';
+    if (days >= 2) {
+      var perDayPrice = Math.round(((days * dailyRate) + surcharge) / days);
+      unitText = perDayPrice.toLocaleString('vi-VN') + 'đ/ngày';
+    }
   } else {
     surcharge = selectedTripPlan === 'out-province' ? priceOutProvince : 0;
     totalText = (pricePerDay + surcharge).toLocaleString('vi-VN') + 'đ';
@@ -451,6 +458,14 @@ updateCarDetailPrice = function(tabMode, days) {
   if (formDuration) formDuration.textContent = durationText;
   if (bottomTotal) bottomTotal.textContent = totalText;
   if (bottomDuration) bottomDuration.textContent = durationText;
+
+  var formUnitPrice = document.getElementById('form-unit-price');
+  var bottomUnitPrice = document.getElementById('bottom-unit-price');
+  [formUnitPrice, bottomUnitPrice].forEach(function(el) {
+    if (!el) return;
+    el.textContent = unitText;
+    el.classList.toggle('hidden', !unitText);
+  });
 };
 
 // ===== PHONE VALIDATION =====
@@ -1845,50 +1860,79 @@ initBottomNav();
 
 // ===== CAR DETAIL DESCRIPTION TOGGLE =====
 (function() {
-  function initDescriptionToggles() {
-    document.querySelectorAll('[data-description-wrapper]').forEach(function(wrapper) {
-      if (wrapper.dataset.descriptionBound === '1') return;
-      wrapper.dataset.descriptionBound = '1';
+  function initOne(wrapper) {
+    if (wrapper.dataset.descriptionBound === '1') return;
 
-      var content = wrapper.querySelector('[data-description-content]');
-      var fade = wrapper.querySelector('[data-description-fade]');
-      var toggle = wrapper.parentElement ? wrapper.parentElement.querySelector('[data-description-toggle]') : null;
-      var label = toggle ? toggle.querySelector('[data-description-toggle-label]') : null;
-      var arrow = toggle ? toggle.querySelector('.description-arrow') : null;
+    // Bỏ qua layout đang ẩn (desktop/mobile) để không đo sai chiều cao 0.
+    // Khi resize sang layout tương ứng, initAll sẽ chạy lại và khởi tạo.
+    if (!wrapper.offsetParent && wrapper !== document.body) return;
 
-      if (!content || !toggle || !label) return;
+    var content = wrapper.querySelector('[data-description-content]');
+    var fade = wrapper.querySelector('[data-description-fade]');
+    var toggle = wrapper.parentElement ? wrapper.parentElement.querySelector('[data-description-toggle]') : null;
+    var label = toggle ? toggle.querySelector('[data-description-toggle-label]') : null;
+    var arrow = toggle ? toggle.querySelector('.description-arrow') : null;
 
-      var collapsedHeight = parseFloat(content.dataset.collapsedHeight || window.getComputedStyle(content).maxHeight);
-      var fullHeight = content.scrollHeight;
+    if (!content || !toggle || !label) return;
 
-      content.style.maxHeight = collapsedHeight + 'px';
-      wrapper.dataset.descriptionExpanded = '0';
-      if (fade) fade.classList.remove('hidden');
+    var collapsedHeight = parseFloat(content.dataset.collapsedHeight || window.getComputedStyle(content).maxHeight);
+    if (isNaN(collapsedHeight) || collapsedHeight <= 0) {
+      collapsedHeight = 128;
+    }
 
-      toggle.addEventListener('click', function() {
-        var expanded = wrapper.dataset.descriptionExpanded === '1';
-        if (expanded) {
-          content.style.maxHeight = collapsedHeight + 'px';
-          wrapper.dataset.descriptionExpanded = '0';
-          label.textContent = 'Xem thêm';
-          if (fade) fade.classList.remove('hidden');
-          if (arrow) arrow.classList.remove('rotate-180');
-        } else {
-          content.style.maxHeight = fullHeight + 'px';
-          wrapper.dataset.descriptionExpanded = '1';
-          label.textContent = 'Thu gọn';
-          if (fade) fade.classList.add('hidden');
-          if (arrow) arrow.classList.add('rotate-180');
-        }
-      });
+    // Đo chiều cao đầy đủ hiện tại (nội dung đã render).
+    var fullHeight = content.scrollHeight;
+
+    wrapper.dataset.descriptionBound = '1';
+
+    // Nếu nội dung không vượt quá chiều cao thu gọn thì không cần nút "Xem thêm".
+    if (fullHeight <= collapsedHeight + 2) {
+      content.style.maxHeight = 'none';
+      wrapper.dataset.descriptionExpanded = '1';
+      toggle.style.display = 'none';
+      return;
+    }
+
+    content.style.maxHeight = collapsedHeight + 'px';
+    wrapper.dataset.descriptionExpanded = '0';
+    if (fade) fade.classList.remove('hidden');
+    toggle.style.display = '';
+
+    toggle.addEventListener('click', function() {
+      var expanded = wrapper.dataset.descriptionExpanded === '1';
+      if (expanded) {
+        content.style.maxHeight = collapsedHeight + 'px';
+        wrapper.dataset.descriptionExpanded = '0';
+        label.textContent = 'Xem thêm';
+        if (fade) fade.classList.remove('hidden');
+        if (arrow) arrow.classList.remove('rotate-180');
+      } else {
+        // Đo lại lúc mở để tránh stale height (font/resize).
+        content.style.maxHeight = content.scrollHeight + 'px';
+        wrapper.dataset.descriptionExpanded = '1';
+        label.textContent = 'Thu gọn';
+        if (fade) fade.classList.add('hidden');
+        if (arrow) arrow.classList.add('rotate-180');
+      }
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDescriptionToggles);
-  } else {
-    initDescriptionToggles();
+  function initAll() {
+    document.querySelectorAll('[data-description-wrapper]').forEach(initOne);
   }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+
+  // Hỗ trợ chuyển layout desktop/mobile sau khi tải trang.
+  var resizeTimer = null;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(initAll, 150);
+  });
 })();
 </script>
 

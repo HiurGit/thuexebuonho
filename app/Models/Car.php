@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Car extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name', 'slug', 'description', 'seats', 'transmission', 'fuel',
-        'fuel_consumption', 'year', 'insurance', 'address',
+        'plate', 'fuel_consumption', 'year', 'insurance', 'address',
+        'brand', 'model', 'color', 'chassis_no', 'engine_no', 'owner',
         'price_per_day', 'price_per_session', 'price_multi_day', 'price_out_province',
         'deposit_min', 'deposit_max', 'deposit_asset',
         'status', 'sort_order',

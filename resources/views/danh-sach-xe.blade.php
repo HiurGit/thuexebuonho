@@ -64,7 +64,7 @@
                     <div class="flex items-start justify-between">
                         <h2 class="text-lg font-extrabold">{{ $car->name }}</h2>
                     </div>
-                    <div class="mt-3 flex flex-wrap gap-3">
+                    <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
                         <div class="flex items-center gap-1.5">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-app-muted"><path d="M15.214 18.373L15.214 18.373C15.4789 18.5536 15.8056 18.4392 15.9384 18.2034L15.9385 18.2033L16.8394 16.6021L18.327 17.2521L16.3093 21.5005L7.45754 21.5005L5.65568 17.2645L7.20867 16.6026L8.05607 18.193C8.05607 18.193 8.05608 18.193 8.05608 18.193C8.1829 18.431 8.51278 18.5592 8.78602 18.373L8.50445 17.9598L8.78602 18.373C8.83279 18.3411 10.0881 17.5005 12 17.5005C13.9124 17.5005 15.1679 18.3416 15.214 18.373ZM8.93862 17.7228L8.93862 17.7228C8.93862 17.7228 8.93862 17.7228 8.93862 17.7228Z" stroke="#666666"></path><path d="M9.5 4C9.5 3.17157 10.1716 2.5 11 2.5H13C13.8284 2.5 14.5 3.17157 14.5 4V5C14.5 5.27614 14.2761 5.5 14 5.5H10C9.72386 5.5 9.5 5.27614 9.5 5V4Z" stroke="#666666"></path><path d="M7 17L7.40499 8.90013C7.45821 7.83571 8.33675 7 9.4025 7H14.5975C15.6633 7 16.5418 7.83571 16.595 8.90012L17 17" stroke="#666666"></path><path d="M11 5.51855V7.41751" stroke="#666666"></path><path d="M13 5.51855V7.41751" stroke="#666666"></path></svg>
                             <span class="text-xs font-extrabold text-app-muted">{{ $car->seats }} chỗ</span>

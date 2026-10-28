@@ -95,6 +95,11 @@ if ($routeName === 'index') {
         ['name' => 'Trang chủ', 'url' => route('index')],
         ['name' => 'Hướng dẫn', 'url' => route('huongdan')],
     ];
+} elseif ($routeName === 'checklist.giaoxe') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Checklist giao xe', 'url' => route('checklist.giaoxe')],
+    ];
 } elseif ($routeName === 'cars.index') {
     $breadcrumbItems = [
         ['name' => 'Trang chủ', 'url' => route('index')],

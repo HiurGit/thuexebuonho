@@ -14,7 +14,7 @@ class AdminAuthController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return view('auth.login');
+        return view('adminlte::auth.login');
     }
 
     public function login(Request $request)

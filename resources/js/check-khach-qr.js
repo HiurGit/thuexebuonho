@@ -158,6 +158,7 @@ import {
         var nameEl = document.getElementById('report-name');
         var cccdEl = document.getElementById('report-cccd');
         var licenseEl = document.getElementById('report-license');
+        var phoneEl = document.getElementById('report-phone');
         var dobEl = document.getElementById('report-dob');
         var genderEl = document.getElementById('report-gender');
         var addressEl = document.getElementById('report-address');
@@ -165,6 +166,7 @@ import {
         if (info.name && nameEl) nameEl.value = info.name;
         if (info.cccd && cccdEl) cccdEl.value = info.cccd;
         if (info.license && licenseEl) licenseEl.value = info.license;
+        if (info.phone && phoneEl) phoneEl.value = info.phone;
         if (info.dob && dobEl) dobEl.value = info.dob;
         if (info.gender && genderEl) genderEl.value = info.gender;
         if (info.address && addressEl) addressEl.value = info.address;
@@ -545,7 +547,7 @@ import {
     }
 
     async function recognizeInfoGemini(file) {
-        setStatus('Đang đọc thông tin...');
+        setStatus('Đang đọc dữ liệu...');
         var fd = new FormData();
         fd.append('image', file);
 
@@ -576,6 +578,7 @@ import {
             name: fields.name || '',
             cccd: fields.cccd || '',
             license: fields.license || '',
+            phone: fields.phone || '',
             dob: fields.dob || '',
             gender: fields.gender || '',
             address: fields.address || '',
@@ -584,7 +587,7 @@ import {
     }
 
     async function recognizeInfoOpenAI(file) {
-        setStatus('Đang đọc thông tin bằng ChatGPT...');
+        setStatus('Đang đọc dữ liệu...');
         var fd = new FormData();
         fd.append('image', file);
 
@@ -636,7 +639,7 @@ import {
                 return;
             }
 
-            setStatus('Đang đọc thông tin...');
+            setStatus('Đang đọc dữ liệu...');
             var info = await recognizeInfo(file);
             URL.revokeObjectURL(loaded.url);
             if (info) {

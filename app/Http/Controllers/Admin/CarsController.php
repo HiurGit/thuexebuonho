@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Car;
-use App\Models\CarGuide;
 use App\Models\CarImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -20,6 +19,7 @@ class CarsController extends Controller
             ->withSum('views as total_views', 'visit_count')
             ->orderBy('sort_order')
             ->paginate(20);
+
         return view('admin.cars.index', compact('cars'));
     }
 
@@ -32,12 +32,19 @@ class CarsController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'plate' => 'nullable|string|max:50',
             'description' => 'nullable|string',
             'seats' => 'required|integer|min:2|max:50',
             'transmission' => 'required|string|max:50',
             'fuel' => 'required|string|max:50',
             'fuel_consumption' => 'nullable|string|max:50',
             'year' => 'nullable|integer',
+            'brand' => 'nullable|string|max:255',
+            'model' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:255',
+            'chassis_no' => 'nullable|string|max:255',
+            'engine_no' => 'nullable|string|max:255',
+            'owner' => 'nullable|string|max:255',
             'insurance' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'price_per_day' => 'required|numeric|min:0',
@@ -62,14 +69,14 @@ class CarsController extends Controller
 
         if ($request->guides) {
             foreach ($request->guides as $i => $g) {
-                if (!empty($g['title'])) {
+                if (! empty($g['title'])) {
                     $videoPath = null;
-                    if (!empty($g['video']) && $g['video'] instanceof UploadedFile) {
-                        $videoPath = 'storage/' . $g['video']->store('videos/car-guides', 'public');
+                    if (! empty($g['video']) && $g['video'] instanceof UploadedFile) {
+                        $videoPath = 'storage/'.$g['video']->store('videos/car-guides', 'public');
                     }
                     $imagePath = null;
-                    if (!empty($g['image']) && $g['image'] instanceof UploadedFile) {
-                        $imagePath = 'storage/' . $g['image']->store('car-guides-images', 'public');
+                    if (! empty($g['image']) && $g['image'] instanceof UploadedFile) {
+                        $imagePath = 'storage/'.$g['image']->store('car-guides-images', 'public');
                     }
                     $car->guides()->create([
                         'title' => $g['title'],
@@ -85,7 +92,7 @@ class CarsController extends Controller
             foreach ($request->file('images') as $i => $image) {
                 $path = $image->store('cars', 'public');
                 $car->images()->create([
-                    'path' => 'storage/' . $path,
+                    'path' => 'storage/'.$path,
                     'is_main' => $i === 0 && $car->images()->count() === 0,
                     'sort_order' => $i,
                 ]);
@@ -104,12 +111,19 @@ class CarsController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'plate' => 'nullable|string|max:50',
             'description' => 'nullable|string',
             'seats' => 'required|integer|min:2|max:50',
             'transmission' => 'required|string|max:50',
             'fuel' => 'required|string|max:50',
             'fuel_consumption' => 'nullable|string|max:50',
             'year' => 'nullable|integer',
+            'brand' => 'nullable|string|max:255',
+            'model' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:255',
+            'chassis_no' => 'nullable|string|max:255',
+            'engine_no' => 'nullable|string|max:255',
+            'owner' => 'nullable|string|max:255',
             'insurance' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'price_per_day' => 'required|numeric|min:0',
@@ -127,9 +141,8 @@ class CarsController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'delete_images' => 'nullable|array',
             'delete_images.*' => 'integer|exists:car_images,id',
-            'main_image_id' => 'nullable|integer|exists:car_images,id',
-            'sort_images' => 'nullable|array',
-            'sort_images.*' => 'integer|exists:car_images,id',
+            'image_order' => 'nullable|array',
+            'image_order.*' => ['string', 'regex:/^(existing:\d+|new:\d+)$/'],
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
@@ -140,34 +153,36 @@ class CarsController extends Controller
         if ($request->guides) {
             $submittedIds = [];
             foreach ($request->guides as $i => $g) {
-                if (empty($g['title'])) continue;
-                if (!empty($g['id'])) {
+                if (empty($g['title'])) {
+                    continue;
+                }
+                if (! empty($g['id'])) {
                     $guide = $car->guides()->find($g['id']);
                     if ($guide) {
                         $data = ['title' => $g['title'], 'sort_order' => $i];
-                        if (!empty($g['video']) && $g['video'] instanceof UploadedFile) {
+                        if (! empty($g['video']) && $g['video'] instanceof UploadedFile) {
                             if ($guide->video_path) {
                                 Storage::disk('public')->delete(str_replace('storage/', '', $guide->video_path));
                             }
-                            $data['video_path'] = 'storage/' . $g['video']->store('videos/car-guides', 'public');
+                            $data['video_path'] = 'storage/'.$g['video']->store('videos/car-guides', 'public');
                         }
-                        if (!empty($g['image']) && $g['image'] instanceof UploadedFile) {
+                        if (! empty($g['image']) && $g['image'] instanceof UploadedFile) {
                             if ($guide->image_path) {
                                 Storage::disk('public')->delete(str_replace('storage/', '', $guide->image_path));
                             }
-                            $data['image_path'] = 'storage/' . $g['image']->store('car-guides-images', 'public');
+                            $data['image_path'] = 'storage/'.$g['image']->store('car-guides-images', 'public');
                         }
                         $guide->update($data);
                         $submittedIds[] = $g['id'];
                     }
                 } else {
                     $videoPath = null;
-                    if (!empty($g['video']) && $g['video'] instanceof UploadedFile) {
-                        $videoPath = 'storage/' . $g['video']->store('videos/car-guides', 'public');
+                    if (! empty($g['video']) && $g['video'] instanceof UploadedFile) {
+                        $videoPath = 'storage/'.$g['video']->store('videos/car-guides', 'public');
                     }
                     $imagePath = null;
-                    if (!empty($g['image']) && $g['image'] instanceof UploadedFile) {
-                        $imagePath = 'storage/' . $g['image']->store('car-guides-images', 'public');
+                    if (! empty($g['image']) && $g['image'] instanceof UploadedFile) {
+                        $imagePath = 'storage/'.$g['image']->store('car-guides-images', 'public');
                     }
                     $guide = $car->guides()->create([
                         'title' => $g['title'],
@@ -209,34 +224,41 @@ class CarsController extends Controller
             }
         }
 
-        if ($request->main_image_id) {
-            CarImage::where('car_id', $car->id)->update(['is_main' => false]);
-            CarImage::where('id', $request->main_image_id)->where('car_id', $car->id)->update(['is_main' => true]);
-        }
-
-        if ($request->sort_images) {
-            $imageIds = $car->images()->pluck('id')->toArray();
-            $orderedIds = array_intersect($request->sort_images, $imageIds);
-            CarImage::where('car_id', $car->id)->update(['is_main' => false]);
-            foreach ($orderedIds as $i => $id) {
-                CarImage::where('id', $id)->where('car_id', $car->id)->update([
-                    'sort_order' => $i,
-                    'is_main' => $i === 0,
-                ]);
-            }
-        }
-
+        $newImages = [];
         if ($request->hasFile('images')) {
             $lastOrder = $car->images()->max('sort_order') ?? -1;
-            $hasMain = $car->images()->where('is_main', true)->exists();
             foreach ($request->file('images') as $i => $image) {
                 $path = $image->store('cars', 'public');
-                $car->images()->create([
-                    'path' => 'storage/' . $path,
-                    'is_main' => !$hasMain && $i === 0,
+                $newImages[$i] = $car->images()->create([
+                    'path' => 'storage/'.$path,
+                    'is_main' => false,
                     'sort_order' => $lastOrder + 1 + $i,
                 ]);
             }
+        }
+
+        if ($request->image_order) {
+            CarImage::where('car_id', $car->id)->update(['is_main' => false]);
+            foreach ($request->image_order as $i => $key) {
+                if (Str::startsWith($key, 'existing:')) {
+                    $id = (int) substr($key, strlen('existing:'));
+                    CarImage::where('id', $id)->where('car_id', $car->id)->update([
+                        'sort_order' => $i,
+                        'is_main' => $i === 0,
+                    ]);
+                } elseif (Str::startsWith($key, 'new:')) {
+                    $idx = (int) substr($key, strlen('new:'));
+                    if (isset($newImages[$idx])) {
+                        $newImages[$idx]->update([
+                            'sort_order' => $i,
+                            'is_main' => $i === 0,
+                        ]);
+                    }
+                }
+            }
+        } elseif ($newImages && ! $car->images()->where('is_main', true)->exists()) {
+            $firstNew = reset($newImages);
+            $firstNew->update(['is_main' => true]);
         }
 
         return redirect()->route('admin.cars.index')->with('success', 'Đã cập nhật xe.');
@@ -261,7 +283,7 @@ class CarsController extends Controller
         $car->delete();
 
         if (request()->ajax() || request()->wantsJson()) {
-            return response()->json(['success' => true, 'message' => 'Đã xóa xe ' . $car->name]);
+            return response()->json(['success' => true, 'message' => 'Đã xóa xe '.$car->name]);
         }
 
         return redirect()->route('admin.cars.index')->with('success', 'Đã xóa xe.');
@@ -297,7 +319,7 @@ class CarsController extends Controller
         $labels = ['available' => 'Sẵn sàng', 'rented' => 'Đang thuê', 'maintenance' => 'Bảo trì'];
 
         if ($request->ajax() || $request->wantsJson()) {
-            return response()->json(['success' => true, 'message' => 'Đã đổi trạng thái thành "' . $labels[$request->status] . '"']);
+            return response()->json(['success' => true, 'message' => 'Đã đổi trạng thái thành "'.$labels[$request->status].'"']);
         }
 
         return back()->with('success', 'Đã cập nhật trạng thái.');

@@ -262,7 +262,10 @@ $carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' 
                 <p class="text-[11px] font-bold text-app-muted">Tổng giá thuê</p>
                 <p id="form-duration" class="text-xs font-bold text-app-ink">1 ngày</p>
               </div>
-              <p id="form-total" class="text-base font-extrabold text-app-accent">{{ number_format($car->price_per_day) }}đ</p>
+              <div class="flex items-baseline gap-1.5">
+                <p id="form-total" class="text-base font-extrabold text-app-accent">{{ number_format($car->price_per_day) }}đ</p>
+                <p id="form-unit-price" class="hidden text-[11px] font-bold text-app-muted">650.000đ/ngày</p>
+              </div>
             </div>
             <button id="btn-thue-ngay" data-car-price-day="{{ $car->price_per_day }}" data-car-price-session="{{ $car->price_per_session }}" data-car-price-multi-day="{{ $car->price_multi_day }}" data-car-price-out-province="{{ $car->price_out_province }}" onclick="openConfirmModal()" class="mt-2 w-full rounded-xl bg-app-accent px-4 py-2.5 text-xs font-extrabold uppercase tracking-wide text-white shadow-sm transition-all hover:bg-app-green">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-1 inline-block h-4 w-4">
@@ -961,8 +964,10 @@ $carDesc = 'Thuê ' . $car->name . ' tại Buôn Hồ, Đăk Lăk. Chỉ từ ' 
   <div class="flex items-center px-4 py-2">
     <div>
       <p class="text-sm font-bold text-app-muted">Tổng giá thuê: <span id="bottom-duration">1 ngày</span></p>
-      <p id="bottom-total" class="text-xl font-extrabold text-app-accent">{{ number_format($car->price_per_day) }}đ</p>
-      <p id="bottom-pickup" class="mt-0.5 text-[13px] font-semibold text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-0.5 inline-block h-3.5 w-3.5 align-text-bottom text-app-accent"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>Nhận tại shop</p>
+      <div class="flex flex-row items-baseline gap-2">
+        <p id="bottom-total" class="text-xl font-extrabold text-app-accent">{{ number_format($car->price_per_day) }}đ</p>
+        <p id="bottom-unit-price" class="hidden text-[12px] font-bold text-app-muted">650.000đ/ngày</p>
+      </div>
     </div>
     <div class="ml-auto">
       <button id="btn-thue-ngay-mobile" data-car-price-day="{{ $car->price_per_day }}" data-car-price-session="{{ $car->price_per_session }}" data-car-price-multi-day="{{ $car->price_multi_day }}" data-car-price-out-province="{{ $car->price_out_province }}" onclick="openConfirmModal()" class="rounded-[10px] bg-app-accent px-5 py-2.5 text-sm font-extrabold uppercase tracking-wide text-white shadow-sm transition-all hover:bg-green-600 active:scale-[0.98]">

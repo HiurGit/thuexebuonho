@@ -330,13 +330,18 @@ return [
             'text' => 'Cộng tác viên',
             'url' => 'admin/collaborators',
             'icon' => 'fas fa-fw fa-handshake',
-        ],
+],
         [
             'text' => 'Đặt xe',
             'url' => 'admin/bookings',
             'icon' => 'fas fa-fw fa-calendar-check',
             'label' => 'New',
             'label_color' => 'success',
+        ],
+        [
+            'text' => 'Hợp đồng',
+            'url' => 'admin/contracts',
+            'icon' => 'fas fa-fw fa-file-contract',
         ],
         [
             'text' => 'Lịch thuê xe',

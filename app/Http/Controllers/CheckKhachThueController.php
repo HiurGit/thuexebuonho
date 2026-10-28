@@ -82,6 +82,7 @@ class CheckKhachThueController extends Controller
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'image_back' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $apiKey = trim((string) config('services.gemini.api_key', ''));
@@ -97,13 +98,19 @@ class CheckKhachThueController extends Controller
             $mime = $file->getMimeType() ?: 'image/jpeg';
             $base64 = base64_encode((string) file_get_contents($file->getRealPath()));
 
+            $backBase64 = null;
+            if ($request->hasFile('image_back')) {
+                $backFile = $request->file('image_back');
+                $backBase64 = base64_encode((string) file_get_contents($backFile->getRealPath()));
+            }
+
             $maxRetries = (int) config('services.gemini.max_retries', 2);
             $retryDelay = (int) config('services.gemini.retry_delay', 2500);
             $last = null;
 
             foreach ($this->geminiModelCandidates() as $model) {
                 for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
-                    $result = $this->callGemini($apiKey, $model, $mime, $base64);
+                    $result = $this->callGemini($apiKey, $model, $mime, $base64, $backBase64);
                     $last = $result;
 
                     if (! empty($result['ok'])) {
@@ -115,6 +122,7 @@ class CheckKhachThueController extends Controller
 
                     if (! empty($result['retryable']) && $attempt < $maxRetries) {
                         usleep($retryDelay * 1000);
+
                         continue;
                     }
 
@@ -156,18 +164,23 @@ class CheckKhachThueController extends Controller
         return $candidates;
     }
 
-    private function callGemini(string $apiKey, string $model, string $mime, string $base64): array
+    private function callGemini(string $apiKey, string $model, string $mime, string $base64, ?string $backBase64 = null): array
     {
         try {
+            $parts = [
+                ['inline_data' => ['mime_type' => $mime, 'data' => $base64]],
+            ];
+            if ($backBase64 !== null && $backBase64 !== '') {
+                $parts[] = ['inline_data' => ['mime_type' => 'image/jpeg', 'data' => $backBase64]];
+            }
+            $parts[] = ['text' => $this->geminiPrompt()];
+
             $response = Http::timeout((int) config('services.gemini.timeout', 60))
                 ->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", [
                     'contents' => [
                         [
                             'role' => 'user',
-                            'parts' => [
-                                ['inline_data' => ['mime_type' => $mime, 'data' => $base64]],
-                                ['text' => $this->geminiPrompt()],
-                            ],
+                            'parts' => $parts,
                         ],
                     ],
                     'generationConfig' => [
@@ -182,6 +195,10 @@ class CheckKhachThueController extends Controller
                                 'gender' => ['type' => 'STRING', 'nullable' => true],
                                 'permanent_address' => ['type' => 'STRING', 'nullable' => true],
                                 'date_of_issue' => ['type' => 'STRING', 'nullable' => true],
+                                'phone_number' => ['type' => 'STRING', 'nullable' => true],
+                                'license_class' => ['type' => 'STRING', 'nullable' => true],
+                                'license_issue_date' => ['type' => 'STRING', 'nullable' => true],
+                                'license_expiry_date' => ['type' => 'STRING', 'nullable' => true],
                             ],
                         ],
                     ],
@@ -196,7 +213,7 @@ class CheckKhachThueController extends Controller
                     'ok' => false,
                     'status' => $status,
                     'retryable' => in_array($status, [429, 500, 502, 503], true),
-                    'error' => $body['error']['message'] ?? 'HTTP ' . $status,
+                    'error' => $body['error']['message'] ?? 'HTTP '.$status,
                     'model' => $model,
                 ];
             }
@@ -266,15 +283,22 @@ class CheckKhachThueController extends Controller
     private function geminiPrompt(): string
     {
         return 'Ban la cong cu doc thong tin tu anh giay to tuy than cua nguoi Viet Nam '
-            . '(CCCD/Ca cuoc cong dan hoac Giay phep lai xe). '
-            . 'Hay doc chinh xac cac truong sau tu anh, tra ve JSON dung schema: '
-            . 'full_name (ho va ten), id_number (so CCCD/Can cuoc, chi giu so), '
-            . 'license_number (so giay phep lai xe neu co), '
-            . 'date_of_birth (ngay sinh dang dd/mm/yyyy), gender (Nam hoac Nu), '
-            . 'permanent_address (noi thuong tru hoac dia chi day du), '
-            . 'date_of_issue (ngay cap dang dd/mm/yyyy). '
-            . 'Neu truong nao khong nhin thay hoac khong ro thi de null. '
-            . 'Chi tra ve JSON, khong them giai thich.';
+            .'(CCCD/Can cuoc cong dan hoac Giay phep lai xe). '
+            .'Ban se nhan 1 hoac 2 anh: loi nhac dau tien la MAT TRUOC cua giay to, '
+            .'anh thu hai (neu co) la MAT SAU cua giay to. '
+            .'Hay doc chinh xac cac truong sau tu anh, tra ve JSON dung schema: '
+            .'full_name (ho va ten), id_number (so CCCD/Can cuoc, chi giu so), '
+            .'license_number (so giay phep lai xe neu co), '
+            .'date_of_birth (ngay sinh dang dd/mm/yyyy), gender (Nam hoac Nu), '
+            .'permanent_address (noi thuong tru hoac dia chi day du), '
+            .'date_of_issue (ngay cap dang dd/mm/yyyy), '
+            .'phone_number (so dien thoai neu co, thuong hien thi tren anh VNeID duoi nhan '
+            .'"So thue bao di dong" hoac "Dang ky tai khoan dinh danh", chi giu chu so), '
+            .'license_class (hang giay phep lai xe neu co, vi du B, B2, C, D...), '
+            .'license_issue_date (ngay cap bang lai dang dd/mm/yyyy neu co), '
+            .'license_expiry_date (ngay het han bang lai dang dd/mm/yyyy neu co). '
+            .'Neu truong nao khong nhin thay hoac khong ro thi de null. '
+            .'Chi tra ve JSON, khong them giai thich.';
     }
 
     private function extractJsonFromText(string $text): array
@@ -302,6 +326,10 @@ class CheckKhachThueController extends Controller
             'gender' => $this->normalizeGender($fields['gender'] ?? null),
             'address' => trim((string) ($fields['permanent_address'] ?? '')),
             'issue_date' => $this->normalizeDate($fields['date_of_issue'] ?? null),
+            'phone' => $this->normalizePhone($fields['phone_number'] ?? null),
+            'license_class' => trim((string) ($fields['license_class'] ?? '')),
+            'license_issue_date' => $this->normalizeDate($fields['license_issue_date'] ?? null),
+            'license_expiry_date' => $this->normalizeDate($fields['license_expiry_date'] ?? null),
         ];
     }
 
@@ -337,10 +365,26 @@ class CheckKhachThueController extends Controller
         return '';
     }
 
+    private function normalizePhone($value): string
+    {
+        $digits = preg_replace('/\D/', '', (string) ($value ?? ''));
+
+        if (str_starts_with($digits, '84') && strlen($digits) === 11) {
+            $digits = '0'.substr($digits, 2);
+        }
+
+        if (strlen($digits) < 9 || strlen($digits) > 11) {
+            return '';
+        }
+
+        return $digits;
+    }
+
     public function ocrOpenAI(Request $request)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'image_back' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $apiKey = trim((string) config('services.openai.api_key', ''));
@@ -356,13 +400,19 @@ class CheckKhachThueController extends Controller
             $mime = $file->getMimeType() ?: 'image/jpeg';
             $base64 = base64_encode((string) file_get_contents($file->getRealPath()));
 
+            $backBase64 = null;
+            if ($request->hasFile('image_back')) {
+                $backFile = $request->file('image_back');
+                $backBase64 = base64_encode((string) file_get_contents($backFile->getRealPath()));
+            }
+
             $maxRetries = (int) config('services.openai.max_retries', 2);
             $retryDelay = (int) config('services.openai.retry_delay', 2500);
             $last = null;
 
             foreach ($this->openaiModelCandidates() as $model) {
                 for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
-                    $result = $this->callOpenAI($apiKey, $model, $mime, $base64);
+                    $result = $this->callOpenAI($apiKey, $model, $mime, $base64, $backBase64);
                     $last = $result;
 
                     if (! empty($result['ok'])) {
@@ -374,6 +424,7 @@ class CheckKhachThueController extends Controller
 
                     if (! empty($result['retryable']) && $attempt < $maxRetries) {
                         usleep($retryDelay * 1000);
+
                         continue;
                     }
 
@@ -415,9 +466,16 @@ class CheckKhachThueController extends Controller
         return $candidates;
     }
 
-    private function callOpenAI(string $apiKey, string $model, string $mime, string $base64): array
+    private function callOpenAI(string $apiKey, string $model, string $mime, string $base64, ?string $backBase64 = null): array
     {
         try {
+            $imageContent = [];
+            if ($backBase64 !== null && $backBase64 !== '') {
+                $imageContent[] = ['type' => 'image_url', 'image_url' => ['url' => 'data:image/jpeg;base64,'.$backBase64]];
+            }
+            $imageContent[] = ['type' => 'image_url', 'image_url' => ['url' => "data:{$mime};base64,{$base64}"]];
+            $imageContent[] = ['type' => 'text', 'text' => $this->openaiPrompt()];
+
             $response = Http::timeout((int) config('services.openai.timeout', 60))
                 ->withToken($apiKey)
                 ->post('https://api.openai.com/v1/chat/completions', [
@@ -425,18 +483,7 @@ class CheckKhachThueController extends Controller
                     'messages' => [
                         [
                             'role' => 'user',
-                            'content' => [
-                                [
-                                    'type' => 'text',
-                                    'text' => $this->openaiPrompt(),
-                                ],
-                                [
-                                    'type' => 'image_url',
-                                    'image_url' => [
-                                        'url' => "data:{$mime};base64,{$base64}",
-                                    ],
-                                ],
-                            ],
+                            'content' => $imageContent,
                         ],
                     ],
                     'response_format' => ['type' => 'json_object'],
@@ -451,7 +498,7 @@ class CheckKhachThueController extends Controller
                     'ok' => false,
                     'status' => $status,
                     'retryable' => in_array($status, [429, 500, 502, 503], true),
-                    'error' => $body['error']['message'] ?? 'HTTP ' . $status,
+                    'error' => $body['error']['message'] ?? 'HTTP '.$status,
                     'model' => $model,
                 ];
             }
@@ -534,6 +581,10 @@ class CheckKhachThueController extends Controller
             'gender' => $this->normalizeGender($fields['gender'] ?? null),
             'address' => trim((string) ($fields['permanent_address'] ?? '')),
             'issue_date' => $this->normalizeDate($fields['date_of_issue'] ?? null),
+            'phone' => $this->normalizePhone($fields['phone_number'] ?? null),
+            'license_class' => trim((string) ($fields['license_class'] ?? '')),
+            'license_issue_date' => $this->normalizeDate($fields['license_issue_date'] ?? null),
+            'license_expiry_date' => $this->normalizeDate($fields['license_expiry_date'] ?? null),
         ];
     }
 
@@ -744,7 +795,7 @@ class CheckKhachThueController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('report_images', 'public');
-                $report->images()->create(['path' => 'storage/' . $path]);
+                $report->images()->create(['path' => 'storage/'.$path]);
             }
         }
 
@@ -832,7 +883,7 @@ class CheckKhachThueController extends Controller
             return 'xxxx';
         }
 
-        return substr($digits, 0, -4) . 'xxxx';
+        return substr($digits, 0, -4).'xxxx';
     }
 
     private function maskAddress($value): string
