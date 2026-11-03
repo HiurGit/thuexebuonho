@@ -5,22 +5,23 @@
 @section('meta')
 @php
     $listDesc = 'Danh sách xe tự lái và có tài xế tại Buôn Hồ, Đăk Lăk. Đa dạng dòng xe từ 4 chỗ, 7 chỗ giá rẻ chỉ từ 350k, thủ tục nhanh gọn uy tín.';
+    $homeOgImage = \App\Models\Setting::get('home_og_image', 'assets/image/bannerMXH.jpg');
 @endphp
 <meta name="description" content="{{ $listDesc }}">
 <meta property="og:title" content="Danh Sách Xe - Thuê Xe Buôn Hồ">
 <meta property="og:description" content="{{ $listDesc }}">
-<meta property="og:image" content="{{ asset('assets/image/banner-MXH-2.png') }}">
-<meta name="twitter:image" content="{{ asset('assets/image/banner-MXH-2.png') }}">
+<meta property="og:image" content="{{ asset($homeOgImage) }}">
+<meta name="twitter:image" content="{{ asset($homeOgImage) }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="{{ url()->current() }}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Thuê Xe Buôn Hồ">
+<meta property="og:site_name" content="{{ \App\Models\Setting::get('site_title', 'Thuê Xe Buôn Hồ - Đưa Đón Khách') }}">
 <meta property="og:locale" content="vi_VN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Danh Sách Xe - Thuê Xe Buôn Hồ">
 <meta name="twitter:description" content="{{ $listDesc }}">
-<meta property="og:image:type" content="image/png">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:alt" content="Danh Sách Xe - Thuê Xe Buôn Hồ">
 @endsection
 
@@ -41,8 +42,8 @@
         @if($cars->count() > 0)
         <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach($cars as $car)
-            <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer rounded-2xl border border-app-line bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-card">
-                <div class="card-car-swiper-wrap cursor-pointer" style="aspect-ratio: 280/210;">
+            <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer overflow-hidden rounded-2xl border border-app-line bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-card">
+                <div class="card-car-swiper-wrap cursor-pointer" style="aspect-ratio: 280/210; border-radius: 0; background: transparent;">
                     @if($car->images->count())
                     <div class="swiper card-car-swiper">
                         <div class="swiper-wrapper">
@@ -60,9 +61,9 @@
                     <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted">{{ $car->name }}</div>
                     @endif
                 </div>
-                <div class="mt-4">
+                <div class="p-4">
                     <div class="flex items-start justify-between">
-                        <h2 class="text-lg font-extrabold">{{ $car->name }}</h2>
+                        <h2 class="w-full truncate text-lg font-extrabold" title="{{ $car->name }}">{{ $car->name }}</h2>
                     </div>
                     <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
                         <div class="flex items-center gap-1.5">
@@ -122,22 +123,20 @@
     @if($cars->count() > 0)
     <div class="mb-2 flex items-center justify-between gap-2">
         <p class="text-xs font-semibold text-app-muted">Có {{ $cars->count() }} xe</p>
-        <div class="inline-flex items-center gap-1 rounded-lg border border-app-line bg-white p-0.5 shadow-sm">
-            <button type="button" class="mobile-view-btn flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-bold transition-all" data-view="grid-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-                2 / hàng
+        <div class="inline-flex items-center gap-0.5 rounded-lg border border-app-line bg-white p-0.5 shadow-sm">
+            <button type="button" class="mobile-view-btn flex h-8 w-8 items-center justify-center rounded-md transition-all" data-view="grid-2" aria-label="2 xe / hàng">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
             </button>
-            <button type="button" class="mobile-view-btn flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-bold transition-all" data-view="grid-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="18" height="7" x="3" y="14" rx="1"/></svg>
-                1 / hàng
+            <button type="button" class="mobile-view-btn flex h-8 w-8 items-center justify-center rounded-md transition-all" data-view="grid-1" aria-label="1 xe / hàng">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="18" height="7" x="3" y="14" rx="1"/></svg>
             </button>
         </div>
     </div>
     @endif
     <div id="cars-grid-mobile" class="grid grid-cols-2 gap-2">
         @forelse($cars as $car)
-        <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer rounded-[10px] border border-app-line bg-white p-2">
-            <div class="card-car-swiper-wrap-mobile cursor-pointer" style="aspect-ratio: 280/210;">
+        <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer overflow-hidden rounded-[10px] border border-app-line bg-white">
+            <div class="card-car-swiper-wrap-mobile cursor-pointer" style="aspect-ratio: 280/210; border-radius: 0; background: transparent;">
                 @if($car->images->count())
                 <div class="swiper card-car-swiper-mobile">
                     <div class="swiper-wrapper">
@@ -155,10 +154,10 @@
                 <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted">{{ $car->name }}</div>
                 @endif
             </div>
-            <div class="mt-3">
+            <div class="p-2 pt-3">
                 <div class="flex items-start justify-between">
-                    <div>
-                        <h2 class="text-lg font-extrabold">{{ $car->name }}</h2>
+                    <div class="min-w-0 flex-1">
+                        <h2 class="w-full truncate text-lg font-extrabold" title="{{ $car->name }}">{{ $car->name }}</h2>
                     </div>
                 </div>
                 <div class="mt-3 flex items-center justify-between car-specs">

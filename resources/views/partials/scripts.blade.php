@@ -112,6 +112,7 @@ function openDrawer() {
     drawerPanel.classList.remove('translate-x-full');
   });
   document.body.style.overflow = 'hidden';
+  menuBtns.forEach(function(btn) { btn.classList.add('menu-open'); });
 }
 
 function closeDrawer() {
@@ -123,6 +124,7 @@ function closeDrawer() {
     drawerPanel.classList.add('hidden');
   }, 300);
   document.body.style.overflow = '';
+  menuBtns.forEach(function(btn) { btn.classList.remove('menu-open'); });
 }
 
 if (menuBtns.length && drawerOverlay && drawerPanel) {

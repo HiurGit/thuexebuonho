@@ -257,8 +257,8 @@
       @if($cars->count() > 0)
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @foreach($cars as $car)
-        <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer rounded-2xl border border-app-line bg-white p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-card">
-          <div class="card-car-swiper-wrap cursor-pointer" style="aspect-ratio: 280/210;">
+        <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer overflow-hidden rounded-2xl border border-app-line bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-card">
+          <div class="card-car-swiper-wrap cursor-pointer" style="aspect-ratio: 280/210; border-radius: 0; background: transparent;">
             @if($car->images->count())
             <div class="swiper card-car-swiper">
               <div class="swiper-wrapper">
@@ -276,9 +276,9 @@
             <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted">{{ $car->name }}</div>
             @endif
           </div>
-          <div class="mt-4">
+          <div class="p-4">
             <div class="flex items-start justify-between">
-              <h3 class="text-lg font-extrabold">{{ $car->name }}</h3>
+              <h3 class="w-full truncate text-lg font-extrabold" title="{{ $car->name }}">{{ $car->name }}</h3>
             </div>
             <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
               <div class="flex items-center gap-1.5">
@@ -952,8 +952,8 @@
 
         <div class="mt-3 space-y-3">
           @forelse($cars as $car)
-           <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer rounded-[10px] border border-app-line bg-white p-3">
-            <div class="card-car-swiper-wrap-mobile cursor-pointer" style="aspect-ratio: 280/210;">
+           <article onclick="location.href='{{ route('car-detail', $car->slug) }}'" class="cursor-pointer overflow-hidden rounded-[10px] border border-app-line bg-white">
+            <div class="card-car-swiper-wrap-mobile cursor-pointer" style="aspect-ratio: 280/210; border-radius: 0; background: transparent;">
               @if($car->images->count())
               <div class="swiper card-car-swiper-mobile">
                 <div class="swiper-wrapper">
@@ -971,10 +971,10 @@
               <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted">{{ $car->name }}</div>
               @endif
             </div>
-            <div class="mt-3">
+            <div class="p-3">
               <div class="flex items-start justify-between">
-                <div>
-                  <h3 class="text-lg font-extrabold">{{ $car->name }}</h3>
+                <div class="min-w-0 flex-1">
+                  <h3 class="w-full truncate text-lg font-extrabold" title="{{ $car->name }}">{{ $car->name }}</h3>
                 </div>
               </div>
               <div class="mt-3 flex items-center justify-between">
@@ -1607,3 +1607,7 @@
 
     
 @endsection
+
+@push('modals')
+  @include('partials.popup-banner')
+@endpush

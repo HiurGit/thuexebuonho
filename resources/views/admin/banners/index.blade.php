@@ -41,6 +41,8 @@
                     <td>
                         @if($b->position === 'hero')
                             <span class="badge badge-primary">Hero</span>
+                        @elseif($b->position === 'popup')
+                            <span class="badge badge-warning">Popup</span>
                         @else
                             <span class="badge badge-info">Banner giá</span>
                         @endif

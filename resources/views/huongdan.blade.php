@@ -59,55 +59,74 @@ $typeInfo = [
 @endphp
 
 @section('content-desktop')
-<div class="hidden min-h-screen bg-app-bg lg:block">
-  <section class="border-b border-app-line bg-white">
-    <div class="mx-auto max-w-7xl px-5 py-4">
+<div class="bg-white">
+  <section class="border-b border-app-line">
+    <div class="mx-auto max-w-7xl px-6 py-5">
       <h1 class="text-2xl font-extrabold text-app-ink">Hướng dẫn</h1>
       <p class="mt-1 text-sm font-semibold text-app-muted">Quá trình sử dụng xe, xử lý tai nạn, bảo hiểm và thủ tục nhận xe</p>
     </div>
   </section>
 
-  <main class="mx-auto max-w-7xl space-y-8 px-5 py-6">
+  <main class="mx-auto max-w-6xl px-6 py-8">
     <section>
-      <h2 class="section-title mb-4 text-lg font-extrabold">Hướng dẫn chung</h2>
-      <div class="grid grid-cols-3 gap-4">
+      <div class="flex items-end justify-between gap-4 pb-2">
+        <div>
+          <p class="text-[11px] font-extrabold uppercase tracking-[0.2em] text-app-accent">Tài liệu</p>
+          <h2 class="mt-1 text-xl font-extrabold text-app-ink">Hướng dẫn chung</h2>
+        </div>
+        <span class="text-xs font-bold text-app-muted">{{ count($globalGuideTypes) }} mục</span>
+      </div>
+
+      <div class="mt-4 grid grid-cols-2 gap-x-10">
         @foreach($globalGuideTypes as $type)
         @php $info = $typeInfo[$type]; @endphp
-        <div class="guide-card cursor-pointer rounded-2xl border border-app-line bg-white p-5 shadow-sm transition-all hover:border-app-accent hover:shadow-card" @if(isset($info['url'])) onclick="window.location.href='{{ $info['url'] }}'" @else onclick="document.getElementById('modal-{{ $type }}').classList.remove('hidden');document.body.style.overflow='hidden'" @endif>
-          @if(!empty($info['icon']))
-          <img src="{{ asset($info['icon']) }}" alt="{{ $info['label'] }}" class="mb-3 h-20 w-20 object-contain">
-          @endif
-          <h3 class="mb-2 text-base font-extrabold text-app-ink">{{ $info['label'] }}</h3>
-          <p class="mb-4 text-sm leading-relaxed text-app-muted">{{ $info['desc'] }}</p>
-          <div class="flex items-center gap-1.5 text-sm font-bold text-app-accent">
-            <span>Xem chi tiết</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        <article class="guide-card cursor-pointer border-t border-app-line py-6" @if(isset($info['url'])) onclick="window.location.href='{{ $info['url'] }}'" @else onclick="document.getElementById('modal-{{ $type }}').classList.remove('hidden');document.body.style.overflow='hidden'" @endif>
+          <div class="flex items-start gap-4">
+            @if(!empty($info['icon']))
+            <img src="{{ asset($info['icon']) }}" alt="{{ $info['label'] }}" loading="lazy" class="h-16 w-16 shrink-0 object-contain">
+            @endif
+            <div class="min-w-0">
+              <h3 class="text-base font-extrabold text-app-ink">{{ $info['label'] }}</h3>
+              <p class="mt-1 text-sm leading-6 text-app-muted">{{ $info['desc'] }}</p>
+              <div class="mt-3 flex items-center gap-1.5 text-sm font-bold text-app-accent">
+                <span>Xem chi tiết</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+              </div>
+            </div>
           </div>
-        </div>
+        </article>
         @endforeach
       </div>
     </section>
 
     @if($cars->count() > 0)
-    <section>
-      <h2 class="section-title mb-1 text-lg font-extrabold">Hướng dẫn theo từng loại xe</h2>
-      <div class="grid grid-cols-3 gap-4">
+    <section class="mt-10">
+      <div class="flex items-end justify-between gap-4 pb-2">
+        <div>
+          <p class="text-[11px] font-extrabold uppercase tracking-[0.2em] text-app-accent">Theo dòng xe</p>
+          <h2 class="mt-1 text-xl font-extrabold text-app-ink">Hướng dẫn theo từng loại xe</h2>
+        </div>
+        <span class="text-xs font-bold text-app-muted">{{ $cars->count() }} xe</span>
+      </div>
+
+      <div class="mt-5 grid grid-cols-3 gap-6">
         @foreach($cars as $car)
-        <div class="group cursor-pointer rounded-2xl border border-app-line bg-white p-4 shadow-sm transition-all hover:border-app-accent hover:shadow-card" onclick="openCarModal({{ $car->id }})">
-          <div class="mb-3 aspect-[4/3] overflow-hidden rounded-xl bg-stone-100">
+        <article class="group cursor-pointer" onclick="openCarModal({{ $car->id }})">
+          <div class="aspect-[4/3] overflow-hidden rounded-xl bg-stone-100">
             @if($car->mainImage)
-            <img src="{{ asset($car->mainImage->path) }}" alt="{{ $car->name }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
+            <img src="{{ asset($car->mainImage->path) }}" alt="{{ $car->name }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
             @else
             <div class="flex h-full w-full items-center justify-center text-sm font-bold text-app-muted">{{ $car->name }}</div>
             @endif
           </div>
-          <h3 class="text-base font-extrabold text-app-ink">{{ $car->name }}</h3>
-          <p class="mt-0.5 text-xs text-app-muted">{{ $car->seats }} chỗ - {{ $car->transmission }} - {{ $car->fuel }}</p>
-          <div class="mt-2 flex items-center gap-1.5 text-xs font-bold text-app-accent">
-            <span>Xem hướng dẫn</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          <div class="mt-3 flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <h3 class="text-sm font-extrabold text-app-ink">{{ $car->name }}</h3>
+              <p class="mt-0.5 text-xs font-semibold text-app-muted">{{ $car->seats }} chỗ · {{ $car->transmission }} · {{ $car->fuel }}</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-app-accent transition-transform group-hover:translate-x-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
           </div>
-        </div>
+        </article>
         @endforeach
       </div>
     </section>
@@ -130,32 +149,36 @@ $typeInfo = [
     </div>
 
     @if($type === 'pickup')
-    <div class="mb-3 rounded-xl bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-800">
+    <div class="mb-3 rounded-lg bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-800">
       Để hoàn tất thủ tục thuê và nhận xe, Quý khách vui lòng chuẩn bị đầy đủ giấy tờ và đáp ứng các điều kiện dưới đây.
     </div>
     @endif
 
-    <div class="space-y-3 text-sm">
+    <div class="text-sm">
       @if($type === 'insurance_rules')
-      <img src="{{ asset('assets/icon-huongdan/quytac_baohiem1.jpg') }}" alt="Quy tắc bảo hiểm 1" class="w-full rounded-xl border border-app-line bg-white object-contain" loading="lazy">
-      <img src="{{ asset('assets/icon-huongdan/quytac_baohiem2.jpg') }}" alt="Quy tắc bảo hiểm 2" class="w-full rounded-xl border border-app-line bg-white object-contain" loading="lazy">
-      <img src="{{ asset('assets/icon-huongdan/quytac_baohiem3.jpg') }}" alt="Quy tắc bảo hiểm 3" class="w-full rounded-xl border border-app-line bg-white object-contain" loading="lazy">
-      @else
-      @forelse($items as $guide)
-      <div class="rounded-xl border border-app-line bg-white p-3">
-        <h4 class="mb-1.5 flex items-center gap-2 text-base font-extrabold text-app-ink">
-          <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-app-accentSoft text-xs font-extrabold text-app-accent">{{ $loop->iteration }}</span>
-          {{ $guide->section_title }}
-        </h4>
-        <div class="ml-8 space-y-2 leading-relaxed text-app-muted whitespace-pre-line">{!! $guide->content !!}</div>
+      <div class="space-y-3">
+        <img src="{{ asset('assets/icon-huongdan/quytac_baohiem1.jpg') }}" alt="Quy tắc bảo hiểm 1" class="w-full rounded-lg object-contain" loading="lazy">
+        <img src="{{ asset('assets/icon-huongdan/quytac_baohiem2.jpg') }}" alt="Quy tắc bảo hiểm 2" class="w-full rounded-lg object-contain" loading="lazy">
+        <img src="{{ asset('assets/icon-huongdan/quytac_baohiem3.jpg') }}" alt="Quy tắc bảo hiểm 3" class="w-full rounded-lg object-contain" loading="lazy">
       </div>
-      @empty
-      <p class="py-6 text-center text-app-muted">Nội dung đang được cập nhật...</p>
-      @endforelse
+      @else
+      <div class="divide-y divide-app-line">
+        @forelse($items as $guide)
+        <div class="py-3 first:pt-0 last:pb-0">
+          <h4 class="mb-1.5 flex items-center gap-2 text-base font-extrabold text-app-ink">
+            <span class="text-xs font-extrabold text-app-accent">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+            {{ $guide->section_title }}
+          </h4>
+          <div class="pl-7 space-y-2 leading-relaxed text-app-muted whitespace-pre-line">{!! $guide->content !!}</div>
+        </div>
+        @empty
+        <p class="py-6 text-center text-app-muted">Nội dung đang được cập nhật...</p>
+        @endforelse
+      </div>
       @endif
     </div>
     <div class="mt-4">
-      <button type="button" onclick="this.closest('[id^=modal-]').classList.add('hidden');document.body.style.overflow=''" class="w-full rounded-xl bg-app-accent px-4 py-2.5 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-app-green active:scale-[0.98]">Đã hiểu</button>
+      <button type="button" onclick="this.closest('[id^=modal-]').classList.add('hidden');document.body.style.overflow=''" class="w-full rounded-xl bg-app-accent px-4 py-2.5 text-sm font-extrabold text-white transition-all hover:bg-app-green active:scale-[0.98]">Đã hiểu</button>
     </div>
   </div>
 </div>
@@ -174,16 +197,16 @@ $typeInfo = [
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="space-y-3 text-sm">
+    <div class="divide-y divide-app-line text-sm">
       @forelse($car->guides as $guide)
-      <div class="rounded-xl border border-app-line bg-white p-3">
+      <div class="py-3 first:pt-0 last:pb-0">
         <h4 class="mb-2 flex items-center gap-2 text-base font-extrabold text-app-ink">
-          <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-app-accentSoft text-xs font-extrabold text-app-accent">{{ $loop->iteration }}</span>
+          <span class="text-xs font-extrabold text-app-accent">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
           {{ $guide->title }}
         </h4>
         @if($guide->image_path)
         <div class="mt-2 text-right">
-          <button type="button" onclick="openImageViewer('{{ asset($guide->image_path) }}')" class="inline-flex items-center gap-2 rounded-xl bg-app-accentSoft px-4 py-2 text-sm font-extrabold text-app-accent transition-all hover:bg-app-accent hover:text-white">
+          <button type="button" onclick="openImageViewer('{{ asset($guide->image_path) }}')" class="inline-flex items-center gap-2 rounded-lg bg-app-accentSoft px-4 py-2 text-sm font-extrabold text-app-accent transition-all hover:bg-app-accent hover:text-white">
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M8.25 6.75h.008v.008H8.25V6.75zM12.75 19.5h8.25v-8.25m-15.75 8.25h.008v.008H5.25v-.008z"/></svg>
             Xem hướng dẫn
           </button>
@@ -191,7 +214,7 @@ $typeInfo = [
         @endif
         @if($guide->video_path)
         <div class="mt-2 text-right">
-          <button type="button" onclick="openVideoViewer('{{ asset($guide->video_path) }}')" class="inline-flex items-center gap-2 rounded-xl bg-app-accentSoft px-4 py-2 text-sm font-extrabold text-app-accent transition-all hover:bg-app-accent hover:text-white">
+          <button type="button" onclick="openVideoViewer('{{ asset($guide->video_path) }}')" class="inline-flex items-center gap-2 rounded-lg bg-app-accentSoft px-4 py-2 text-sm font-extrabold text-app-accent transition-all hover:bg-app-accent hover:text-white">
             <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             Xem video
           </button>
@@ -203,7 +226,7 @@ $typeInfo = [
       @endforelse
     </div>
     <div class="mt-4">
-      <button type="button" onclick="closeCarModal(this)" class="w-full rounded-xl bg-app-accent px-4 py-2.5 text-sm font-extrabold text-white shadow-sm transition-all hover:bg-app-green active:scale-[0.98]">Đã hiểu</button>
+      <button type="button" onclick="closeCarModal(this)" class="w-full rounded-xl bg-app-accent px-4 py-2.5 text-sm font-extrabold text-white transition-all hover:bg-app-green active:scale-[0.98]">Đã hiểu</button>
     </div>
   </div>
 </div>
@@ -283,8 +306,8 @@ function closeImageViewer() {
 @endpush
 
 @section('content-mobile')
-<div class="block min-h-screen bg-app-bg pb-20 lg:hidden">
-  <div class="border-b border-app-line bg-white px-4 py-2 shadow-sm">
+<div class="min-h-full bg-white pb-24">
+  <div class="border-b border-app-line px-4 py-2">
     <div class="flex items-center justify-between">
       <a href="{{ route('index') }}" class="flex h-9 w-9 items-center justify-center rounded-xl bg-app-accentSoft text-app-accent transition-all hover:bg-app-accent hover:text-white">
         <i class="ri-arrow-left-s-line text-lg"></i>
@@ -294,61 +317,65 @@ function closeImageViewer() {
     </div>
   </div>
 
-  <main class="flex-1 overflow-y-auto" style="scroll-behavior: smooth">
-    <div class="space-y-6 px-4 pb-24 pt-3">
-      <section>
-        <h2 class="section-title mb-3 text-base font-extrabold">Hướng dẫn chung</h2>
-        <div class="space-y-2">
-          @foreach($globalGuideTypes as $type)
-          @php $info = $typeInfo[$type]; @endphp
-          <div class="guide-card cursor-pointer rounded-xl border border-app-line bg-white p-3.5 shadow-sm transition-all active:scale-[0.98]" @if(isset($info['url'])) onclick="window.location.href='{{ $info['url'] }}'" @else onclick="document.getElementById('modal-{{ $type }}').classList.remove('hidden');document.body.style.overflow='hidden'" @endif>
-            <div class="flex items-start gap-3">
-              @if(!empty($info['icon']))
-              <img src="{{ asset($info['icon']) }}" alt="{{ $info['label'] }}" class="h-14 w-14 shrink-0 object-contain">
-              @endif
-              <div class="min-w-0 flex-1">
-                <h3 class="text-sm font-extrabold text-app-ink">{{ $info['label'] }}</h3>
-                <p class="mt-0.5 text-xs leading-relaxed text-app-muted">{{ $info['desc'] }}</p>
-                <div class="mt-2 flex items-center gap-1.5 text-xs font-bold text-app-accent">
-                  <span>Xem chi tiết</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                </div>
-              </div>
-            </div>
-          </div>
-          @endforeach
-        </div>
-      </section>
+  <main class="px-4 pt-5">
+    <section>
+      <div class="flex items-end justify-between gap-3">
+        <h2 class="text-base font-extrabold text-app-ink">Hướng dẫn chung</h2>
+        <span class="text-[11px] font-bold text-app-muted">{{ count($globalGuideTypes) }} mục</span>
+      </div>
 
-      @if($cars->count() > 0)
-      <section>
-        <h2 class="section-title mb-4 mt-4 text-base font-extrabold">Hướng dẫn theo từng loại xe</h2>
-        <div class="space-y-2">
-          @foreach($cars as $car)
-          <div class="cursor-pointer rounded-xl border border-app-line bg-white p-3.5 shadow-sm transition-all active:scale-[0.98]" onclick="openCarModal({{ $car->id }})">
-            <div class="flex items-start gap-3">
-              <div class="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-stone-100">
-                @if($car->mainImage)
-                <img src="{{ asset($car->mainImage->path) }}" alt="{{ $car->name }}" class="h-full w-full object-cover">
-                @else
-                <div class="flex h-full w-full items-center justify-center text-xs font-bold text-app-muted">{{ $car->name }}</div>
-                @endif
-              </div>
-              <div class="min-w-0 flex-1">
-                <h3 class="text-sm font-extrabold text-app-ink">{{ $car->name }}</h3>
-                <p class="mt-0.5 text-xs leading-relaxed text-app-muted">{{ $car->seats }} chỗ - {{ $car->transmission }}</p>
-                <div class="mt-2 flex items-center gap-1.5 text-xs font-bold text-app-accent">
-                  <span>Xem hướng dẫn</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                </div>
+      <div class="mt-3 divide-y divide-app-line">
+        @foreach($globalGuideTypes as $type)
+        @php $info = $typeInfo[$type]; @endphp
+        <article class="guide-card cursor-pointer py-4 first:pt-0 last:pb-0" @if(isset($info['url'])) onclick="window.location.href='{{ $info['url'] }}'" @else onclick="document.getElementById('modal-{{ $type }}').classList.remove('hidden');document.body.style.overflow='hidden'" @endif>
+          <div class="flex items-start gap-3">
+            @if(!empty($info['icon']))
+            <img src="{{ asset($info['icon']) }}" alt="{{ $info['label'] }}" loading="lazy" class="h-14 w-14 shrink-0 object-contain">
+            @endif
+            <div class="min-w-0 flex-1">
+              <h3 class="text-sm font-extrabold text-app-ink">{{ $info['label'] }}</h3>
+              <p class="mt-0.5 text-xs leading-5 text-app-muted">{{ $info['desc'] }}</p>
+              <div class="mt-2 flex items-center gap-1.5 text-xs font-bold text-app-accent">
+                <span>Xem chi tiết</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
               </div>
             </div>
           </div>
-          @endforeach
-        </div>
-      </section>
-      @endif
-    </div>
+        </article>
+        @endforeach
+      </div>
+    </section>
+
+    @if($cars->count() > 0)
+    <section class="mt-8">
+      <div class="flex items-end justify-between gap-3">
+        <h2 class="text-base font-extrabold text-app-ink">Hướng dẫn theo từng loại xe</h2>
+        <span class="text-[11px] font-bold text-app-muted">{{ $cars->count() }} xe</span>
+      </div>
+
+      <div class="mt-2 divide-y divide-app-line">
+        @foreach($cars as $car)
+        <article class="flex cursor-pointer items-start gap-3 py-4 first:pt-0 last:pb-0" onclick="openCarModal({{ $car->id }})">
+          <div class="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-stone-100">
+            @if($car->mainImage)
+            <img src="{{ asset($car->mainImage->path) }}" alt="{{ $car->name }}" loading="lazy" class="h-full w-full object-cover">
+            @else
+            <div class="flex h-full w-full items-center justify-center text-xs font-bold text-app-muted">{{ $car->name }}</div>
+            @endif
+          </div>
+          <div class="min-w-0 flex-1">
+            <h3 class="text-sm font-extrabold text-app-ink">{{ $car->name }}</h3>
+            <p class="mt-0.5 text-xs font-semibold text-app-muted">{{ $car->seats }} chỗ · {{ $car->transmission }}</p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs font-bold text-app-accent">
+              <span>Xem hướng dẫn</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-3 w-3"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </div>
+          </div>
+        </article>
+        @endforeach
+      </div>
+    </section>
+    @endif
   </main>
 </div>
 @endsection

@@ -28,26 +28,47 @@ $checklistGroups = [
         'items' => [
             'Chụp ảnh công-tơ-mét, mức xăng/pin khi bàn giao',
             'Kiểm tra ngoại thất, nội thất và tình trạng xe',
+            'Kiểm tra giấy tờ xe cần thiết.',
+            'Kiểm tra chìa khóa',
         ],
     ],
     [
         'title' => 'Hướng dẫn thao tác trên xe',
         'items' => [
+              'Hướng dẫn khởi động và tắt máy xe',
             'Hướng dẫn cần số P – R – N – D',
-            'Hướng dẫn khởi động và tắt máy xe',
             'Hướng dẫn đèn pha, cos, xi nhan',
             'Hướng dẫn bật/tắt đèn Hazard (đèn cảnh báo)',
+              'Hướng dẫn sử dụng camera 360°',
+            'Hướng dẫn màn hình vào Vietmap Live',
+             'Hướng dẫn điều hòa và sấy kính',
+                    'Hướng dẫn sử dụng dây an toàn',
             'Hướng dẫn vị trí nút mở nắp bình xăng',
-            'Hướng dẫn mở cốp sau và nắp capo',
-            'Hướng dẫn sử dụng camera lùi / camera 360°',
+            'Hướng dẫn mở cốp sau và nắp capo niêm phong',
+              'Hướng dẫn chỉnh ghế, gương chiếu hậu',
+                    'Hướng dẫn phanh tay / phanh tay điện tử',
+          
             'Hướng dẫn gạt mưa và rửa kính',
-            'Hướng dẫn phanh tay / phanh tay điện tử',
-            'Hướng dẫn điều hòa và màn hình giải trí',
-            'Hướng dẫn chỉnh ghế, gương chiếu hậu',
-            'Hướng dẫn khóa/mở cửa xe',
-            'Hướng dẫn vị trí lốp dự phòng',
+      
+           
+          
+            'Hướng dẫn khóa/mở cửa bên phải, lock trái',
+            'Hướng dẫn bình chữa cháy vs phá kính',
+            'Hướng dẫn lốp dự phòng, đèn tam giác cảnh báo',
         ],
     ],
+];
+$safetyRules = [
+    ['title' => 'KHÔNG VƯỢT ĐÈN VÀNG VÀ ĐÈN ĐỎ', 'content' => 'Đèn xanh chỉ còn 3 – 4 giây cũng không cố tăng tốc để vượt qua.', 'absolute' => true],
+    ['title' => 'KHÔNG UỐNG RƯỢU BIA KHI THAM GIA GIAO THÔNG', 'content' => 'Hậu quả rất nghiêm trọng: Công an giữ xe, bảo hiểm xét nghiệm có nồng độ cồn sẽ từ chối bồi thường.', 'absolute' => true],
+    ['title' => 'LUÔN CHỦ ĐỘNG CHÂN PHANH', 'content' => 'Khi không sử dụng chân ga, hãy để chân phải sẵn sàng chân phanh. Rảnh chân là đặt chân vào phanh.'],
+    ['title' => 'TỐC ĐỘ VỪA PHẢI', 'content' => 'Xe lạ nên quý khách hãy chạy chậm, giữ tốc độ vừa phải.'],
+
+    ['title' => 'KHÔNG VƯỢT ẨU, VƯỢT KHI KHUẤT TẦM NHÌN', 'content' => 'Chỉ vượt khi đủ điều kiện an toàn, quan sát rõ đoạn đường phía trước. Tuyệt đối không vượt tại khúc cua, đỉnh dốc hoặc nơi tầm nhìn bị hạn chế.'],
+    ['title' => 'GIỮ KHOẢNG CÁCH AN TOÀN', 'content' => 'Không bám đuôi xe phía trước. Luôn giữ khoảng cách đủ để xử lý khi xe trước phanh gấp hoặc có tình huống bất ngờ.'],
+    ['title' => 'KHÔNG SỬ DỤNG ĐIỆN THOẠI KHI LÁI XE', 'content' => 'Tập trung quan sát đường đi, gương chiếu hậu, biển báo và các phương tiện xung quanh.'],
+    ['title' => 'KHÔNG CHỦ QUAN KHI ĐI ĐƯỜNG LẠ', 'content' => 'Giảm tốc độ tại ngã tư, đường đông dân cư, trường học, khu vực có trẻ em, đường trơn trượt hoặc trời mưa.'],
+    ['title' => 'AN TOÀN LÀ TRÊN HẾT', 'content' => 'Đi chậm một chút không sao, đến muộn vài phút không sao. Quan trọng nhất là quý khách và mọi người đều đến nơi an toàn.', 'final' => true],
 ];
 @endphp
 
@@ -76,7 +97,7 @@ $checklistGroups = [
           <p class="mt-0.5 text-sm text-app-muted">Tick vào các mục đã hoàn thành trong lúc hướng dẫn khách</p>
         </div>
         <div class="shrink-0 text-right">
-          <p class="text-2xl font-extrabold text-app-accent js-check-count">0/15</p>
+          <p class="text-2xl font-extrabold text-app-accent js-check-count">0/19</p>
           <button type="button" class="js-check-reset mt-0.5 text-xs font-bold text-app-muted underline transition-colors hover:text-app-accent">Đặt lại</button>
         </div>
       </div>
@@ -85,9 +106,59 @@ $checklistGroups = [
       </div>
     </div>
 
+    <!-- Lưu ý an toàn -->
+    <div class="overflow-hidden rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 p-4 shadow-sm">
+      <div class="flex items-start gap-3">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white shadow-md">
+          <i class="ri-error-warning-fill text-xl"></i>
+        </span>
+        <div class="space-y-1.5">
+          <p class="text-xs font-extrabold uppercase tracking-widest text-amber-700">Lưu ý an toàn</p>
+          <p class="text-sm font-extrabold uppercase leading-6 text-amber-900">Sử dụng các phím nút nhẹ tay , Không leo trèo, ngồi lên mui xe, nắp capo.</p>
+          <p class="text-sm font-bold uppercase leading-6 text-amber-800"> VÌ Các bộ phận này rất mỏng và mềm, dễ bị móp méo, hư hỏng.</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Danh sách checklist -->
     @include('partials.checklist', ['checklistGrid' => 'grid-cols-2 gap-3 p-4'])
   </main>
+
+  <!-- ===== LÁI XE AN TOÀN ===== -->
+  <section id="lai-xe-an-toan" class="mx-auto max-w-4xl px-6 pb-10 pt-2">
+    <div class="mb-6 flex items-center gap-3">
+      <div class="h-8 w-1.5 rounded-full bg-app-accent"></div>
+      <div>
+        <h2 class="text-xl font-extrabold text-app-ink">Lái xe an toàn</h2>
+        <p class="text-sm font-semibold  ">9 điều cần nhớ khi lái xe</p>
+      </div>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      @foreach($safetyRules as $rule)
+        @if(!empty($rule['final']))
+        <div class="relative rounded-2xl bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-card">
+          <div class="mb-4 flex items-center justify-end">
+            <span class="text-4xl font-extrabold leading-none select-none text-stone-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+          </div>
+          <h3 class="text-base font-extrabold uppercase tracking-wide text-app-ink">{{ $rule['title'] }}</h3>
+          <p class="mt-2 text-sm leading-6  ">{{ $rule['content'] }}</p>
+          <p class="mt-3 text-sm font-extrabold text-app-green">Chúc quý khách có những chuyến đi an toàn và vui vẻ cùng Thuê Xe Tự Lái Buôn Hồ!</p>
+        </div>
+        @else
+        <div class="relative rounded-2xl bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-card {{ !empty($rule['absolute']) ? 'ring-1 ring-red-200' : '' }}">
+          @if(!empty($rule['absolute']))
+          <span class="absolute -left-2 -top-2 z-10 whitespace-nowrap rounded-full bg-red-600 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-md ring-2 ring-white">Tuyệt đối</span>
+          @endif
+          <div class="mb-4 flex items-center justify-end">
+            <span class="text-4xl font-extrabold leading-none select-none {{ !empty($rule['absolute']) ? 'text-red-200' : 'text-stone-300' }}">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+          </div>
+          <h3 class="text-base font-extrabold text-app-ink">{{ $rule['title'] }}</h3>
+          <p class="mt-2 text-sm leading-6  ">{{ $rule['content'] }}</p>
+        </div>
+        @endif
+      @endforeach
+    </div>
+  </section>
 
   <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -177,7 +248,7 @@ $checklistGroups = [
           <p class="mt-0.5 text-xs text-app-muted">Tick các mục đã hoàn thành</p>
         </div>
         <div class="shrink-0 text-right">
-          <p class="text-xl font-extrabold text-app-accent js-check-count">0/15</p>
+          <p class="text-xl font-extrabold text-app-accent js-check-count">0/19</p>
           <button type="button" class="js-check-reset mt-0.5 text-xs font-bold text-app-muted underline">Đặt lại</button>
         </div>
       </div>
@@ -186,7 +257,55 @@ $checklistGroups = [
       </div>
     </div>
 
+    <!-- Lưu ý an toàn -->
+    <div class="overflow-hidden rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 p-4 shadow-sm">
+      <div class="flex items-start gap-3">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white shadow-md">
+          <i class="ri-error-warning-fill text-xl"></i>
+        </span>
+        <div class="space-y-1.5">
+          <p class="text-xs font-extrabold uppercase tracking-widest text-amber-700">Lưu ý an toàn</p>
+          <p class="text-sm font-extrabold uppercase leading-6 text-amber-900">Sử dụng các phím nút nhẹ tay , Không leo trèo, ngồi lên mui xe, nắp capo.</p>
+          <p class="text-sm font-bold uppercase leading-6 text-amber-800">Các bộ phận này rất mỏng và mềm, dễ bị móp méo, hư hỏng.</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Danh sách checklist -->
     @include('partials.checklist', ['checklistGrid' => 'grid-cols-1 gap-2 p-3'])
+
+    <!-- Lái xe an toàn -->
+    <div id="lai-xe-an-toan" class="space-y-3">
+      <div class="flex items-center gap-2 px-1">
+        <div class="h-6 w-1 rounded-full bg-app-accent"></div>
+        <div>
+          <h2 class="text-base font-extrabold text-app-ink">Lái xe an toàn</h2>
+          <p class="text-xs font-semibold text-app-muted">9 điều cần nhớ khi lái xe</p>
+        </div>
+      </div>
+      @foreach($safetyRules as $rule)
+        @if(!empty($rule['final']))
+        <div class="relative rounded-xl bg-white p-4 shadow-sm">
+          <div class="mb-3 flex items-center justify-end">
+            <span class="text-3xl font-extrabold leading-none select-none text-stone-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+          </div>
+          <h3 class="text-sm font-extrabold uppercase tracking-wide text-app-ink">{{ $rule['title'] }}</h3>
+          <p class="mt-1.5 text-sm leading-6 text-app-muted">{{ $rule['content'] }}</p>
+          <p class="mt-2.5 text-xs font-extrabold leading-5 text-app-green">Chúc quý khách có những chuyến đi an toàn và vui vẻ cùng Thuê Xe Tự Lái Buôn Hồ!</p>
+        </div>
+        @else
+        <div class="relative rounded-xl bg-white p-4 shadow-sm">
+          @if(!empty($rule['absolute']))
+          <span class="absolute -left-2 -top-2 z-10 whitespace-nowrap rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-md ring-2 ring-white">Tuyệt đối</span>
+          @endif
+          <div class="mb-3 flex items-center justify-end">
+            <span class="text-3xl font-extrabold leading-none select-none {{ !empty($rule['absolute']) ? 'text-red-200' : 'text-stone-300' }}">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+          </div>
+          <h3 class="text-sm font-extrabold text-app-ink">{{ $rule['title'] }}</h3>
+          <p class="mt-1.5 text-sm leading-6 text-app-muted">{{ $rule['content'] }}</p>
+        </div>
+        @endif
+      @endforeach
+    </div>
   </div>
 @endsection

@@ -359,4 +359,9 @@ foreach ($breadcrumbItems as $i => $item) {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
+  .htx-hamburger { display: inline-flex; flex-direction: column; justify-content: center; gap: 4px; width: 20px; height: 16px; }
+  .htx-hamburger span { display: block; height: 2px; width: 100%; border-radius: 9999px; background: currentColor; transition: transform .28s ease, opacity .2s ease; transform-origin: center; }
+  .menu-open .htx-hamburger span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .menu-open .htx-hamburger span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .menu-open .htx-hamburger span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 </style>

@@ -25,7 +25,7 @@ class BannerController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'position' => 'required|string|in:hero,banner-price',
+            'position' => 'required|string|in:hero,banner-price,popup',
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable',
         ]);
@@ -54,7 +54,7 @@ class BannerController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'position' => 'required|string|in:hero,banner-price',
+            'position' => 'required|string|in:hero,banner-price,popup',
             'sort_order' => 'nullable|integer',
             'is_active' => 'nullable',
         ]);

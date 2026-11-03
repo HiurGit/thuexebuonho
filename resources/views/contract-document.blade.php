@@ -99,7 +99,7 @@
   <p>1.2. Mục đích thuê: sử dụng xe tự lái cho nhu cầu cá nhân hợp pháp theo thỏa thuận. Bên B không được sử dụng xe cho vận tải hành khách/hàng hóa có thu tiền, cho thuê lại, cầm cố, thế chấp, đua xe hoặc hoạt động trái pháp luật nếu không có thỏa thuận bằng văn bản của Bên A và/hoặc pháp luật không cho phép.</p>
   <p>1.3. Thời gian thuê: từ <span class="fill">{{ $doc['pickup_hour'] }}</span> giờ <span class="fill">{{ $doc['pickup_minute'] }}</span> phút, ngày <span class="fill">{{ $doc['pickup_date'] }}</span> đến <span class="fill">{{ $doc['return_hour'] }}</span> giờ <span class="fill">{{ $doc['return_minute'] }}</span> phút, ngày <span class="fill">{{ $doc['return_date'] }}</span></p>
   <p>1.4. Địa điểm nhận xe: <span class="fill">{{ $doc['pickup_location'] }}</span></p>
-  <p>1.5. Khu vực / lộ trình di chuyển: <span class="fill">{{ $doc['route'] }}</span></p>
+  <p>1.5. Lộ trình di chuyển / Mục đích thuê xe: <span class="fill">{{ $doc['route'] }}</span></p>
   @if($doc['route_line'] !== '')
     <p>{{ $doc['route_line'] }}</p>
   @endif
@@ -126,9 +126,9 @@
   <p>- Bảo đảm quyền cho thuê hợp pháp và chịu trách nhiệm về nguồn gốc, quyền sở hữu/quyền sử dụng hợp pháp của xe trong phạm vi Bên A có nghĩa vụ.</p>
   <p>- Bảo đảm xe ở trạng thái an toàn phù hợp với việc cho thuê; chịu chi phí sửa chữa đối với hư hỏng do hao mòn tự nhiên hoặc lỗi kỹ thuật không do Bên B gây ra.</p>
   <p>- Hỗ trợ Bên B trong trường hợp xe hỏng hoặc tai nạn; phối hợp với doanh nghiệp bảo hiểm/cơ quan chức năng khi cần thiết.</p>
-  <p>- Có quyền thu hồi xe hoặc chấm dứt Hợp đồng nếu Bên B vi phạm nghiêm trọng, bao gồm: sử dụng trái pháp luật; cho người không được phép lái xe; cố ý che giấu vị trí xe, tự ý sửa chữa trái thỏa thuận, không trả xe đúng hạn và không liên lạc được, hoặc có nguy cơ rõ ràng gây mất an toàn cho người hoặc tài sản.</p>
-  <p>- Trong thời gian bên B sử dụng xe nếu bên A thấy xe mất tín hiệu định vị xe, bên A có quyền yêu cầu bên B mang xe về cho bên A hoặc bên A có quyền thu hồi xe đồng thời chấm dứt hợp đồng ngay lập tức với bên B; nếu phát hiện cũng như kiểm tra hệ thống định vị trên xe bị tháo thì bên B phải chịu hoàn toàn trách nhiệm trước pháp luật.</p>
-  <p>- Bên A có quyền lấy lại xe dùng khóa dự phòng mà không cần thông báo trước khi thấy bên B thanh toán muộn, sử dụng xe không đúng mục đích, không báo quản xe, thiết bị GPS không hoạt động, không liên lạc được với bên B và bên A được biết là do bên B lừa đảo.</p>
+  <p>- Có quyền thu hồi xe hoặc chấm dứt Hợp đồng nếu Bên B vi phạm, bao gồm: sử dụng trái pháp luật; cho người không được phép lái xe; cố ý che giấu vị trí xe, tự ý sửa chữa trái thỏa thuận, không trả xe đúng hạn và không liên lạc được, hoặc có nguy cơ rõ ràng gây mất an toàn cho người hoặc tài sản.</p>
+  <p>- Trong thời gian bên B sử dụng xe nếu bên A thấy xe mất tín hiệu định vị xe, bên A có quyền yêu cầu bên B mang xe về cho bên A hoặc bên A có quyền thu hồi xe đồng thời chấm dứt hợp đồng ngay lập tức với bên B, nếu phát hiện cũng như kiểm tra hệ thống định vị trên xe bị tháo thì bên B phải chịu hoàn toàn trách nhiệm trước pháp luật.</p>
+  <p>- Bên A có quyền lấy lại xe dùng khóa dự phòng mà không cần thông báo trước khi thấy bên B sử dụng xe không đúng mục đích, không bảo quản xe, thiết bị GPS không hoạt động, không liên lạc được với bên B và bên A được biết là do bên B lừa đảo.</p>
 
   <h2 class="section">ĐIỀU 5. QUYỀN VÀ NGHĨA VỤ CỦA BÊN B</h2>
   <p>- Nhận xe và hồ sơ/giấy tờ liên quan theo thỏa thuận, được sử dụng xe đúng mục đích, đúng lộ trình và thời hạn thuê.</p>
@@ -153,10 +153,10 @@
 
   <h2 class="section">ĐIỀU 8. TAI NẠN, HƯ HỎNG, BẢO HIỂM VÀ BỒI THƯỜNG</h2>
   <p>8.1. Khi xảy ra tai nạn/hư hỏng, Bên B phải: bảo đảm an toàn người, gọi ngay bên A để được hướng dẫn, giữ nguyên hiện trường trong phạm vi pháp luật cho phép, chụp ảnh/video.</p>
-  <p>8.2. Bên B chịu trách nhiệm bồi thường thiệt hại thực tế, căn cứ chứng minh nếu thiệt hại phát sinh do lỗi của Bên B, bao gồm chi phí sửa chữa hợp lý, phụ tùng cần thay thế, chi phí kéo/cứu hộ và các khoản bảo hiểm không chi trả do hành vi vi phạm của Bên B.</p>
+  <p>8.2. Bên B chịu trách nhiệm bồi thường thiệt hại thực tế, căn cứ chứng minh nếu thiệt hại phát sinh do lỗi của Bên B, bao gồm chi phí sửa chữa, phụ tùng cần thay thế, chi phí kéo/cứu hộ và các khoản bảo hiểm không chi trả do hành vi vi phạm của Bên B.</p>
   <p>8.3. Việc sửa chữa ưu tiên thực hiện tại cơ sở do Bên A hoặc doanh nghiệp bảo hiểm lựa chọn, phù hợp với điều kiện bảo hành và bảo hiểm. Nếu cần sửa chữa khẩn cấp để ngăn ngừa thiệt hại lớn hơn mà không liên lạc được Bên A, Bên B được quyền thực hiện trong phạm vi cần thiết và phải lưu đầy đủ hóa đơn/chứng từ.</p>
   <p>8.4. Trong trường hợp xe không thể lưu hành do lỗi của Bên B, Bên B chịu chi phí mất doanh thu cho thời gian xe thực tế không thể cho thuê, tính theo đơn giá thuê tương ứng trong Hợp đồng, trên cơ sở có căn cứ về thời gian xe phải sửa chữa hoặc ngừng khai thác, và không tính trùng phần thiệt hại đã được bảo hiểm hoặc được bên thứ ba bồi thường.</p>
-  <p>8.5. Trường hợp xe bị mất hoặc tổn thất toàn bộ do lỗi của Bên B, mức bồi thường được xác định theo giá trị thị trường hợp lý của xe ngay trước thời điểm tổn thất, cộng các chi phí hợp lý không được bảo hiểm chi trả và trừ các khoản Bên A đã được bảo hiểm hoặc bên thứ ba thanh toán bồi thường cho cùng một tổn thất. Hai bên không đồng thời yêu cầu bồi thường trùng lặp cho cùng một thiệt hại.</p>
+  <p>8.5. Trường hợp xe bị tổn thất hoặc mất cắp do lỗi của Bên B, mức bồi thường được xác định theo giá trị thị trường của xe ngay trước thời điểm tổn thất, cộng các chi phí hợp lý không được bảo hiểm chi trả và trừ các khoản Bên A đã được bảo hiểm hoặc bên thứ ba thanh toán bồi thường cho cùng một tổn thất.</p>
   <p>8.6. Đối với hư hỏng nội thất, mùi, vết bẩn hoặc hư hỏng do sử dụng không đúng quy định, Bên B thanh toán chi phí vệ sinh/sửa chữa thực tế hoặc theo bảng giá đã được thông báo trước khi thuê. Nếu xe không thể phục vụ khách tiếp theo do lỗi của Bên B, Bên B chịu thêm thiệt hại thực tế, hợp lý và có chứng minh.</p>
 
   <h2 class="section">ĐIỀU 9. ĐIỀU KHOẢN CHUNG</h2>

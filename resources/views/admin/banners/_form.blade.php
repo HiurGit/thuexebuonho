@@ -12,6 +12,7 @@
             <select name="position" class="form-control @error('position') is-invalid @enderror" required>
                 <option value="hero" {{ old('position', $banner->position ?? '') === 'hero' ? 'selected' : '' }}>Hero (Banner chính)</option>
                 <option value="banner-price" {{ old('position', $banner->position ?? '') === 'banner-price' ? 'selected' : '' }}>Banner giá (Swiper)</option>
+                <option value="popup" {{ old('position', $banner->position ?? '') === 'popup' ? 'selected' : '' }}>Popup quảng cáo (trang chủ)</option>
             </select>
             @error('position') <span class="text-danger">{{ $message }}</span> @enderror
         </div>

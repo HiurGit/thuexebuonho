@@ -33,8 +33,9 @@ Route::get('/', function () {
     $defaultCar = Car::orderBy('sort_order')->first();
     $heroBanner = Banner::active()->position('hero')->orderBy('sort_order')->first();
     $priceBanners = Banner::active()->position('banner-price')->orderBy('sort_order')->get();
+    $popupBanner = Banner::active()->position('popup')->orderBy('sort_order')->first();
 
-    return view('index', compact('cars', 'defaultCar', 'heroBanner', 'priceBanners'));
+    return view('index', compact('cars', 'defaultCar', 'heroBanner', 'priceBanners', 'popupBanner'));
 })->name('index');
 
 Route::get('/xe/{slug}', function (string $slug) {
@@ -75,7 +76,7 @@ Route::get('/dieu-khoan', function () {
 })->name('terms');
 
 Route::get('/lai-xe-an-toan', function () {
-    return view('lai-xe-an-toan');
+    return redirect()->to(route('checklist.giaoxe') . '#lai-xe-an-toan');
 })->name('lai-xe-an-toan');
 
 Route::get('/chinh-sach-bao-mat', function () {
@@ -83,7 +84,9 @@ Route::get('/chinh-sach-bao-mat', function () {
 })->name('privacy');
 
 Route::get('/lien-he', function () {
-    return view('lien-he');
+    $popupBanner = Banner::active()->position('popup')->orderBy('sort_order')->first();
+
+    return view('lien-he', compact('popupBanner'));
 })->name('lien-he');
 
 Route::get('/tra-cuu', [ContractLookupController::class, 'index'])->name('contract.lookup');
@@ -125,7 +128,6 @@ Route::get('/sitemap.xml', function () {
         ['url' => route('cars.index'), 'lastmod' => $now, 'images' => []],
         ['url' => route('da-giao'), 'lastmod' => $now, 'images' => []],
         ['url' => route('terms'), 'lastmod' => $now, 'images' => []],
-        ['url' => route('lai-xe-an-toan'), 'lastmod' => $now, 'images' => []],
         ['url' => route('privacy'), 'lastmod' => $now, 'images' => []],
         ['url' => route('lien-he'), 'lastmod' => $now, 'images' => []],
     ]);
