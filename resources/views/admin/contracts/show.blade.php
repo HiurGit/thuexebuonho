@@ -51,6 +51,24 @@
                     <div class="col-md-3"><strong>Trạng thái:</strong><br><span class="badge badge-{{ $contract->status_badge }}">{{ $contract->status_label }}</span></div>
                     <div class="col-md-3"><strong>Nhân viên tạo:</strong><br>{{ $contract->creator->name ?? '-' }}</div>
                     <div class="col-md-3 mt-3"><strong>Chi nhánh / Địa điểm thuê:</strong><br>{{ $contract->branch ?: '-' }}</div>
+                    <div class="col-md-3 mt-3"><strong>Cộng tác viên giới thiệu:</strong><br>
+                        @if($contract->collaborator)
+                            <a href="{{ route('admin.collaborators.edit', $contract->collaborator) }}">{{ $contract->collaborator->name }}</a>
+                            <span class="text-muted">({{ $contract->collaborator->code }})</span>
+                        @else
+                            <span class="text-muted">Khách tự đến / chưa xác định</span>
+                        @endif
+                    </div>
+                    <div class="col-md-3 mt-3"><strong>Nguồn ghi nhận:</strong><br>
+                        @php
+                            $sourceLabels = [
+                                'customer_source' => 'Nguồn khách đã khóa',
+                                'booking' => 'Đơn đặt xe',
+                                'contract' => 'Chọn trên hợp đồng',
+                            ];
+                        @endphp
+                        {{ $sourceLabels[$contract->referral_source] ?? ($contract->collaborator ? 'Chọn trên hợp đồng' : '-') }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -127,6 +145,20 @@
                     <tr><th>Giá thuê 1 ngày</th><td>{{ $contract->daily_rate ? number_format($contract->daily_rate, 0, ',', '.') . 'đ' : '-' }}</td></tr>
                     <tr><th>Số ngày thuê</th><td>{{ $contract->rental_days ?: '-' }}</td></tr>
                     <tr class="table-secondary"><th>Tổng tiền thuê</th><td><strong>{{ $contract->total_rental_fee ? number_format($contract->total_rental_fee, 0, ',', '.') . 'đ' : '-' }}</strong></td></tr>
+                    @if($contract->commission)
+                        <tr>
+                            <th>Hoa hồng CTV ({{ rtrim(rtrim(number_format((float) $contract->commission->commission_rate, 2, ',', '.'), '0'), ',') }}%)</th>
+                            <td>
+                                <strong class="text-danger">{{ number_format($contract->commission->commission_amount, 0, ',', '.') }}đ</strong>
+                                <span class="badge badge-{{ $contract->commission->status_badge }} ml-1">{{ $contract->commission->status_label }}</span>
+                            </td>
+                        </tr>
+                    @elseif($contract->collaborator)
+                        <tr>
+                            <th>Hoa hồng CTV</th>
+                            <td><span class="text-muted">Chưa phát sinh (hợp đồng chưa trả xe)</span></td>
+                        </tr>
+                    @endif
                 </table>
                 @if($contract->notes)
                 <div class="p-3">

@@ -10,7 +10,7 @@ class Booking extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'car_id', 'customer_name', 'customer_phone',
+        'car_id', 'collaborator_id', 'referral_code', 'customer_name', 'customer_phone',
         'rental_type', 'start_date', 'end_date', 'start_time', 'end_time',
         'session_type', 'pickup_type', 'trip_plan', 'days', 'total_price', 'deposit',
         'status', 'notes',
@@ -27,6 +27,11 @@ class Booking extends Model
     public function car()
     {
         return $this->belongsTo(Car::class);
+    }
+
+    public function collaborator()
+    {
+        return $this->belongsTo(Collaborator::class);
     }
 
     public function getSessionLabelAttribute(): ?string

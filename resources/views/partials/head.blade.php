@@ -134,6 +134,11 @@ if ($routeName === 'index') {
         ['name' => 'Trang chủ', 'url' => route('index')],
         ['name' => 'Liên hệ', 'url' => route('lien-he')],
     ];
+} elseif ($routeName === 'kiem-tien') {
+    $breadcrumbItems = [
+        ['name' => 'Trang chủ', 'url' => route('index')],
+        ['name' => 'Đối tác giới thiệu', 'url' => route('kiem-tien')],
+    ];
 }
 @endphp
 
@@ -159,6 +164,26 @@ foreach ($breadcrumbItems as $i => $item) {
 @endif
 
 @stack('schemas')
+
+<style>
+  @keyframes money-wiggle {
+    0% { transform: rotate(0deg) scale(1); }
+    10% { transform: rotate(-12deg) scale(1.12); }
+    20% { transform: rotate(12deg) scale(1.18); }
+    30% { transform: rotate(-16deg) scale(1.22); }
+    40% { transform: rotate(16deg) scale(1.25); }
+    50% { transform: rotate(-12deg) scale(1.22); }
+    60% { transform: rotate(12deg) scale(1.18); }
+    70% { transform: rotate(-8deg) scale(1.12); }
+    80% { transform: rotate(8deg) scale(1.08); }
+    90% { transform: rotate(-4deg) scale(1.04); }
+    100% { transform: rotate(0deg) scale(1); }
+  }
+  .money-coin-anim {
+    animation: money-wiggle 0.5s ease-in-out infinite;
+    transform-origin: center;
+  }
+</style>
 
 @if ($googleTagId !== '')
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ urlencode($googleTagId) }}"></script>

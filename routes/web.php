@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CarsController;
+use App\Http\Controllers\Admin\CollaboratorCommissionController;
 use App\Http\Controllers\Admin\CollaboratorController;
 use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\ContractDocumentController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CheckKhachThueController;
 use App\Http\Controllers\ContractLookupController;
+use App\Http\Controllers\ReferralController;
 use App\Models\Banner;
 use App\Models\Car;
 use App\Models\DeliveredProof;
@@ -89,6 +91,11 @@ Route::get('/lien-he', function () {
     return view('lien-he', compact('popupBanner'));
 })->name('lien-he');
 
+Route::get('/kiem-tien', [ReferralController::class, 'index'])->name('kiem-tien');
+Route::post('/kiem-tien/dang-ky', [ReferralController::class, 'register'])
+    ->middleware('throttle:5,1')
+    ->name('kiem-tien.register');
+
 Route::get('/tra-cuu', [ContractLookupController::class, 'index'])->name('contract.lookup');
 Route::post('/tra-cuu', [ContractLookupController::class, 'lookup'])->middleware('throttle:10,1')->name('contract.lookup.check');
 Route::get('/tra-cuu/{contract:contract_code}', [ContractLookupController::class, 'shared'])->name('contract.lookup.shared');
@@ -130,6 +137,7 @@ Route::get('/sitemap.xml', function () {
         ['url' => route('terms'), 'lastmod' => $now, 'images' => []],
         ['url' => route('privacy'), 'lastmod' => $now, 'images' => []],
         ['url' => route('lien-he'), 'lastmod' => $now, 'images' => []],
+        ['url' => route('kiem-tien'), 'lastmod' => $now, 'images' => []],
     ]);
 
     $carPages = Car::with(['mainImage', 'images'])
@@ -190,6 +198,7 @@ Route::prefix('admin')->middleware('admin')->name('admin.')->group(function () {
     Route::resource('amenities', AmenityController::class)->except(['show'])->parameters(['amenities' => 'amenity']);
     Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class)->except(['show'])->parameters(['bookings' => 'booking']);
     Route::get('/bookings-calendar', [App\Http\Controllers\Admin\BookingController::class, 'calendar'])->name('bookings.calendar');
+    Route::get('/contracts/referral-lookup', [ContractController::class, 'referralLookup'])->name('contracts.referral-lookup');
     Route::resource('contracts', ContractController::class)->parameters(['contracts' => 'contract']);
     Route::get('/contracts/{contract}/hop-dong', [ContractDocumentController::class, 'html'])->name('contracts.html');
     Route::delete('/contracts/image/{image}', [ContractController::class, 'destroyImage'])->name('contracts.image.destroy');
@@ -197,6 +206,11 @@ Route::prefix('admin')->middleware('admin')->name('admin.')->group(function () {
     Route::resource('global-guides', GlobalGuideController::class)->except(['show'])->parameters(['globalGuide' => 'globalGuide']);
     Route::resource('delivered-proofs', DeliveredProofController::class)->except(['show'])->parameters(['delivered-proofs' => 'deliveredProof']);
     Route::resource('collaborators', CollaboratorController::class)->except(['show'])->parameters(['collaborators' => 'collaborator']);
+    Route::post('/collaborators/{collaborator}/approve', [CollaboratorController::class, 'approve'])->name('collaborators.approve');
+    Route::get('/commissions', [CollaboratorCommissionController::class, 'index'])->name('commissions.index');
+    Route::post('/commissions/{commission}/paid', [CollaboratorCommissionController::class, 'markPaid'])->name('commissions.paid');
+    Route::post('/commissions/{commission}/pending', [CollaboratorCommissionController::class, 'markPending'])->name('commissions.pending');
+    Route::post('/commissions/{commission}/cancel', [CollaboratorCommissionController::class, 'cancel'])->name('commissions.cancel');
     Route::resource('banners', BannerController::class)->except(['show'])->parameters(['banners' => 'banner']);
     Route::resource('check-khach-thue', App\Http\Controllers\Admin\CheckKhachThueController::class)->except(['show'])->parameters(['check-khach-thue' => 'customer']);
     Route::post('/check-khach-thue/{customer}/status', [App\Http\Controllers\Admin\CheckKhachThueController::class, 'updateStatus'])->name('check-khach-thue.status');

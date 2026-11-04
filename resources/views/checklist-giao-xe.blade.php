@@ -29,7 +29,7 @@ $checklistGroups = [
             'Chụp ảnh công-tơ-mét, mức xăng/pin khi bàn giao',
             'Kiểm tra ngoại thất, nội thất và tình trạng xe',
             'Kiểm tra giấy tờ xe cần thiết.',
-            'Kiểm tra chìa khóa',
+          'Epass qua trạm thu phí tự động',
         ],
     ],
     [
@@ -54,7 +54,7 @@ $checklistGroups = [
           
             'Hướng dẫn khóa/mở cửa bên phải, lock trái',
             'Hướng dẫn bình chữa cháy vs phá kính',
-            'Hướng dẫn lốp dự phòng, đèn tam giác cảnh báo',
+          'Hướng dẫn lốp dự phòng, đèn tam giác cảnh báo',
         ],
     ],
 ];

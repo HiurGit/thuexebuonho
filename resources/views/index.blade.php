@@ -232,11 +232,27 @@
        DESKTOP - SECTION 2: DANH SÁCH XE NỔI BẬT
        ID: #danh-sach-xe
        ============================================================ -->
-  <section id="danh-sach-xe" class="border-b border-app-line">
-    <div class="mx-auto max-w-7xl rounded-b-2xl bg-[#f5f5f4] px-6 pb-10">
+  <section id="danh-sach-xe">
+    <div class="mx-auto max-w-7xl rounded-b-2xl bg-[#f5f5f4] px-4 pb-6 pt-2">
       <div class="text-center">
         <h2 class="inline-block rounded-b-xl bg-[#5fcf86] px-8 py-3 text-3xl font-extrabold text-white">Danh sách xe nổi bật</h2>
         <p class="mt-3 text-sm font-semibold text-app-muted"></p>
+      </div>
+      <div class="mt-6 mb-6">
+        <a href="{{ route('kiem-tien') }}" class="group flex items-center gap-3 rounded-2xl border border-app-line bg-white px-4 py-3.5 transition-all hover:-translate-y-0.5 hover:border-app-accent hover:shadow-card">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-app-accent text-white shadow-sm transition-transform group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-6 w-6 money-coin-anim">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+            </svg>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-base font-extrabold text-app-ink leading-tight">Giới thiệu bạn bè khách mới !<br>Nhận hoa hồng 10% mỗi hợp đồng</span>
+            <span class="mt-0.5 block text-sm font-semibold text-app-muted">Đăng ký làm đối tác giới thiệu, nhận hoa hồng trên từng hợp đồng hoàn tất</span>
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0 text-app-accent transition-transform group-hover:translate-x-1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+          </svg>
+        </a>
       </div>
       <div class="mt-6 hidden overflow-hidden rounded-2xl">
         <div class="swiper banner-price-swiper">
@@ -930,10 +946,27 @@
            MOBILE - SECTION 2: DANH SÁCH XE NỔI BẬT
            ID: #danh-sach-xe (mobile)
            ============================================================ -->
-<section id="danh-sach-xe" class="border-b border-app-line bg-white px-4 py-5">
+<section id="danh-sach-xe" class="bg-white px-4 pt-3 pb-4">
     
 
-      <div class="mt-2 overflow-hidden rounded-[10px]">
+      <div class="mt-2">
+        <a href="{{ route('kiem-tien') }}" class="flex items-center gap-2.5 rounded-2xl border border-app-line bg-white px-3.5 py-2.5 transition-all active:scale-[0.98]">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-app-accent text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-5 w-5 money-coin-anim">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+            </svg>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-[13px] font-extrabold text-app-ink leading-tight">Giới thiệu bạn bè khách mới!<br>Nhận hoa hồng 10% mỗi hợp đồng</span>
+            <span class="mt-0.5 block text-[11px] font-semibold text-app-muted">Đăng ký đối tác giới thiệu</span>
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 shrink-0 text-app-accent">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="mt-3 overflow-hidden rounded-[10px]">
         <div class="swiper banner-price-swiper-mobile">
           <div class="swiper-wrapper">
             @forelse($priceBanners as $pb)

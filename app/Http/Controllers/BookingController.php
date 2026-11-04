@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\CaptureReferral;
 use App\Models\Booking;
 use App\Models\Car;
+use App\Models\Collaborator;
+use App\Services\CollaboratorCommissionService;
 use App\Services\TelegramNotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -11,8 +14,11 @@ use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
-    public function submit(Request $request, TelegramNotificationService $telegramNotificationService)
-    {
+    public function submit(
+        Request $request,
+        TelegramNotificationService $telegramNotificationService,
+        CollaboratorCommissionService $commissionService
+    ) {
         try {
             $validated = $request->validate([
                 'car_id' => 'nullable|integer|exists:cars,id',
@@ -46,8 +52,21 @@ class BookingController extends Controller
             $car = !empty($validated['car_id']) ? Car::find($validated['car_id']) : null;
             $carName = $validated['car_name'] ?? null;
 
+            $collaborator = $commissionService->resolveCollaborator($validated['phone']);
+
+            if (! $collaborator) {
+                $referralCode = $request->cookie(CaptureReferral::COOKIE)
+                    ?: session(CaptureReferral::SESSION);
+
+                $collaborator = $referralCode
+                    ? Collaborator::where('code', $referralCode)->where('status', 'active')->first()
+                    : null;
+            }
+
             $booking = Booking::create([
                 'car_id' => $validated['car_id'] ?? null,
+                'collaborator_id' => $collaborator?->id,
+                'referral_code' => $collaborator?->code,
                 'customer_name' => null,
                 'customer_phone' => $validated['phone'],
                 'rental_type' => $rentalType,
@@ -69,6 +88,17 @@ class BookingController extends Controller
                 'status' => 'pending',
                 'notes' => $carName ? 'Xe khách chọn: ' . $carName : null,
             ]);
+
+            if ($collaborator) {
+                $commissionService->attachCustomer(
+                    $collaborator,
+                    $booking->customer_name,
+                    $validated['phone'],
+                    null,
+                    'booking',
+                    $booking->id
+                );
+            }
 
             $telegramNotificationService->sendNewBookingNotification(
                 $booking,

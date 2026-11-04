@@ -90,6 +90,11 @@ class DashboardController extends Controller
             'site_owner_name' => Setting::get('site_owner_name', 'Thuê Xe Tự Lái Buôn Hồ'),
             'site_owner_avatar' => Setting::get('site_owner_avatar', ''),
             'site_facebook' => Setting::get('site_facebook', 'https://www.facebook.com/9999NDT/'),
+            'site_business_name' => Setting::get('site_business_name', 'HỘ KINH DOANH THUÊ XE BUÔN HỒ'),
+            'site_tax_code' => Setting::get('site_tax_code', '8603250741-001'),
+            'site_representative' => Setting::get('site_representative', 'NGUYỄN ĐÌNH THẢO'),
+            'site_bank_account' => Setting::get('site_bank_account', '8869926323'),
+            'site_bank_name' => Setting::get('site_bank_name', 'BIDV'),
             'site_keywords' => Setting::get('site_keywords', ''),
             'site_title' => Setting::get('site_title', 'Thuê Xe Buôn Hồ - Đưa Đón Khách'),
             'site_description' => Setting::get('site_description', 'Dịch vụ cho thuê xe tự lái, có tài xế tại Buôn Hồ, Đăk Lăk. Giá rẻ, uy tín, thủ tục nhanh gọn.'),
@@ -115,6 +120,11 @@ class DashboardController extends Controller
             'site_owner_name' => 'nullable|string|max:255',
             'site_owner_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'site_facebook' => 'nullable|url|max:500',
+            'site_business_name' => 'nullable|string|max:255',
+            'site_tax_code' => 'nullable|string|max:50',
+            'site_representative' => 'nullable|string|max:255',
+            'site_bank_account' => 'nullable|string|max:50',
+            'site_bank_name' => 'nullable|string|max:255',
             'site_keywords' => 'nullable|string|max:1000',
             'site_title' => 'nullable|string|max:200',
             'site_description' => 'nullable|string|max:500',
@@ -137,6 +147,11 @@ class DashboardController extends Controller
             'site_owner_avatar.max' => 'Dung lượng avatar không được vượt quá 2MB.',
             'site_facebook.url' => 'Link Facebook phải là URL hợp lệ.',
             'site_facebook.max' => 'Link Facebook không được vượt quá 500 ký tự.',
+            'site_business_name.max' => 'Tên đơn vị không được vượt quá 255 ký tự.',
+            'site_tax_code.max' => 'Mã số thuế không được vượt quá 50 ký tự.',
+            'site_representative.max' => 'Người đại diện không được vượt quá 255 ký tự.',
+            'site_bank_account.max' => 'Số tài khoản không được vượt quá 50 ký tự.',
+            'site_bank_name.max' => 'Tên ngân hàng không được vượt quá 255 ký tự.',
             'site_description.max' => 'Meta description không được vượt quá 500 ký tự.',
             'site_title.max' => 'Title website không được vượt quá 200 ký tự.',
             'home_title.max' => 'Title trang chủ không được vượt quá 200 ký tự.',
@@ -154,6 +169,11 @@ class DashboardController extends Controller
         Setting::set('google_tag_id', strtoupper(trim((string) ($validated['google_tag_id'] ?? ''))));
         Setting::set('site_owner_name', trim((string) ($validated['site_owner_name'] ?? '')));
         Setting::set('site_facebook', trim((string) ($validated['site_facebook'] ?? '')));
+        Setting::set('site_business_name', trim((string) ($validated['site_business_name'] ?? '')));
+        Setting::set('site_tax_code', trim((string) ($validated['site_tax_code'] ?? '')));
+        Setting::set('site_representative', trim((string) ($validated['site_representative'] ?? '')));
+        Setting::set('site_bank_account', trim((string) ($validated['site_bank_account'] ?? '')));
+        Setting::set('site_bank_name', trim((string) ($validated['site_bank_name'] ?? '')));
         Setting::set('site_keywords', trim((string) ($validated['site_keywords'] ?? '')));
         Setting::set('site_title', trim((string) ($validated['site_title'] ?? '')));
         Setting::set('site_description', trim((string) ($validated['site_description'] ?? '')));

@@ -34,6 +34,25 @@
     </div>
 </section>
 
+<section class="border-b border-app-line bg-white px-4 py-4">
+    <div class="mx-auto max-w-7xl">
+        <a href="{{ route('kiem-tien') }}" class="group flex items-center gap-3 rounded-2xl border border-app-line bg-white px-4 py-3.5 transition-all hover:-translate-y-0.5 hover:border-app-accent hover:shadow-card">
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-app-accent text-white shadow-sm transition-transform group-hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-6 w-6 money-coin-anim">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+            </span>
+            <span class="min-w-0 flex-1">
+                <span class="block text-base font-extrabold text-app-ink leading-tight">Giới thiệu khách mới !<br>Nhận hoa hồng 10% mỗi hợp đồng</span>
+                <span class="mt-0.5 block text-sm font-semibold text-app-muted">Đăng ký làm đối tác giới thiệu, nhận hoa hồng trên từng hợp đồng hoàn tất</span>
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5 shrink-0 text-app-accent transition-transform group-hover:translate-x-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+            </svg>
+        </a>
+    </div>
+</section>
+
 <section class="border-b border-app-line">
     <div class="mx-auto max-w-7xl rounded-b-2xl bg-[#f5f5f4] px-6 pb-10">
         <div class="text-center">
@@ -117,6 +136,23 @@
         <h1 class="flex-1 text-center text-lg font-extrabold">Danh sách xe</h1>
         <div class="w-9 shrink-0"></div>
     </div>
+</div>
+
+<div class="bg-white px-4 py-3">
+    <a href="{{ route('kiem-tien') }}" class="flex items-center gap-2.5 rounded-2xl border border-app-line bg-white px-3.5 py-2.5 transition-all active:scale-[0.98]">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-app-accent text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-5 w-5 money-coin-anim">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+            </svg>
+        </span>
+        <span class="min-w-0 flex-1">
+        <span class="block text-[13px] font-extrabold text-app-ink leading-tight">Giới thiệu khách mới!<br>Nhận hoa hồng 10% mỗi hợp đồng</span>
+            <span class="mt-0.5 block text-[11px] font-semibold text-app-muted">Đăng ký đối tác giới thiệu</span>
+        </span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4 shrink-0 text-app-accent">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+    </a>
 </div>
 
 <section class="bg-white px-4 pb-28 pt-3">

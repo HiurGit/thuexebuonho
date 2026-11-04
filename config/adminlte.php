@@ -332,6 +332,11 @@ return [
             'icon' => 'fas fa-fw fa-handshake',
 ],
         [
+            'text' => 'Hoa hồng CTV',
+            'url' => 'admin/commissions',
+            'icon' => 'fas fa-fw fa-hand-holding-usd',
+        ],
+        [
             'text' => 'Đặt xe',
             'url' => 'admin/bookings',
             'icon' => 'fas fa-fw fa-calendar-check',

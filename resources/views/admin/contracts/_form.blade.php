@@ -543,6 +543,52 @@
     </div>
 </div>
 
+{{-- ============ 5.5 NGUỒN GIỚI THIỆU ============ --}}
+<div class="card mb-3">
+    <div class="card-header bg-info text-white"><i class="fas fa-handshake mr-1"></i> Nguồn giới thiệu (cộng tác viên)</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Cộng tác viên giới thiệu</label>
+                    <select name="collaborator_id" id="collaborator-id" class="form-control @error('collaborator_id') is-invalid @enderror">
+                        <option value="">-- Khách tự đến / không qua CTV --</option>
+                        @foreach($collaborators as $ctv)
+                            <option value="{{ $ctv->id }}"
+                                    data-rate="{{ $ctv->commission_rate_value }}"
+                                    data-name="{{ $ctv->name }}"
+                                    data-code="{{ $ctv->code }}"
+                                    {{ (string) old('collaborator_id', $contract->collaborator_id ?? '') === (string) $ctv->id ? 'selected' : '' }}>
+                                {{ $ctv->name }} ({{ $ctv->code ?: 'chưa có mã' }}) - {{ rtrim(rtrim(number_format($ctv->commission_rate_value, 2, ',', '.'), '0'), ',') }}%{{ $ctv->status === 'pending' ? ' - Chờ duyệt' : '' }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('collaborator_id') <span class="text-danger">{{ $message }}</span> @enderror
+                    <small class="form-text text-muted">
+                        Khách đã có nguồn sẽ được giữ nguyên CTV đầu tiên, kể cả khi khách tự liên hệ lại sau này.
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" id="btn-lookup-referral" class="btn btn-outline-info btn-block"
+                            data-url="{{ route('admin.contracts.referral-lookup') }}">
+                        <i class="fas fa-search mr-1"></i> Kiểm tra nguồn khách
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Hoa hồng dự kiến</label>
+                    <div id="referral-preview" class="alert alert-light border py-2 mb-0 small">Chưa chọn CTV</div>
+                </div>
+            </div>
+        </div>
+        <div id="referral-lookup-result" class="small mt-1"></div>
+    </div>
+</div>
+
 {{-- ============ 6. TIỀN THUÊ ============ --}}
 <div class="card mb-3">
     <div class="card-header bg-danger text-white"><i class="fas fa-money-bill-wave mr-1"></i> Tiền thuê</div>
@@ -929,6 +975,59 @@
 
         callCardAI(doc, frontFile, backFile);
     }
+    function updateReferralPreview() {
+        var $select = $('#collaborator-id');
+        var $preview = $('#referral-preview');
+        if (!$select.length) return;
+        if (!$select.val()) {
+            $preview.html('Chưa chọn CTV');
+            return;
+        }
+
+        var rate = parseFloat($select.find('option:selected').data('rate')) || 0;
+        var total = parseFloat(moneyDigits($('#total-fee').val())) || 0;
+        var amount = Math.round(total * rate / 100);
+
+        $preview.html(
+            '<span class="text-muted">Tỷ lệ:</span> <strong>' + rate + '%</strong><br>' +
+            '<span class="text-muted">Hoa hồng:</span> <strong class="text-danger">' + formatMoney(String(amount)) + 'đ</strong>' +
+            (total > 0 ? '' : '<br><span class="text-muted">Nhập tổng tiền thuê để tính</span>')
+        );
+    }
+
+    $('#collaborator-id').on('change', updateReferralPreview);
+    $('#total-fee').on('input change', updateReferralPreview);
+
+    $('#btn-lookup-referral').on('click', function() {
+        var url = $(this).data('url');
+        var phone = $('input[name="customer_phone"]').val();
+        var cccd = $('input[name="cccd"]').val();
+
+        if (!phone && !cccd) {
+            alert('Vui lòng nhập số điện thoại hoặc CCCD của khách để kiểm tra.');
+            return;
+        }
+
+        var $box = $('#referral-lookup-result').removeClass('text-success text-danger text-muted').html('<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...');
+
+        $.getJSON(url, { phone: phone, cccd: cccd })
+            .done(function(res) {
+                if (res.found && res.collaborator) {
+                    $('#collaborator-id').val(String(res.collaborator.id)).trigger('change');
+                    $box.addClass('text-success').html(
+                        '<i class="fas fa-lock mr-1"></i>' + res.message +
+                        (res.source_type ? '<br><span class="text-muted">Nguồn: ' + res.source_type + '</span>' : '')
+                    );
+                } else {
+                    $box.addClass('text-muted').html('<i class="fas fa-info-circle mr-1"></i>' + res.message);
+                }
+            })
+            .fail(function() {
+                $box.addClass('text-danger').text('Không kiểm tra được nguồn khách, vui lòng thử lại.');
+            });
+    });
+
+    updateReferralPreview();
 })(jQuery);
 </script>
 @endpush

@@ -36,6 +36,7 @@
         <a href="{{ route('cars.index') }}" class="rounded-xl px-2 py-2 text-sm font-bold @if(request()->routeIs('cars.index')) text-app-accent bg-app-accentSoft @else text-app-muted @endif transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:px-4">Danh sách xe</a>
         <a href="{{ route('index') }}#dich-vu" class="hidden rounded-xl px-2 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:block xl:px-4">Dịch vụ</a>
         <a href="{{ route('index') }}#bang-gia" class="rounded-xl px-2 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:px-4">Bảng giá</a>
+        <a href="{{ route('kiem-tien') }}" class="rounded-xl px-2 py-2 text-sm font-bold @if(request()->routeIs('kiem-tien')) text-app-accent bg-app-accentSoft @else text-app-muted @endif transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:px-4" title="Đối tác giới thiệu - Hoa hồng 10%">Đối tác</a>
         <a href="{{ route('privacy') }}" class="hidden rounded-xl px-2 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent lg:block xl:hidden">Chính sách</a>
         <a href="{{ route('services') }}" class="hidden rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:block">Dịch vụ khác</a>
         <a href="{{ route('terms') }}" class="hidden rounded-xl px-4 py-2 text-sm font-bold text-app-muted transition-colors hover:bg-app-accentSoft hover:text-app-accent xl:block">Điều khoản</a>
@@ -84,6 +85,7 @@
             <li><a href="#dich-vu" class="text-sm text-white/60 transition-colors hover:text-white">Dịch vụ</a></li>
             <li><a href="#bang-gia" class="text-sm text-white/60 transition-colors hover:text-white">Bảng giá</a></li>
             <li><a href="{{ route('services') }}" class="text-sm text-white/60 transition-colors hover:text-white">Dịch vụ khác</a></li>
+            <li><a href="{{ route('kiem-tien') }}" class="text-sm font-bold text-app-accent transition-colors hover:text-white">Đối tác giới thiệu – Hoa hồng 10%</a></li>
             <li><a href="{{ route('checklist.giaoxe') }}" class="text-sm text-white/60 transition-colors hover:text-white">Checklist giao xe</a></li>
             <li><a href="{{ route('lien-he') }}" class="text-sm text-white/60 transition-colors hover:text-white">Liên hệ</a></li>
           </ul>
@@ -214,7 +216,7 @@
     </header>
 
     {{-- MOBILE CONTENT --}}
-    <main id="mobile-content" class="flex-1 overflow-y-auto" style="scroll-behavior: smooth">
+    <main id="mobile-content" class="flex-1 overflow-y-auto" style="scroll-behavior: smooth; @if(request()->routeIs('kiem-tien')) padding-bottom: calc(7rem + env(safe-area-inset-bottom)); @endif">
       @yield('content-mobile')
     </main>
 
@@ -236,11 +238,11 @@
           <span class="text-[10px] font-extrabold">DS Xe</span>
         </a>
 
-        <a href="{{ route('services') }}" class="nav-item flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors @if(request()->routeIs('services')) text-app-accent @else text-app-muted @endif" data-nav="services">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+        <a href="{{ route('kiem-tien') }}" class="nav-item flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors @if(request()->routeIs('kiem-tien')) text-app-accent bg-app-accentSoft/40 @else text-app-muted @endif" data-nav="kiem-tien">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 money-coin-anim">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
           </svg>
-          <span class="text-[10px] font-extrabold">Dịch vụ</span>
+          <span class="text-[10px] font-extrabold">Kiếm tiền</span>
         </a>
 
         <a id="nav-contact" href="{{ route('lien-he') }}" class="nav-item flex flex-col items-center gap-0.5 rounded-xl px-3 py-1.5 transition-colors @if(request()->routeIs('lien-he')) text-app-accent @else text-app-muted @endif" data-nav="contact">
@@ -269,7 +271,7 @@
 <div id="drawer-overlay" class="fixed inset-0 z-[70] bg-black/50 opacity-0 pointer-events-none hidden"></div>
 
 <!-- Drawer panel -->
-<div id="drawer-panel" class="fixed inset-y-0 right-0 z-[80] flex w-[360px] translate-x-full flex-col hidden bg-[#F7F7F7]">
+<div id="drawer-panel" class="fixed inset-y-0 right-0 z-[80] flex w-[360px] translate-x-full flex-col hidden bg-white">
   <div class="flex items-center justify-between px-5 p-5">
     <span class="text-xl font-bold text-app-ink mt-4 mb-3">Thông tin khác</span>
     <button id="drawer-close" class="flex h-9 w-9 items-center justify-center rounded-full bg-[#E8E8E8]">
@@ -277,9 +279,8 @@
     </button>
   </div>
 
-  <div class="flex-1 overflow-y-auto px-5">
-    <!-- Card 1: Đăng nhập/Đăng ký - Liên hệ Zalo - Vào nhóm Zalo -->
-    <div class="bg-white rounded-[20px] shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+  <div class="flex-1 overflow-y-auto pb-6">
+    <!-- Nhóm: Liên hệ Zalo -->
       <!-- <a href="#" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
@@ -289,7 +290,6 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a> -->
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
       <a href="{{ $siteZaloUrl }}" target="_blank" rel="noopener" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
@@ -299,98 +299,77 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
-      <a href="#" class="flex items-center h-[52px] px-5">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"/>
-        </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">Vào nhóm Zalo</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
-        </svg>
-      </a>
-    </div>
 
-    <!-- Card 2: Thông tin -->
-    <div class="mt-3 bg-white rounded-[20px] shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+    <!-- Nhóm: Thông tin -->
       <a href="tel:{{ $sitePhone }}" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/>
         </svg>
         <span class="flex-1 text-base font-medium text-app-ink ml-3">{{ $sitePhoneDisplay }}</span>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
       <div class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
         </svg>
         <span class="flex-1 text-base font-medium text-app-ink ml-3">{{ $siteAddress }}</span>
       </div>
-    </div>
 
-    <!-- Card 3: Chính sách -->
-    <div class="mt-3 mb-6 bg-white rounded-[20px] shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-      <a href="{{ route('checklist.giaoxe') }}" class="flex items-center h-[52px] px-5">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+    <!-- Nhóm: Chính sách & tiện ích -->
+      <a href="{{ route('checklist.giaoxe') }}" class="flex items-center h-[52px] px-5 @if(request()->routeIs('checklist.*')) bg-app-accentSoft/60 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="{{ request()->routeIs('checklist.*') ? '#5fcf86' : '#333' }}" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"/>
         </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">Checklist giao xe</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+        <span class="flex-1 text-base ml-3 @if(request()->routeIs('checklist.*')) font-extrabold text-app-accent @else font-medium text-app-ink @endif">Checklist giao xe</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ request()->routeIs('checklist.*') ? '#5fcf86' : '#999' }}" class="h-4 w-4 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
-      <a href="{{ route('services') }}" class="flex items-center h-[52px] px-5">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+      <a href="{{ route('services') }}" class="flex items-center h-[52px] px-5 @if(request()->routeIs('services')) bg-app-accentSoft/60 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="{{ request()->routeIs('services') ? '#5fcf86' : '#333' }}" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 6 20.25h-2.25A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25a2.25 2.25 0 0 1-2.25 2.25h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
         </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">Dịch vụ</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+        <span class="flex-1 text-base ml-3 @if(request()->routeIs('services')) font-extrabold text-app-accent @else font-medium text-app-ink @endif">Dịch vụ</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ request()->routeIs('services') ? '#5fcf86' : '#999' }}" class="h-4 w-4 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
-      <a href="{{ route('huongdan') }}" class="flex items-center h-[52px] px-5">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+      <a href="{{ route('huongdan') }}" class="flex items-center h-[52px] px-5 @if(request()->routeIs('huongdan')) bg-app-accentSoft/60 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="{{ request()->routeIs('huongdan') ? '#5fcf86' : '#333' }}" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.16a47.474 47.474 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/>
           <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z"/>
         </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">Hướng dẫn</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+        <span class="flex-1 text-base ml-3 @if(request()->routeIs('huongdan')) font-extrabold text-app-accent @else font-medium text-app-ink @endif">Hướng dẫn</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ request()->routeIs('huongdan') ? '#5fcf86' : '#999' }}" class="h-4 w-4 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
-      <a href="{{ route('da-giao') }}" class="flex items-center h-[52px] px-5">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+      <a href="{{ route('da-giao') }}" class="flex items-center h-[52px] px-5 @if(request()->routeIs('da-giao')) bg-app-accentSoft/60 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="{{ request()->routeIs('da-giao') ? '#5fcf86' : '#333' }}" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0" />
         </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">Bàn giao xe</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+        <span class="flex-1 text-base ml-3 @if(request()->routeIs('da-giao')) font-extrabold text-app-accent @else font-medium text-app-ink @endif">Bàn giao xe</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ request()->routeIs('da-giao') ? '#5fcf86' : '#999' }}" class="h-4 w-4 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
-      <a href="{{ route('terms') }}" class="flex items-center h-[52px] px-5">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+      <a href="{{ route('terms') }}" class="flex items-center h-[52px] px-5 @if(request()->routeIs('terms')) bg-app-accentSoft/60 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="{{ request()->routeIs('terms') ? '#5fcf86' : '#333' }}" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
         </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">Điều khoản & Điều kiện</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+        <span class="flex-1 text-base ml-3 @if(request()->routeIs('terms')) font-extrabold text-app-accent @else font-medium text-app-ink @endif">Điều khoản & Điều kiện</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ request()->routeIs('terms') ? '#5fcf86' : '#999' }}" class="h-4 w-4 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
-      <a href="{{ route('privacy') }}" class="flex items-center h-[52px] px-5">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
+      <a href="{{ route('privacy') }}" class="flex items-center h-[52px] px-5 @if(request()->routeIs('privacy')) bg-app-accentSoft/60 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="{{ request()->routeIs('privacy') ? '#5fcf86' : '#333' }}" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
         </svg>
-        <span class="flex-1 text-base font-medium text-app-ink ml-3">Chính sách bảo mật</span>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+        <span class="flex-1 text-base ml-3 @if(request()->routeIs('privacy')) font-extrabold text-app-accent @else font-medium text-app-ink @endif">Chính sách bảo mật</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ request()->routeIs('privacy') ? '#5fcf86' : '#999' }}" class="h-4 w-4 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5"></div>
       <a href="{{ route('lien-he') }}" class="flex items-center h-[52px] px-5">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/>
@@ -400,7 +379,15 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
-      <div class="h-px bg-[#EEEEEE] mx-5 lg:hidden"></div>
+      <a href="{{ route('kiem-tien') }}" class="flex items-center h-[52px] px-5 @if(request()->routeIs('kiem-tien')) bg-app-accentSoft/60 @endif">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="{{ request()->routeIs('kiem-tien') ? '#5fcf86' : '#333' }}" class="h-5 w-5 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        <span class="flex-1 text-base ml-3 @if(request()->routeIs('kiem-tien')) font-extrabold text-app-accent @else font-medium text-app-ink @endif">Kiếm tiền</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="{{ request()->routeIs('kiem-tien') ? '#5fcf86' : '#999' }}" class="h-4 w-4 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+      </a>
       <a href="{{ route('index') }}?desktop" class="flex items-center h-[52px] px-5 lg:hidden">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333" class="h-5 w-5 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25"/>
@@ -410,7 +397,42 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
         </svg>
       </a>
+
+    @php
+      $drawerCars = $cars ?? \App\Models\Car::with(['mainImage', 'images'])->orderBy('sort_order')->get();
+    @endphp
+    @if($drawerCars->count())
+    <div class="mt-3">
+      @foreach($drawerCars as $car)
+      @php
+        $thumb = $car->mainImage?->path
+            ?? $car->images->first()?->path
+            ?? 'assets/image/bannerMXH.jpg';
+      @endphp
+      <a href="{{ route('car-detail', $car->slug) }}" class="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-stone-50">
+        <img loading="lazy" src="{{ asset($thumb) }}" alt="{{ $car->name }}" class="h-14 w-20 shrink-0 rounded-lg object-cover">
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-sm font-extrabold text-app-ink">{{ $car->name }}</p>
+          <div class="mt-1 flex items-center gap-1.5 whitespace-nowrap text-[11px]">
+            <span class="font-bold text-app-accent">{{ number_format($car->price_per_session) }}đ<span class="font-semibold text-app-muted">/buổi</span></span>
+            <span class="text-app-line">|</span>
+            <span class="font-bold text-app-accent">{{ number_format($car->price_per_day) }}đ<span class="font-semibold text-app-muted">/ngày</span></span>
+          </div>
+          <p class="mt-0.5 flex items-center gap-1 truncate text-[11px] font-medium text-app-muted" title="{{ $car->address ?: $siteAddress }}">
+            <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
+            </svg>
+            <span class="truncate">{{ $car->address ?: $siteAddress }}</span>
+          </p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#999" class="h-4 w-4 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
+        </svg>
+      </a>
+      @endforeach
     </div>
+    @endif
   </div>
 </div>
 

@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Car;
+use App\Models\Collaborator;
 use App\Models\Contract;
 use App\Models\ContractImage;
+use App\Services\CollaboratorCommissionService;
+use App\Support\Phone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,11 +43,12 @@ class ContractController extends Controller
     public function create()
     {
         $cars = Car::orderBy('name')->get();
+        $collaborators = $this->collaboratorOptions();
 
-        return view('admin.contracts.create', compact('cars'));
+        return view('admin.contracts.create', compact('cars', 'collaborators'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CollaboratorCommissionService $commissionService)
     {
         $validated = $this->validateData($request);
         $validated['contract_date'] = now();
@@ -54,6 +59,7 @@ class ContractController extends Controller
         ]);
 
         $this->storeImages($request, $contract);
+        $commissionService->syncForContract($contract);
 
         return redirect()->route('admin.contracts.show', $contract)
             ->with('success', 'Đã tạo hợp đồng '.$contract->contract_code.'.');
@@ -61,24 +67,103 @@ class ContractController extends Controller
 
     public function show(Contract $contract)
     {
-        $contract->load(['creator', 'car', 'images']);
+        $contract->load(['creator', 'car', 'images', 'collaborator', 'commission']);
 
         return view('admin.contracts.show', compact('contract'));
+    }
+
+    public function referralLookup(Request $request, CollaboratorCommissionService $commissionService)
+    {
+        $request->validate([
+            'phone' => 'nullable|string|max:30',
+            'cccd' => 'nullable|string|max:50',
+        ]);
+
+        $phone = Phone::normalize($request->input('phone'));
+        $cccd = trim((string) $request->input('cccd')) ?: null;
+
+        if (! $phone && ! $cccd) {
+            return response()->json([
+                'found' => false,
+                'message' => 'Vui lòng nhập số điện thoại hoặc CCCD để kiểm tra.',
+            ]);
+        }
+
+        $source = $commissionService->findCustomerSource($phone, $cccd);
+
+        $booking = null;
+
+        if ($phone) {
+            $booking = Booking::with('collaborator')
+                ->whereNotNull('collaborator_id')
+                ->where(function ($query) use ($phone) {
+                    $query->where('customer_phone', $phone)
+                        ->orWhereRaw("REPLACE(REPLACE(REPLACE(REPLACE(customer_phone, ' ', ''), '.', ''), '-', ''), '+', '') = ?", [$phone]);
+                })
+                ->latest('id')
+                ->first();
+        }
+
+        $contracts = Contract::with('collaborator')
+            ->where(function ($query) use ($phone, $cccd) {
+                if ($phone) {
+                    $query->where('customer_phone', $phone)
+                        ->orWhereRaw("REPLACE(REPLACE(REPLACE(REPLACE(customer_phone, ' ', ''), '.', ''), '-', ''), '+', '') = ?", [$phone]);
+                }
+
+                if ($cccd) {
+                    $query->orWhere('cccd', $cccd);
+                }
+            })
+            ->latest('id')
+            ->limit(5)
+            ->get();
+
+        $collaborator = $source?->collaborator
+            ?? $booking?->collaborator
+            ?? $contracts->first()?->collaborator;
+
+        return response()->json([
+            'found' => (bool) $collaborator,
+            'collaborator' => $collaborator ? [
+                'id' => $collaborator->id,
+                'name' => $collaborator->name,
+                'code' => $collaborator->code,
+                'phone' => $collaborator->phone,
+                'commission_rate' => $collaborator->commission_rate_value,
+            ] : null,
+            'source_type' => $source ? 'Đã khóa nguồn khách hàng' : ($booking ? 'Từ đơn đặt xe' : ($contracts->isNotEmpty() ? 'Từ hợp đồng trước' : null)),
+            'booking' => $booking ? [
+                'id' => $booking->id,
+                'status' => $booking->status,
+                'created_at' => optional($booking->created_at)->format('d/m/Y H:i'),
+            ] : null,
+            'contracts' => $contracts->map(fn (Contract $contract) => [
+                'code' => $contract->contract_code,
+                'status' => $contract->status_label,
+                'date' => optional($contract->contract_date)->format('d/m/Y'),
+            ])->values(),
+            'message' => $collaborator
+                ? 'Khách đã thuộc về CTV '.$collaborator->name.'. Hệ thống sẽ giữ nguyên nguồn này.'
+                : 'Chưa tìm thấy nguồn giới thiệu cho khách hàng này.',
+        ]);
     }
 
     public function edit(Contract $contract)
     {
         $cars = Car::orderBy('name')->get();
-        $contract->load('images');
+        $collaborators = $this->collaboratorOptions();
+        $contract->load(['images', 'collaborator', 'commission']);
 
-        return view('admin.contracts.edit', compact('contract', 'cars'));
+        return view('admin.contracts.edit', compact('contract', 'cars', 'collaborators'));
     }
 
-    public function update(Request $request, Contract $contract)
+    public function update(Request $request, Contract $contract, CollaboratorCommissionService $commissionService)
     {
         $validated = $this->validateData($request);
 
         $contract->update($validated);
+        $commissionService->syncForContract($contract);
 
         if ($request->delete_images) {
             $images = ContractImage::whereIn('id', $request->delete_images)
@@ -136,6 +221,7 @@ class ContractController extends Controller
 
         return $request->validate([
             'status' => 'required|in:pending,active,returned,cancelled',
+            'collaborator_id' => 'nullable|integer|exists:collaborators,id',
             'branch' => 'nullable|string|max:255',
             'cccd' => 'nullable|string|max:50',
             'customer_name' => 'required|string|max:255',
@@ -214,6 +300,14 @@ class ContractController extends Controller
             'delete_images' => 'nullable|array',
             'delete_images.*' => 'integer|exists:contract_images,id',
         ]);
+    }
+
+    private function collaboratorOptions()
+    {
+        return Collaborator::whereIn('status', ['active', 'pending'])
+            ->orderByRaw("FIELD(status, 'active', 'pending')")
+            ->orderBy('name')
+            ->get();
     }
 
     private function storeImages(Request $request, Contract $contract): void

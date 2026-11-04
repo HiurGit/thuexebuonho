@@ -145,6 +145,91 @@
 
                         <hr>
 
+                        <h5 class="mb-3"><i class="fas fa-building mr-1"></i> Thông tin pháp lý &amp; ngân hàng</h5>
+
+                        <div class="form-group">
+                            <label for="site_business_name">Tên đơn vị</label>
+                            <input
+                                type="text"
+                                class="form-control @error('site_business_name') is-invalid @enderror"
+                                id="site_business_name"
+                                name="site_business_name"
+                                maxlength="255"
+                                value="{{ old('site_business_name', $settings['site_business_name']) }}"
+                                placeholder="HỘ KINH DOANH THUÊ XE BUÔN HỒ"
+                            >
+                            @error('site_business_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="site_tax_code">Mã số thuế tổ chức</label>
+                            <input
+                                type="text"
+                                class="form-control @error('site_tax_code') is-invalid @enderror"
+                                id="site_tax_code"
+                                name="site_tax_code"
+                                maxlength="50"
+                                value="{{ old('site_tax_code', $settings['site_tax_code']) }}"
+                                placeholder="8603250741-001"
+                            >
+                            @error('site_tax_code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="site_representative">Người đại diện</label>
+                            <input
+                                type="text"
+                                class="form-control @error('site_representative') is-invalid @enderror"
+                                id="site_representative"
+                                name="site_representative"
+                                maxlength="255"
+                                value="{{ old('site_representative', $settings['site_representative']) }}"
+                                placeholder="NGUYỄN ĐÌNH THẢO"
+                            >
+                            @error('site_representative')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="site_bank_account">Số tài khoản</label>
+                                <input
+                                    type="text"
+                                    class="form-control @error('site_bank_account') is-invalid @enderror"
+                                    id="site_bank_account"
+                                    name="site_bank_account"
+                                    maxlength="50"
+                                    value="{{ old('site_bank_account', $settings['site_bank_account']) }}"
+                                    placeholder="8869926323"
+                                >
+                                @error('site_bank_account')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="site_bank_name">Ngân hàng</label>
+                                <input
+                                    type="text"
+                                    class="form-control @error('site_bank_name') is-invalid @enderror"
+                                    id="site_bank_name"
+                                    name="site_bank_name"
+                                    maxlength="255"
+                                    value="{{ old('site_bank_name', $settings['site_bank_name']) }}"
+                                    placeholder="BIDV"
+                                >
+                                @error('site_bank_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <hr>
+
                         <h5 class="mb-3"><i class="fas fa-bullhorn mr-1"></i> Băng thông báo chạy chữ</h5>
 
                         <div class="form-group">

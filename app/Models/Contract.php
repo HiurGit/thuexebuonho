@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Contract extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'contract_code', 'status', 'created_by', 'branch', 'contract_date',
+        'contract_code', 'status', 'created_by', 'collaborator_id', 'referral_source', 'branch', 'contract_date',
         'cccd', 'customer_name', 'customer_phone', 'dob', 'gender', 'cccd_issue_date', 'cccd_issue_place',
         'customer_address', 'driver_license_no', 'license_issue_date', 'license_expiry_date', 'license_class',
         'car_id', 'car_name', 'car_brand', 'car_model', 'car_plate', 'car_color', 'car_year',
@@ -77,6 +78,21 @@ class Contract extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function collaborator(): BelongsTo
+    {
+        return $this->belongsTo(Collaborator::class);
+    }
+
+    public function commission(): HasOne
+    {
+        return $this->hasOne(CollaboratorCommission::class);
+    }
+
+    public function referredCustomer()
+    {
+        return $this->hasOne(CollaboratorCustomer::class);
     }
 
     public function car(): BelongsTo
